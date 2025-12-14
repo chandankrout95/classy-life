@@ -1,0 +1,16 @@
+{
+  "placeholderImages": [
+    {
+      "id": "post-1",
+      "description": "Couple walking up stairs",
+      "imageUrl": "https://picsum.photos/seed/post1/600/1000",
+      "imageHint": "couple luxury"
+    },
+    {
+      "id": "post-day-in-life",
+      "description": "Person walking on a street",
+      "imageUrl": "https://picsum.photos/seed/dayinlife/600/1000",
+      "imageHint": "street style"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+
+{
+  "avatars": [
+    {
+      "id": "avatar-1",
+      "url": "/avatars/avatar-1.png",
+      "hint": "classy man"
+    },
+    {
+      "id": "avatar-2",
+      "url": "/avatars/avatar-2.png",
+      "hint": "woman portrait"
+    },
+    {
+      "id": "avatar-3",
+      "url": "/avatars/avatar-3.png",
+      "hint": "abstract art"
+    },
+    {
+      "id": "avatar-4",
+      "url": "/avatars/avatar-4.png",
+      "hint": "classy woman"
+    },
+    {
+      "id": "avatar-5",
+      "url": "/avatars/avatar-5.png",
+      "hint": "man portrait"
+    },
+    {
+      "id": "avatar-6",
+      "url": "/avatars/avatar-6.png",
+      "hint": "nature"
+    },
+    {
+      "id": "avatar-7",
+      "url": "/avatars/avatar-7.png",
+      "hint": "architecture"
+    },
+    {
+      "id": "avatar-8",
+      "url": "/avatars/avatar-8.png",
+      "hint": "tech"
+    },
+    {
+      "id": "avatar-9",
+      "url": "/avatars/avatar-9.png",
+      "hint": "animal"
+    }
+  ]
+}

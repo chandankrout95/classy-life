@@ -159,7 +159,15 @@ export default function ReelInsightsPage() {
             ) : (
               <p className="text-lg font-semibold">{post.caption || ""}</p>
             )}
-            <p className="text-sm text-zinc-400 mt-1">25 April · Duration 0:33</p>
+             {isEditing ? (
+              <Input
+                value={post.postDate || "25 April · Duration 0:33"}
+                onChange={(e) => handleSimpleFieldChange('postDate', e.target.value)}
+                className="bg-transparent border-none p-0 h-auto text-sm text-zinc-400 text-center ring-1 ring-primary rounded-sm mt-1"
+              />
+            ) : (
+               <p className="text-sm text-zinc-400 mt-1">{post.postDate || "25 April · Duration 0:33"}</p>
+            )}
           </div>
         </div>
 

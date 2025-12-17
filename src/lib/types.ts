@@ -1,4 +1,5 @@
 
+
 export interface Post {
   id?: string;
   imageUrl: string;
@@ -51,6 +52,7 @@ export interface Post {
   viewRate?: number;
   reposts?: number;
   likesOverTime?: { timestamp: number; retention: number }[];
+  postDate?: string;
   // This is a temporary property for AI actions
   metrics?: Metric;
 }

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -255,7 +256,7 @@ export default function ReelInsightsPage() {
             </div>
           </div>
           <div className="h-[200px] -mb-4 mt-4">
-            <RetentionChart data={retentionData} />
+            <RetentionChart data={retentionData} yAxisTicks={[0, 50, 100]} yAxisDomain={[0, 100]} />
           </div>
           <div className="mt-8 space-y-2">
             <h3 className="font-bold">Skip rate</h3>

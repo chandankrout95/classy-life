@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Link from "next/link";
@@ -204,7 +205,7 @@ export default function ViewsPage() {
             
             <section>
             <div className="relative flex justify-center items-center">
-                <ViewsBreakdownChart data={viewsBreakdown} totalViews={totalViews}/>
+                <ViewsBreakdownChart data={viewsBreakdown} totalViews={totalViews} />
                 <div className="absolute flex flex-col items-center">
                 <span className="text-sm text-zinc-400">Views</span>
                 <Input
@@ -394,7 +395,7 @@ export default function ViewsPage() {
                                             <span className="text-xs sm:text-sm">%</span>
                                         </div>
                                     </div>
-                                    <Progress value={gender.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={gender.name === 'Women' ? "indicator-bg-chart-2" : "indicator-bg-chart-1"}/>
+                                    <Progress value={gender.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={gender.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
                                 </div>
                             ))}
                         </div>

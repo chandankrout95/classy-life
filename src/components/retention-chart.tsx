@@ -20,7 +20,7 @@ const chartConfig = {
 interface RetentionChartProps {
   data: RetentionData[];
   yAxisTicks?: number[];
-  yAxisDomain?: number[];
+  yAxisDomain?: [number, number];
 }
 
 export function RetentionChart({ data, yAxisTicks, yAxisDomain }: RetentionChartProps) {
@@ -49,7 +49,7 @@ export function RetentionChart({ data, yAxisTicks, yAxisDomain }: RetentionChart
           axisLine={false}
           tickMargin={8}
           tickFormatter={(value) => `${value}%`}
-          domain={yAxisDomain || [0, 100]}
+          domain={yAxisDomain || [0, 'dataMax']}
           ticks={yAxisTicks || [0, 50, 100]}
         />
         <ChartTooltip

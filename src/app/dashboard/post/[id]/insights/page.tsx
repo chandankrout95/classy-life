@@ -404,7 +404,3 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
-
-    
-
-    

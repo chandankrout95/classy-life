@@ -4,68 +4,68 @@
       "id": "reel-1",
       "type": "video",
       "url": "/reel.mp4",
-      "thumbnailUrl": "/avatars/avatar-2.png",
+      "thumbnailUrl": "https://picsum.photos/seed/reel-thumb-1/300/300",
       "hint": "classy woman"
     },
     {
       "id": "reel-2",
       "type": "video",
       "url": "/reel1.mp4",
-      "thumbnailUrl": "/avatars/avatar-3.png",
+      "thumbnailUrl": "https://picsum.photos/seed/reel-thumb-2/300/300",
       "hint": "new reel"
     },
     {
       "id": "avatar-1",
       "type": "image",
-      "url": "/avatars/avatar-1.png",
+      "url": "https://picsum.photos/seed/avatar1/200/200",
       "hint": "classy man"
     },
     {
       "id": "avatar-2",
       "type": "image",
-      "url": "/avatars/avatar-2.png",
+      "url": "https://picsum.photos/seed/avatar2/200/200",
       "hint": "woman portrait"
     },
     {
       "id": "avatar-3",
       "type": "image",
-      "url": "/avatars/avatar-3.png",
+      "url": "https://picsum.photos/seed/avatar3/200/200",
       "hint": "abstract art"
     },
     {
       "id": "avatar-4",
       "type": "image",
-      "url": "/avatars/avatar-4.png",
+      "url": "https://picsum.photos/seed/avatar4/200/200",
       "hint": "classy woman"
     },
     {
       "id": "avatar-5",
       "type": "image",
-      "url": "/avatars/avatar-5.png",
+      "url": "https://picsum.photos/seed/avatar5/200/200",
       "hint": "man portrait"
     },
     {
       "id": "avatar-6",
       "type": "image",
-      "url": "/avatars/avatar-6.png",
+      "url": "https://picsum.photos/seed/avatar6/200/200",
       "hint": "nature"
     },
     {
       "id": "avatar-7",
       "type": "image",
-      "url": "/avatars/avatar-7.png",
+      "url": "https://picsum.photos/seed/avatar7/200/200",
       "hint": "architecture"
     },
     {
       "id": "avatar-8",
       "type": "image",
-      "url": "/avatars/avatar-8.png",
+      "url": "https://picsum.photos/seed/avatar8/200/200",
       "hint": "tech"
     },
     {
       "id": "avatar-9",
       "type": "image",
-      "url": "/avatars/avatar-9.png",
+      "url": "https://picsum.photos/seed/avatar9/200/200",
       "hint": "animal"
     }
   ]

@@ -312,7 +312,7 @@ export function UserProfile() {
           <PlaySquare size={24} className="mx-auto" />
         </button>
         <button className="p-3 text-zinc-500 flex-1">
-          <Repeat size={24} className="mx-auto" />
+          <Repeat size={24} className="mx-auto" style={{ transform: 'scaleX(-1)' }} />
         </button>
         <button className="p-3 text-zinc-500 flex-1">
           <Contact size={24} className="mx-auto" />

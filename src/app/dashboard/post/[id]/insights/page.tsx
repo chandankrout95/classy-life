@@ -146,7 +146,7 @@ export default function ReelInsightsPage() {
 
 
   return (
-    <div className="bg-background text-white min-h-screen pb-24">
+    <div className="bg-background text-white min-h-screen">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/post/${id}`}>
@@ -481,3 +481,4 @@ export default function ReelInsightsPage() {
     
 
     
+

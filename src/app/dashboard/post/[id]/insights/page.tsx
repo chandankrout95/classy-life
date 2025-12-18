@@ -17,7 +17,7 @@ import {
   PlayIcon,
   Settings,
 } from "lucide-react";
-import { Post } from "@/lib/types";
+import { Post, RetentionData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useDashboard } from "@/app/dashboard/context";
@@ -71,6 +71,16 @@ export default function ReelInsightsPage() {
     });
     setPost(updatedPost);
   };
+
+  const handleRetentionDataChange = (index: number, field: keyof RetentionData, value: string) => {
+    if (!post) return;
+    const updatedPost = produce(post, draft => {
+      if (draft.retentionData && draft.retentionData[index]) {
+        (draft.retentionData[index] as any)[field] = Number(value) || 0;
+      }
+    });
+    setPost(updatedPost);
+  }
 
   const handleToggleEdit = () => {
     if (isEditing) {
@@ -258,6 +268,32 @@ export default function ReelInsightsPage() {
           <div className="h-[200px] -mb-4 mt-4">
             <RetentionChart data={retentionData} yAxisTicks={[0, 50, 100]} yAxisDomain={[0, 100]} />
           </div>
+
+          {isEditing && (
+            <div className="mt-4 space-y-2">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                <p className="text-xs text-muted-foreground">Timestamp (s)</p>
+                <p className="text-xs text-muted-foreground">Retention (%)</p>
+              </div>
+              {retentionData.map((dataPoint, index) => (
+                <div key={index} className="grid grid-cols-2 gap-x-4">
+                  <Input
+                    type="number"
+                    value={dataPoint.timestamp}
+                    onChange={(e) => handleRetentionDataChange(index, 'timestamp', e.target.value)}
+                    className="bg-transparent"
+                  />
+                  <Input
+                    type="number"
+                    value={dataPoint.retention}
+                    onChange={(e) => handleRetentionDataChange(index, 'retention', e.target.value)}
+                    className="bg-transparent"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          
           <div className="mt-8 space-y-2">
             <h3 className="font-bold">Skip rate</h3>
             <div className="flex justify-between items-center text-sm">
@@ -404,3 +440,5 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
+
+    

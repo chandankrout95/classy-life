@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -148,11 +149,11 @@ export function AudienceSection({
                   onChange={(e) =>
                     handleDemographicChange(activeTab, idx, 'label', e.target.value)
                   }
-                  className="bg-transparent border-none p-0 h-auto text-[11px] font-semibold flex-1 min-w-[120px] text-white ring-1 ring-primary rounded-sm"
+                  className="bg-transparent border-none p-0 h-auto text-[13px] font-semibold flex-1 min-w-[120px] text-white ring-1 ring-primary rounded-sm"
                   disabled={activeTab === 'gender'}
                 />
               ) : (
-                <span className="font-semibold text-[11px] flex-1 min-w-0 text-white">
+                <span className="font-semibold text-[13px] flex-1 min-w-0 text-white">
                   {item.label}
                 </span>
               )}

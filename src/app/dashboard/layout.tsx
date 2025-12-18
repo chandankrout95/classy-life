@@ -58,15 +58,16 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
       return null; // The context handles redirection
   }
 
-  const isPostPage = pathname.startsWith('/dashboard/post/');
+  const isReelPage = pathname.includes('/post/') && !pathname.includes('/insights');
+  const shouldShowBottomNav = !isReelPage;
 
   return (
     <>
-      <div className={`bg-background text-white min-h-screen ${isPostPage ? '' : 'pb-24'}`}>
+      <div className={`bg-background text-white min-h-screen ${shouldShowBottomNav ? 'pb-24' : ''}`}>
         {children}
       </div>
       
-      {!isPostPage && (
+      {shouldShowBottomNav && (
         <div className="fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800">
           <BottomNav 
             onPlusClick={() => setIsCreatingPost(true)}

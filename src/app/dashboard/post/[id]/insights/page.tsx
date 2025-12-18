@@ -82,6 +82,16 @@ export default function ReelInsightsPage() {
     });
     setPost(updatedPost);
   }
+  
+  const handleLikesOverTimeDataChange = (index: number, field: keyof RetentionData, value: string) => {
+    if (!post) return;
+    const updatedPost = produce(post, draft => {
+      if (draft.likesOverTime && draft.likesOverTime[index]) {
+        (draft.likesOverTime[index] as any)[field] = Number(value) || 0;
+      }
+    });
+    setPost(updatedPost);
+  }
 
   const handleToggleEdit = () => {
     if (isEditing) {
@@ -136,7 +146,7 @@ export default function ReelInsightsPage() {
 
 
   return (
-    <div className="bg-background text-white min-h-screen pb-8">
+    <div className="bg-background text-white min-h-screen pb-24">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/post/${id}`}>
@@ -392,7 +402,31 @@ export default function ReelInsightsPage() {
             <div className="h-[200px] -mb-4 mt-4">
               <RetentionChart data={likesOverTimeData} yAxisTicks={[0, 10, 20]} yAxisDomain={[0, 20]} />
             </div>
-             <div className="mt-8 space-y-2 text-sm">
+             {isEditing && (
+              <div className="mt-4 space-y-2">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  <p className="text-xs text-muted-foreground">Timestamp (s)</p>
+                  <p className="text-xs text-muted-foreground">Likes (%)</p>
+                </div>
+                {likesOverTimeData.map((dataPoint, index) => (
+                  <div key={index} className="grid grid-cols-2 gap-x-4">
+                    <Input
+                      type="number"
+                      value={dataPoint.timestamp}
+                      onChange={(e) => handleLikesOverTimeDataChange(index, 'timestamp', e.target.value)}
+                      className="bg-transparent"
+                    />
+                    <Input
+                      type="number"
+                      value={dataPoint.retention}
+                      onChange={(e) => handleLikesOverTimeDataChange(index, 'retention', e.target.value)}
+                      className="bg-transparent"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="mt-8 space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <span>Likes</span>
                  {isEditing ? <Input type="number" value={post.likes || 0} onChange={(e) => handleSimpleFieldChange('likes', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent"/> : <span className="font-semibold">{formatNumber(post.likes || 0)}</span>}

@@ -270,9 +270,17 @@ export default function ReelInsightsPage() {
             <Info size={16} className="text-zinc-400" />
           </div>
           <div className="mt-4 flex justify-center">
-            <div className="bg-zinc-800 w-28 h-48 rounded-lg flex items-center justify-center">
-                <div className="border-2 border-white rounded-full p-2">
-                    <PlayIcon className="text-white w-6 h-6" fill="white" />
+            <div className="relative bg-zinc-800 w-28 h-48 rounded-lg flex items-center justify-center overflow-hidden">
+                <Image
+                    src={post.imageUrl}
+                    alt={post.caption || "Reel thumbnail"}
+                    fill
+                    className="object-cover"
+                />
+                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <div className="border-2 border-white rounded-full p-2">
+                        <PlayIcon className="text-white w-6 h-6" fill="white" />
+                    </div>
                 </div>
             </div>
           </div>
@@ -393,11 +401,19 @@ export default function ReelInsightsPage() {
           <div className="border-t border-zinc-800 pt-6">
             <h3 className="font-bold mb-4">When people liked your reel</h3>
             <div className="mt-4 flex justify-center">
-              <div className="bg-zinc-800 w-28 h-48 rounded-lg flex items-center justify-center">
-                <div className="border-2 border-white rounded-full p-2">
-                  <PlayIcon className="text-white w-6 h-6" fill="white" />
+                <div className="relative bg-zinc-800 w-28 h-48 rounded-lg flex items-center justify-center overflow-hidden">
+                    <Image
+                        src={post.imageUrl}
+                        alt={post.caption || "Reel thumbnail"}
+                        fill
+                        className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                        <div className="border-2 border-white rounded-full p-2">
+                            <PlayIcon className="text-white w-6 h-6" fill="white" />
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
             <div className="h-[200px] -mb-4 mt-4">
               <RetentionChart data={likesOverTimeData} yAxisTicks={[0, 10, 20]} yAxisDomain={[0, 20]} />
@@ -481,4 +497,5 @@ export default function ReelInsightsPage() {
     
 
     
+
 

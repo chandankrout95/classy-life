@@ -53,6 +53,7 @@ export interface Post {
   reposts?: number;
   likesOverTime?: { timestamp: number; retention: number }[];
   postDate?: string;
+  approximateEarnings?: string;
   // This is a temporary property for AI actions
   metrics?: Metric;
 }

@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { ViewSourcesSection } from "@/components/view-sources-section";
 import { AudienceSection } from "@/components/audience-section";
 import { ViewsBreakdownSection } from "@/components/views-breakdown-section";
+import { MonetizationSection } from "@/components/monetization-section";
 
 
 export default function ReelInsightsPage() {
@@ -435,6 +436,8 @@ export default function ReelInsightsPage() {
         <section>
            <AudienceSection post={post} isEditing={isEditing} onPostChange={handlePostChange} />
         </section>
+        
+        <MonetizationSection post={post} isEditing={isEditing} onPostChange={handlePostChange} />
 
       </main>
     </div>

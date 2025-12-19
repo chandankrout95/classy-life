@@ -16,6 +16,8 @@ import {
   Loader2,
   PlayIcon,
   Settings,
+  BarChart,
+  ChevronRight,
 } from "lucide-react";
 import { Post, RetentionData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
@@ -98,17 +100,17 @@ export default function ReelInsightsPage() {
   };
 
   const handleRetentionDataChange = (index: number, field: keyof RetentionData, value: string) => {
-    if (!post) return;
-    const updatedPost = produce(post, draft => {
-      if (draft.retentionData && draft.retentionData[index]) {
-        (draft.retentionData[index] as any)[field] = Number(value) || 0;
-      }
+    if (!post || !post.retentionData) return;
+      const updatedPost = produce(post, draft => {
+        if (draft.retentionData && draft.retentionData[index]) {
+          (draft.retentionData[index] as any)[field] = Number(value) || 0;
+        }
     });
     setPost(updatedPost);
   }
   
   const handleLikesOverTimeDataChange = (index: number, field: keyof RetentionData, value: string) => {
-    if (!post) return;
+    if (!post || !post.likesOverTime) return;
     const updatedPost = produce(post, draft => {
       if (draft.likesOverTime && draft.likesOverTime[index]) {
         (draft.likesOverTime[index] as any)[field] = Number(value) || 0;
@@ -153,7 +155,7 @@ export default function ReelInsightsPage() {
 
 
   return (
-    <div className="bg-background text-white min-h-screen pb-24">
+    <div className="bg-background text-white min-h-screen">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/post/${id}`}>
@@ -496,14 +498,20 @@ export default function ReelInsightsPage() {
         
         <MonetizationSection post={post} isEditing={isEditing} onPostChange={handlePostChange} />
 
+        <section>
+          <div className="border-t border-zinc-800 pt-6">
+            <h3 className="font-bold mb-2">Ad</h3>
+            <Button variant="ghost" className="w-full justify-between items-center p-2 rounded-lg hover:bg-zinc-800">
+              <div className="flex items-center gap-3">
+                <BarChart className="w-5 h-5" />
+                <span className="text-base">Boost this reel</span>
+              </div>
+              <ChevronRight className="w-5 h-5 text-zinc-500" />
+            </Button>
+          </div>
+        </section>
+
       </main>
     </div>
   );
 }
-
-    
-
-    
-
-
-

@@ -179,8 +179,8 @@ export default function ReelInsightsPage() {
             <Image
               src={post.imageUrl}
               alt="Reel thumbnail"
-              width={100}
-              height={178}
+              width={90}
+              height={160}
               className="rounded-lg object-cover"
               data-ai-hint={post.imageHint}
             />
@@ -526,3 +526,4 @@ export default function ReelInsightsPage() {
     
 
     
+

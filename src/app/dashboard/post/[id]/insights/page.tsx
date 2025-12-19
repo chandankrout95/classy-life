@@ -159,16 +159,18 @@ export default function ReelInsightsPage() {
 
   return (
     <div className="bg-background text-white min-h-screen">
-      <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
-        <div className="flex items-center gap-4">
+       <header className="p-4 grid grid-cols-3 items-center sticky top-0 bg-background z-10">
+        <div className="flex justify-start">
           <Link href={`/dashboard/post/${id}`}>
             <ChevronLeft size={28} />
           </Link>
-          <span className="text-xl font-bold">Reel insights</span>
         </div>
-        <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size="icon">
-          <MoreHorizontal size={24} />
-        </Button>
+        <span className="text-xl font-bold text-center">Reel insights</span>
+        <div className="flex justify-end">
+          <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size="icon">
+            <MoreHorizontal size={24} />
+          </Button>
+        </div>
       </header>
 
       <main className="p-4 space-y-6 pb-0">

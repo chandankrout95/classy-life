@@ -136,7 +136,7 @@ export default function PostPage() {
              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <MoreHorizontal size={28} />
             </Button>
-            <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden animate-spin-slow">
+            <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden">
                  {profile.avatarUrl && (
                     <Image
                         src={profile.avatarUrl}

@@ -41,12 +41,36 @@ export default function ReelInsightsPage() {
   const [post, setPost] = useState<Post | null>(null);
   const [activeFilter, setActiveFilter] = useState("All");
   const [isEditing, setIsEditing] = useState(false);
+  
+  const defaultRetentionData = [
+    { timestamp: 0, retention: 100 }, { timestamp: 3, retention: 95 },
+    { timestamp: 6, retention: 80 }, { timestamp: 9, retention: 75 },
+    { timestamp: 12, retention: 60 }, { timestamp: 15, retention: 50 },
+    { timestamp: 18, retention: 40 }, { timestamp: 21, retention: 30 },
+    { timestamp: 25, retention: 20 }, { timestamp: 30, retention: 10 },
+  ];
+  
+  const defaultLikesOverTime = [
+    { timestamp: 0, retention: 18 }, { timestamp: 4, retention: 18 },
+    { timestamp: 8, retention: 12 }, { timestamp: 12, retention: 12 },
+    { timestamp: 16, retention: 8 }, { timestamp: 20, retention: 8 },
+    { timestamp: 24, retention: 8 }, { timestamp: 28, retention: 5 },
+    { timestamp: 32, retention: 5 }, { timestamp: 36, retention: 5 },
+    { timestamp: 40, retention: 2 }, { timestamp: 44, retention: 2 },
+  ];
 
   useEffect(() => {
     if (profile) {
       const currentPost = profile.posts.find(p => p.id === id);
       if (currentPost) {
-        setPost(currentPost);
+        setPost(produce(currentPost, draft => {
+          if (!draft.retentionData || draft.retentionData.length === 0) {
+            draft.retentionData = defaultRetentionData;
+          }
+          if (!draft.likesOverTime || draft.likesOverTime.length === 0) {
+            draft.likesOverTime = defaultLikesOverTime;
+          }
+        }));
       }
     }
   }, [profile, id]);
@@ -122,31 +146,14 @@ export default function ReelInsightsPage() {
     );
   }
   
-  const defaultRetentionData = [
-    { timestamp: 0, retention: 100 }, { timestamp: 3, retention: 95 },
-    { timestamp: 6, retention: 80 }, { timestamp: 9, retention: 75 },
-    { timestamp: 12, retention: 60 }, { timestamp: 15, retention: 50 },
-    { timestamp: 18, retention: 40 }, { timestamp: 21, retention: 30 },
-    { timestamp: 25, retention: 20 }, { timestamp: 30, retention: 10 },
-  ];
-  const retentionData = post?.retentionData && post.retentionData.length > 0 ? post.retentionData : defaultRetentionData;
-  
+  const retentionData = post?.retentionData || [];
   const defaultInteractionsBreakdown = { followers: 70, nonFollowers: 30 };
   const interactionsData = post?.interactionsBreakdown || defaultInteractionsBreakdown;
-  
-  const defaultLikesOverTime = [
-    { timestamp: 0, retention: 18 }, { timestamp: 4, retention: 18 },
-    { timestamp: 8, retention: 12 }, { timestamp: 12, retention: 12 },
-    { timestamp: 16, retention: 8 }, { timestamp: 20, retention: 8 },
-    { timestamp: 24, retention: 8 }, { timestamp: 28, retention: 5 },
-    { timestamp: 32, retention: 5 }, { timestamp: 36, retention: 5 },
-    { timestamp: 40, retention: 2 }, { timestamp: 44, retention: 2 },
-  ];
-  const likesOverTimeData = post?.likesOverTime && post.likesOverTime.length > 0 ? post.likesOverTime : defaultLikesOverTime;
+  const likesOverTimeData = post?.likesOverTime || [];
 
 
   return (
-    <div className="bg-background text-white min-h-screen">
+    <div className="bg-background text-white min-h-screen pb-24">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/post/${id}`}>
@@ -497,5 +504,6 @@ export default function ReelInsightsPage() {
     
 
     
+
 
 

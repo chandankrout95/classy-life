@@ -14,6 +14,7 @@ import {
   DEMO_COUNTRY_DATA,
   DEMO_GENDER_DATA,
 } from '@/lib/audience-data';
+import { cn } from '@/lib/utils';
 
 interface AudienceSectionProps {
   post: Post;
@@ -178,7 +179,10 @@ export function AudienceSection({
             </div>
             <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-chart-1 rounded-full"
+                className={cn(
+                  "h-full rounded-full",
+                  activeTab === 'gender' && item.label === 'Women' ? 'bg-chart-2' : 'bg-chart-1'
+                )}
                 style={{
                   width: shouldAnimate ? `${clamp(item.value)}%` : '0%',
                   transition: `width 0.6s ease ${idx * 0.1}s`,

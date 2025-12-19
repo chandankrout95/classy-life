@@ -10,23 +10,25 @@ export function InsightForgeLogo({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth="4"
     >
-      <path
-        d="M20 80 L20 30 C20 20, 30 20, 30 20 L70 20 C80 20, 80 30, 80 30 L80 80"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M35 65 L50 50 L65 65"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="5"
-      />
-       <path
-        d="M50 50 L50 20"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="5"
-      />
+      <g transform="scale(-1, 1) translate(-100, 0)">
+        <path
+          d="M20 80 L20 30 C20 20, 30 20, 30 20 L70 20 C80 20, 80 30, 80 30 L80 80"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M35 65 L50 50 L65 65"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="5"
+        />
+        <path
+          d="M50 50 L50 20"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="5"
+        />
+      </g>
     </svg>
   );
 }

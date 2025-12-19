@@ -28,7 +28,7 @@ export function AudienceSection({
   onPostChange,
 }: AudienceSectionProps) {
   const [activeTab, setActiveTab] = useState<'gender' | 'country' | 'age'>(
-    'country'
+    'gender'
   );
 
   // Memoize data to prevent re-renders unless post object changes

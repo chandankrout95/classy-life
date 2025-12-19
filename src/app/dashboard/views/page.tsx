@@ -204,16 +204,7 @@ export default function ViewsPage() {
             
             <section>
             <div className="relative flex justify-center items-center">
-                <ViewsBreakdownChart data={viewsBreakdown} />
-                <div className="absolute flex flex-col items-center">
-                <span className="text-sm text-zinc-400">Views</span>
-                <Input
-                    type="number"
-                    value={totalViews}
-                    onChange={(e) => handleUpdate('stats.totalViews', parseInt(e.target.value) || 0)}
-                    className="bg-transparent border-none text-3xl font-bold text-center h-auto p-0 w-48 no-spinner"
-                />
-                </div>
+                <ViewsBreakdownChart data={viewsBreakdown} totalViews={totalViews} />
             </div>
             <div className="mt-6 space-y-2 text-sm">
                 <div className="flex justify-between items-center">
@@ -394,7 +385,7 @@ export default function ViewsPage() {
                                             <span className="text-xs sm:text-sm">%</span>
                                         </div>
                                     </div>
-                                    <Progress value={gender.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={index === 0 ? "indicator-bg-chart-1" : "indicator-bg-chart-2"}/>
+                                    <Progress value={gender.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={gender.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
                                 </div>
                             ))}
                         </div>

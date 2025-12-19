@@ -165,7 +165,7 @@ export default function ReelInsightsPage() {
             <ChevronLeft size={28} />
           </Link>
         </div>
-        <span className="text-xl font-bold text-center">Reel insights</span>
+        <span className="text-lg font-bold text-center">Reel insights</span>
         <div className="flex justify-end">
           <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size="icon">
             <MoreHorizontal size={24} />
@@ -520,10 +520,3 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
-

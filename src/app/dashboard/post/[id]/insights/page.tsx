@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -172,7 +171,7 @@ export default function ReelInsightsPage() {
         </Button>
       </header>
 
-      <main className="p-4 space-y-6">
+      <main className="p-4 space-y-6 pb-0">
         <div className="flex flex-col items-center text-center gap-4">
           {post.imageUrl && (
             <Image
@@ -519,3 +518,5 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
+
+    

@@ -10,16 +10,12 @@ import { CreatePostSheet } from '@/components/create-post-sheet';
 import { Loader2 } from 'lucide-react';
 import { DashboardProvider, useDashboard } from './context';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { BarChart, Zap } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 function DashboardCore({ children }: { children: React.ReactNode }) {
   const { user, loading: userLoading } = useUser();
   const firestore = useFirestore();
   const { loading: profileLoading } = useDashboard();
   const pathname = usePathname();
-  const router = useRouter();
   
   const [isCreatingPost, setIsCreatingPost] = useState(false);
 
@@ -59,11 +55,13 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
   }
 
   const isReelPage = pathname.includes('/post/') && !pathname.includes('/insights');
+  const isInsightsPage = pathname.includes('/insights');
   const shouldShowBottomNav = !isReelPage;
+
 
   return (
     <>
-      <div className={`bg-background text-white min-h-screen ${shouldShowBottomNav ? 'pb-24' : ''}`}>
+      <div className={`bg-background text-white min-h-screen ${shouldShowBottomNav && !isInsightsPage ? 'pb-24' : ''}`}>
         {children}
       </div>
       

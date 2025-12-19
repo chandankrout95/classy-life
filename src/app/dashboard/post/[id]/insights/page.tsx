@@ -18,6 +18,7 @@ import {
   Settings,
   BarChart,
   ChevronRight,
+  Zap,
 } from "lucide-react";
 import { Post, RetentionData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
@@ -168,7 +169,7 @@ export default function ReelInsightsPage() {
         </Button>
       </header>
 
-      <main className="p-4 space-y-6">
+      <main className="p-4 space-y-6 pb-24">
         <div className="flex flex-col items-center text-center gap-4">
           {post.imageUrl && (
             <Image
@@ -503,7 +504,7 @@ export default function ReelInsightsPage() {
             <h3 className="font-bold mb-2">Ad</h3>
             <Button variant="ghost" className="w-full justify-between items-center p-2 rounded-lg hover:bg-zinc-800">
               <div className="flex items-center gap-3">
-                <BarChart className="w-5 h-5" />
+                <Zap className="w-5 h-5" />
                 <span className="text-base">Boost this reel</span>
               </div>
               <ChevronRight className="w-5 h-5 text-zinc-500" />

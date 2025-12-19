@@ -174,7 +174,7 @@ export default function PostPage() {
           </div>
         </div>
       </div>
-      <div className="shrink-0 z-30 bg-background border-t border-zinc-800 pointer-events-auto">
+      <div className="shrink-0 z-30 bg-transparent border-t border-zinc-800 pointer-events-auto">
         <div className="flex justify-around gap-2 text-sm p-3">
           <Button
             variant="ghost"

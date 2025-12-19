@@ -156,7 +156,7 @@ export default function ReelInsightsPage() {
 
 
   return (
-    <div className="bg-background text-white min-h-screen pb-24">
+    <div className="bg-background text-white min-h-screen">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/post/${id}`}>
@@ -499,8 +499,8 @@ export default function ReelInsightsPage() {
         
         <MonetizationSection post={post} isEditing={isEditing} onPostChange={handlePostChange} />
 
-        <section>
-          <div className="border-t border-zinc-800 pt-6">
+        <section className="border-t border-zinc-800 pt-6">
+          <div>
             <h3 className="font-bold mb-2">Ad</h3>
             <Button variant="ghost" className="w-full justify-between items-center p-2 rounded-lg hover:bg-zinc-800">
               <div className="flex items-center gap-3">

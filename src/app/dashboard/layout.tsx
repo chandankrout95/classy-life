@@ -61,7 +61,7 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className={`bg-background text-white min-h-screen ${shouldShowBottomNav && !isInsightsPage ? 'pb-24' : ''}`}>
+      <div className={`bg-background text-white min-h-screen ${shouldShowBottomNav ? 'pb-24' : ''}`}>
         {children}
       </div>
       

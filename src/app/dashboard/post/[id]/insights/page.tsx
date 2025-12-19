@@ -207,7 +207,7 @@ export default function ReelInsightsPage() {
           </div>
         </div>
 
-        <div className="flex justify-around text-center border-b border-t border-zinc-800 py-4">
+        <div className="flex justify-around text-center border-b border-zinc-800 py-4">
           <div className="flex flex-col items-center">
             <Heart size={20} fill="white" />
             <span className="text-xs mt-1">{isEditing ? (

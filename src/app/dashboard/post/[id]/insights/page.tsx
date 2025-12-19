@@ -113,6 +113,9 @@ export default function ReelInsightsPage() {
   const handleLikesOverTimeDataChange = (index: number, field: keyof RetentionData, value: string) => {
     if (!post || !post.likesOverTime) return;
     const updatedPost = produce(post, draft => {
+      if (!draft.likesOverTime) {
+        draft.likesOverTime = defaultLikesOverTime;
+      }
       if (draft.likesOverTime && draft.likesOverTime[index]) {
         (draft.likesOverTime[index] as any)[field] = Number(value) || 0;
       }
@@ -152,11 +155,11 @@ export default function ReelInsightsPage() {
   const retentionData = post?.retentionData || [];
   const defaultInteractionsBreakdown = { followers: 70, nonFollowers: 30 };
   const interactionsData = post?.interactionsBreakdown || defaultInteractionsBreakdown;
-  const likesOverTimeData = post?.likesOverTime || [];
+  const likesOverTimeData = post?.likesOverTime || defaultLikesOverTime;
 
 
   return (
-    <div className="bg-background text-white min-h-screen">
+    <div className="bg-background text-white min-h-screen pb-24">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4">
           <Link href={`/dashboard/post/${id}`}>

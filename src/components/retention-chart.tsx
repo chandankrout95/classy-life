@@ -61,6 +61,7 @@ export function RetentionChart({ data, yAxisTicks, yAxisDomain }: RetentionChart
         />
         <Line
           dataKey="retention"
+          type="monotone"
           stroke="hsl(var(--chart-1))"
           strokeWidth={3}
           dot={false}

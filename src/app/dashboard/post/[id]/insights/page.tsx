@@ -14,7 +14,7 @@ import {
   Info,
   Loader2,
   PlayIcon,
-  Settings,
+  MoreHorizontal,
   BarChart,
   ChevronRight,
   Zap,
@@ -167,7 +167,7 @@ export default function ReelInsightsPage() {
           <span className="text-xl font-bold">Reel insights</span>
         </div>
         <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size="icon">
-          <Settings size={24} />
+          <MoreHorizontal size={24} />
         </Button>
       </header>
 

@@ -1,34 +1,19 @@
+
 import React from 'react';
 
 export function InsightForgeLogo({ className }: { className?: string }) {
   return (
     <svg
       className={className}
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="4"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <g transform="scale(-1, 1) translate(-100, 0)">
-        <path
-          d="M20 80 L20 30 C20 20, 30 20, 30 20 L70 20 C80 20, 80 30, 80 30 L80 80"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M35 65 L50 50 L65 65"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="5"
-        />
-        <path
-          d="M50 50 L50 20"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="5"
-        />
-      </g>
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
     </svg>
   );
 }

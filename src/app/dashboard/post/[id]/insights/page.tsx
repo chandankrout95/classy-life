@@ -169,7 +169,7 @@ export default function ReelInsightsPage() {
         </Button>
       </header>
 
-      <main className="p-4 space-y-6 pb-24">
+      <main className="p-4 space-y-6">
         <div className="flex flex-col items-center text-center gap-4">
           {post.imageUrl && (
             <Image

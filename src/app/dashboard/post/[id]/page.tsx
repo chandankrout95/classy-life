@@ -114,7 +114,7 @@ export default function PostPage() {
         
         <div className="absolute inset-0 flex flex-col justify-end z-10 pointer-events-none">
           
-          <div className="absolute right-3 bottom-20 flex flex-col gap-5 items-center text-white pointer-events-auto">
+          <div className="absolute right-3 bottom-4 flex flex-col gap-5 items-center text-white pointer-events-auto">
             <div className="flex flex-col items-center cursor-pointer">
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <Heart size={28} />

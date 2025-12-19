@@ -173,7 +173,7 @@ export default function ReelInsightsPage() {
         </div>
       </header>
 
-      <main className="p-4 space-y-6 pb-0">
+      <main className="p-4 space-y-6">
         <div className="flex flex-col items-center text-center gap-4">
           {post.imageUrl && (
             <Image
@@ -247,23 +247,23 @@ export default function ReelInsightsPage() {
             </div>
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                    <p className="text-zinc-400">Views</p>
+                    <p className="text-white">Views</p>
                     {isEditing ? <Input type="number" value={post.views || 0} onChange={(e) => handleSimpleFieldChange('views', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent"/> : <p className="font-semibold">{formatNumber(post.views || 0)}</p>}
                 </div>
                 <div className="flex justify-between items-center">
-                    <p className="text-zinc-400">Watch time</p>
+                    <p className="text-white">Watch time</p>
                     {isEditing ? <Input value={post.watchTime || '0s'} onChange={(e) => handleSimpleFieldChange('watchTime', e.target.value)} className="w-24 text-right bg-transparent"/> : <p className="font-semibold">{post.watchTime || '0s'}</p>}
                 </div>
                  <div className="flex justify-between items-center">
-                    <p className="text-zinc-400">Average watch time</p>
+                    <p className="text-white">Average watch time</p>
                     {isEditing ? <Input type="number" value={post.avgWatchTime || 0} onChange={(e) => handleSimpleFieldChange('avgWatchTime', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent"/> : <p className="font-semibold">{post.avgWatchTime || 0}s</p>}
                 </div>
                 <div className="flex justify-between items-center">
-                    <p className="text-zinc-400">Interactions</p>
+                    <p className="text-white">Interactions</p>
                     {isEditing ? <Input type="number" value={post.interactions || 0} onChange={(e) => handleSimpleFieldChange('interactions', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent"/> : <p className="font-semibold">{formatNumber(post.interactions || 0)}</p>}
                 </div>
                 <div className="flex justify-between items-center">
-                    <p className="text-zinc-400">Profile activity</p>
+                    <p className="text-white">Profile activity</p>
                     {isEditing ? <Input type="number" value={post.profileActivity || 0} onChange={(e) => handleSimpleFieldChange('profileActivity', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent"/> : <p className="font-semibold">{formatNumber(post.profileActivity || 0)}</p>}
                 </div>
             </div>
@@ -520,5 +520,7 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
+
+    
 
     

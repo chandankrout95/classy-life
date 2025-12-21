@@ -154,7 +154,7 @@ export function AudienceSection({
                   disabled={activeTab === 'gender'}
                 />
               ) : (
-                <span className="font-medium text-sm flex-1 min-w-0 text-foreground">
+                <span className="font-medium text-xs flex-1 min-w-0 text-foreground">
                   {item.label}
                 </span>
               )}
@@ -177,7 +177,7 @@ export function AudienceSection({
                 <span className="text-sm text-foreground">%</span>
               </div>
             </div>
-            <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
               <div
                 className={cn(
                   "h-full rounded-full",

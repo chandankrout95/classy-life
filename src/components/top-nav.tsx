@@ -30,80 +30,55 @@ export function TopNav({ onPlusClick, userId }: TopNavProps) {
     router.push('/dashboard/profile');
   };
 
-  const navItems = [
-    {
-      href: '/dashboard',
-      icon: (
+  return (
+    <div className="top-nav">
+      {/* HOME */}
+      <Link href="/dashboard" className={cn("nav-item", pathname === "/dashboard" ? "active" : "")}>
         <svg className="nav-icon" viewBox="0 0 24 24">
           <path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
         </svg>
-      ),
-      activePath: "/dashboard",
-      isLink: true
-    },
-    {
-      href: '#',
-      icon: (
+      </Link>
+
+      {/* SEARCH */}
+      <Link href="#" className="nav-item">
         <svg className="nav-icon" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="7" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
-      ),
-      activePath: "/search", // Example, adjust as needed
-      isLink: true
-    },
-    {
-      href: '#',
-      icon: (
-        <svg className="nav-icon" viewBox="0 0 24 24" onClick={onPlusClick}>
-            <rect x="3" y="3" width="18" height="18" rx="4" ry="4"/>
-            <polygon points="10,8 16,12 10,16"/>
-        </svg>
-      ),
-      activePath: "",
-      isLink: false
-    },
-    {
-      href: '#',
-      icon: (
-         <svg className="nav-icon" viewBox="0 0 24 24">
-            <path d="M22 2 11 13"/>
-            <path d="M22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      ),
-      activePath: "/messages", // Example, adjust as needed
-      isLink: true
-    },
-  ]
+      </Link>
 
-  return (
-    <div className="top-nav">
-        {navItems.map((item, index) => (
-            item.isLink ? (
-                <Link key={index} href={item.href} className={cn("nav-item", pathname === item.activePath ? "active" : "")}>
-                    {item.icon}
-                </Link>
-            ) : (
-                 <button key={index} onClick={onPlusClick} className="nav-item">
-                    {item.icon}
-                 </button>
-            )
-        ))}
-      <button onClick={handleProfileClick} className="nav-item profile-wrapper">
+      {/* REELS (PLUS) */}
+      <button onClick={onPlusClick} className="nav-item">
+        <svg className="nav-icon" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4" ry="4"/>
+          <polygon points="10,8 16,12 10,16"/>
+        </svg>
+      </button>
+
+      {/* SEND */}
+      <Link href="#" className="nav-item">
+        <svg className="nav-icon" viewBox="0 0 24 24">
+          <path d="M22 2 11 13"/>
+          <path d="M22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </Link>
+
+      {/* PROFILE */}
+      <button onClick={handleProfileClick} className="profile-wrapper">
         {profile && !loading && profile.avatarUrl ? (
-            <>
-                <Image
-                    src={profile.avatarUrl}
-                    alt="Profile"
-                    width={28}
-                    height={28}
-                    className={cn("profile-img", pathname === "/dashboard/profile" && "border-2 border-foreground" )}
-                    data-ai-hint={profile.avatarHint}
-                />
-                {pathname !== "/dashboard/profile" && <span className="dot"></span>}
-            </>
+          <>
+            <Image
+              src={profile.avatarUrl}
+              alt="Profile"
+              width={28}
+              height={28}
+              className={cn("profile-img", pathname === "/dashboard/profile" && "border-2 border-foreground")}
+              data-ai-hint={profile.avatarHint}
+            />
+            {pathname !== "/dashboard/profile" && <span className="dot"></span>}
+          </>
         ) : (
-            <div className="w-[28px] h-[28px] bg-zinc-800 rounded-full animate-pulse" />
+          <div className="w-[28px] h-[28px] bg-zinc-800 rounded-full animate-pulse" />
         )}
       </button>
     </div>

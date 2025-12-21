@@ -77,14 +77,14 @@ export default function PostPage() {
 
   return (
     <div className="bg-background text-foreground h-dvh flex flex-col overflow-hidden">
-        <header className="p-4 flex items-center justify-between text-foreground z-20 shrink-0">
+        <header className="p-4 flex items-center justify-between z-20 shrink-0">
           <div className="flex items-center gap-4">
             <Link href="/dashboard/profile">
               <ChevronLeft size={28} />
             </Link>
             <span className="text-xl font-bold">Your reels</span>
           </div>
-          <Button variant="ghost" size="icon" className="text-foreground rounded-full" onClick={() => setIsOptionsOpen(true)}>
+          <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setIsOptionsOpen(true)}>
             <MoreHorizontal size={28} />
           </Button>
         </header>
@@ -114,26 +114,26 @@ export default function PostPage() {
         
         <div className="absolute inset-0 flex flex-col justify-end z-10 pointer-events-none">
           
-          <div className="absolute right-3 bottom-4 flex flex-col gap-5 items-center text-white pointer-events-auto">
+          <div className="absolute right-3 bottom-4 flex flex-col gap-5 items-center pointer-events-auto">
             <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
                 <Heart size={28} />
               </Button>
               <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.likes || 0)}</span>
             </div>
             <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
                 <MessageCircle size={28} />
               </Button>
               <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.comments || 0)}</span>
             </div>
             <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
                 <Send size={28} />
               </Button>
               <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.shares || 0)}</span>
             </div>
-             <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
+             <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
                 <MoreHorizontal size={28} />
             </Button>
             <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden">
@@ -160,21 +160,21 @@ export default function PostPage() {
                   className="rounded-full"
                 />
               )}
-              <span className="font-bold text-white">{profile.username}</span>
+              <span className="font-bold text-foreground">{profile.username}</span>
             </div>
-            <p className="text-sm text-white/90">
+            <p className="text-sm text-foreground/90">
               {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
             </p>
             <div className="flex items-center gap-2 mt-2">
-              <Music2 size={16} className="text-white"/>
-              <p className="text-sm text-white/90 truncate">Original audio - {profile.username}</p>
+              <Music2 size={16} className="text-foreground"/>
+              <p className="text-sm text-foreground/90 truncate">Original audio - {profile.username}</p>
             </div>
             
-            <Separator className="bg-white/20 mt-3.5" />
+            <Separator className="bg-foreground/20 mt-3.5" />
           </div>
         </div>
       </div>
-      <div className="shrink-0 z-30 bg-transparent border-t border-zinc-800 pointer-events-auto">
+      <div className="shrink-0 z-30 bg-background border-t border-zinc-800 pointer-events-auto">
         <div className="flex justify-around gap-2 text-sm p-3">
           <Button
             variant="ghost"

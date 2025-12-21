@@ -305,7 +305,7 @@ export function UserProfile() {
       </div>
 
       <div className="flex justify-around border-t border-zinc-700">
-        <button className="p-3 border-t-2 border-white flex-1">
+        <button className="p-3 border-t-2 border-foreground flex-1">
           <Grid3x3 size={24} className="mx-auto" />
         </button>
         <button className="p-3 text-zinc-500 flex-1">
@@ -342,10 +342,10 @@ export function UserProfile() {
                   />
                 )
               )}
-              <div className="absolute top-2 right-2 text-white">
+              <div className="absolute top-2 right-2 text-foreground">
                 {post.type === 'reel' && <PlaySquare />}
               </div>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 text-white text-sm font-bold bg-black/30 px-1.5 py-0.5 rounded-md">
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 text-foreground text-sm font-bold bg-black/30 px-1.5 py-0.5 rounded-md">
                 <Eye size={16} />
                 {formatNumber(post.views || 0)}
               </div>

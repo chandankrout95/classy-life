@@ -150,11 +150,11 @@ export function AudienceSection({
                   onChange={(e) =>
                     handleDemographicChange(activeTab, idx, 'label', e.target.value)
                   }
-                  className="bg-transparent border-none p-0 h-auto text-xs font-medium flex-1 min-w-[120px] text-muted-foreground ring-1 ring-primary rounded-sm"
+                  className="bg-transparent border-none p-0 h-auto text-xs font-medium flex-1 min-w-[120px] text-foreground ring-1 ring-primary rounded-sm"
                   disabled={activeTab === 'gender'}
                 />
               ) : (
-                <span className="font-medium text-xs flex-1 min-w-0 text-muted-foreground">
+                <span className="font-medium text-sm flex-1 min-w-0 text-foreground">
                   {item.label}
                 </span>
               )}
@@ -167,14 +167,14 @@ export function AudienceSection({
                     onChange={(e) =>
                       handleDemographicChange(activeTab, idx, 'value', e.target.value)
                     }
-                    className="bg-transparent border-none p-0 h-auto text-right w-12 text-xs font-bold text-foreground ring-1 ring-primary rounded-sm"
+                    className="bg-transparent border-none p-0 h-auto text-right w-12 text-sm font-bold text-foreground ring-1 ring-primary rounded-sm"
                   />
                 ) : (
-                  <span className="font-bold text-xs text-foreground">
+                  <span className="font-bold text-sm text-foreground">
                     {clamp(item.value).toFixed(1)}
                   </span>
                 )}
-                <span className="text-xs text-foreground">%</span>
+                <span className="text-sm text-foreground">%</span>
               </div>
             </div>
             <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">

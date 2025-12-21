@@ -334,7 +334,7 @@ export default function ViewsPage() {
                                             <span className="text-xs sm:text-sm">%</span>
                                         </div>
                                     </div>
-                                    <Progress value={city.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName="bg-chart-1"/>
+                                    <Progress value={city.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1"/>
                                 </div>
                             ))}
                         </div>
@@ -351,7 +351,7 @@ export default function ViewsPage() {
                                             <span className="text-xs sm:text-sm">%</span>
                                         </div>
                                     </div>
-                                    <Progress value={country.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName="bg-chart-1"/>
+                                    <Progress value={country.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1"/>
                                 </div>
                             ))}
                         </div>
@@ -368,7 +368,7 @@ export default function ViewsPage() {
                                             <span className="text-xs sm:text-sm">%</span>
                                         </div>
                                     </div>
-                                    <Progress value={ageRange.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName="bg-chart-1"/>
+                                    <Progress value={ageRange.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1"/>
                                 </div>
                             ))}
                         </div>
@@ -385,7 +385,7 @@ export default function ViewsPage() {
                                             <span className="text-xs sm:text-sm">%</span>
                                         </div>
                                     </div>
-                                    <Progress value={gender.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={gender.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
+                                    <Progress value={gender.percentage} className="h-2 flex-1" indicatorClassName={gender.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
                                 </div>
                             ))}
                         </div>

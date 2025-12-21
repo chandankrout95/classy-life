@@ -180,7 +180,8 @@ export default function ReelInsightsPage() {
               <Image
                 src={post.imageUrl}
                 alt="Reel thumbnail"
-                fill
+                width={112}
+                height={192}
                 className="rounded-lg object-cover"
                 data-ai-hint={post.imageHint}
               />
@@ -358,7 +359,7 @@ export default function ReelInsightsPage() {
             </div>
             <div className="space-y-3">
                 <div className="space-y-2">
-                    <Progress value={post.viewRate || 0} className="h-2 bg-zinc-800" indicatorClassName="bg-chart-1" />
+                    <Progress value={post.viewRate || 0} className="h-2" />
                     <div className="flex justify-between items-center text-sm">
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-chart-1"></span>

@@ -69,7 +69,7 @@ export function ViewSourcesSection({ post, isEditing, onPostChange }: ViewSource
                   <span className="text-xs sm:text-sm">%</span>
                 </div>
               </div>
-              <Progress value={source.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName="bg-chart-1" />
+              <Progress value={source.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1" />
             </div>
           ))}
         </div>

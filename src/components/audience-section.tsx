@@ -120,21 +120,21 @@ export function AudienceSection({
         <Button
           onClick={() => setActiveTab('gender')}
           variant={activeTab === 'gender' ? 'secondary' : 'ghost'}
-          className="rounded-full h-8 px-3 text-xs sm:text-sm"
+          className="rounded-full h-8 px-3 text-xs"
         >
           Gender
         </Button>
         <Button
           onClick={() => setActiveTab('country')}
           variant={activeTab === 'country' ? 'secondary' : 'ghost'}
-          className="rounded-full h-8 px-3 text-xs sm:text-sm"
+          className="rounded-full h-8 px-3 text-xs"
         >
           Country
         </Button>
         <Button
           onClick={() => setActiveTab('age')}
           variant={activeTab === 'age' ? 'secondary' : 'ghost'}
-          className="rounded-full h-8 px-3 text-xs sm:text-sm"
+          className="rounded-full h-8 px-3 text-xs"
         >
           Age
         </Button>
@@ -177,7 +177,7 @@ export function AudienceSection({
                 <span className="text-xs text-zinc-400">%</span>
               </div>
             </div>
-            <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
               <div
                 className={cn(
                   "h-full rounded-full",

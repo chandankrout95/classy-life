@@ -55,23 +55,23 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
   }
 
   const isReelPage = pathname.includes('/post/') && !pathname.includes('/insights');
-  const isInsightsPage = pathname.includes('/insights');
-  const shouldShowTopNav = !isReelPage;
+  const shouldShowNav = !isReelPage;
 
 
   return (
     <>
-        {shouldShowTopNav && (
-            <div className="fixed top-0 left-0 right-0 z-20 bg-background border-b border-zinc-800">
+        <div className={`bg-background text-foreground min-h-screen ${shouldShowNav ? 'pb-14' : ''}`}>
+            {children}
+        </div>
+
+        {shouldShowNav && (
+            <div className="fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800">
                 <TopNav 
                     onPlusClick={() => setIsCreatingPost(true)}
                     userId={user.uid}
                 />
             </div>
         )}
-        <div className={`bg-background text-foreground min-h-screen ${shouldShowTopNav ? 'pt-14' : ''}`}>
-            {children}
-        </div>
 
         <CreatePostSheet
             isOpen={isCreatingPost}

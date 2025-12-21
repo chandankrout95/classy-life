@@ -91,7 +91,7 @@ export default function ProfessionalDashboardPage() {
     ]
 
   return (
-    <div className="bg-background text-white min-h-screen pb-24">
+    <div className="bg-background text-foreground min-h-screen pb-24">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b border-zinc-800">
         <div className="flex items-center gap-4">
           <Link href="/dashboard/profile">
@@ -123,7 +123,7 @@ export default function ProfessionalDashboardPage() {
                                     <Input
                                         value={item.value}
                                         onChange={(e) => handleUpdate(item.field, e.target.value)}
-                                        className="bg-transparent border-none p-0 h-auto text-right w-24 font-semibold text-white ring-1 ring-primary rounded-sm"
+                                        className="bg-transparent border-none p-0 h-auto text-right w-24 font-semibold text-foreground ring-1 ring-primary rounded-sm"
                                     />
                                 ) : (
                                     <span className="font-semibold">

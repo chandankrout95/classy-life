@@ -48,7 +48,7 @@ export default function ViewsPage() {
 
     if (!tempProfile) {
         return (
-            <div className="bg-black text-white min-h-screen flex items-center justify-center">
+            <div className="bg-background text-foreground min-h-screen flex items-center justify-center">
                 Could not load profile data.
             </div>
         );
@@ -172,8 +172,8 @@ export default function ViewsPage() {
     ];
 
     return (
-        <div className="bg-black text-white min-h-screen pb-8">
-        <header className="p-4 flex items-center justify-between sticky top-0 bg-black z-10 border-b border-zinc-800">
+        <div className="bg-background text-foreground min-h-screen pb-8">
+        <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b border-zinc-800">
             <div className="flex items-center gap-4">
             {!isEditing && (
                 <Link href="/dashboard">

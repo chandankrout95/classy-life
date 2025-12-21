@@ -76,15 +76,15 @@ export default function PostPage() {
   }
 
   return (
-    <div className="bg-background text-white h-dvh flex flex-col overflow-hidden">
-        <header className="p-4 flex items-center justify-between text-white z-20 shrink-0">
+    <div className="bg-background text-foreground h-dvh flex flex-col overflow-hidden">
+        <header className="p-4 flex items-center justify-between text-foreground z-20 shrink-0">
           <div className="flex items-center gap-4">
             <Link href="/dashboard/profile">
               <ChevronLeft size={28} />
             </Link>
             <span className="text-xl font-bold">Your reels</span>
           </div>
-          <Button variant="ghost" size="icon" className="text-white rounded-full" onClick={() => setIsOptionsOpen(true)}>
+          <Button variant="ghost" size="icon" className="text-foreground rounded-full" onClick={() => setIsOptionsOpen(true)}>
             <MoreHorizontal size={28} />
           </Button>
         </header>
@@ -160,13 +160,13 @@ export default function PostPage() {
                   className="rounded-full"
                 />
               )}
-              <span className="font-bold">{profile.username}</span>
+              <span className="font-bold text-white">{profile.username}</span>
             </div>
             <p className="text-sm text-white/90">
               {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
             </p>
             <div className="flex items-center gap-2 mt-2">
-              <Music2 size={16} />
+              <Music2 size={16} className="text-white"/>
               <p className="text-sm text-white/90 truncate">Original audio - {profile.username}</p>
             </div>
             
@@ -178,7 +178,7 @@ export default function PostPage() {
         <div className="flex justify-around gap-2 text-sm p-3">
           <Button
             variant="ghost"
-            className="text-white flex-1 justify-center p-0 h-auto"
+            className="text-foreground flex-1 justify-center p-0 h-auto"
             onClick={() => router.push(`/dashboard/post/${id}/insights`)}
           >
             <BarChart className="mr-2 h-4 w-4" />
@@ -186,7 +186,7 @@ export default function PostPage() {
           </Button>
           <Button
             variant="ghost"
-            className="text-white flex-1 justify-center p-0 h-auto"
+            className="text-foreground flex-1 justify-center p-0 h-auto"
           >
             <Zap className="mr-2 h-4 w-4" />
             Boost reel

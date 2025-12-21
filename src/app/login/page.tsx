@@ -12,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 import { InsightForgeLogo } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -106,22 +107,25 @@ export default function LoginPage() {
     const isFormLoading = isLoading || isGoogleLoading || isPending;
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
+            <div className="absolute top-4 right-4">
+                <ThemeToggle />
+            </div>
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
                     <InsightForgeLogo className="w-12 h-12 text-primary mx-auto" />
-                    <h1 className="text-3xl font-bold text-white mt-4">Welcome to Classy Life</h1>
-                    <p className="text-zinc-400">
+                    <h1 className="text-3xl font-bold mt-4">Welcome to Classy Life</h1>
+                    <p className="text-muted-foreground">
                         {mode === 'signin' ? 'Sign in to continue' : 'Create an account to get started'}
                     </p>
                 </div>
 
-                <div className="bg-zinc-900 p-8 rounded-2xl shadow-lg border border-zinc-800">
+                <div className="bg-card p-8 rounded-2xl shadow-lg border">
                     <form onSubmit={handleAuthAction}>
                         <div className="space-y-4">
                             {mode === 'signup' && (
                                 <div>
-                                    <Label htmlFor="name" className="text-zinc-400">Name</Label>
+                                    <Label htmlFor="name" className="text-muted-foreground">Name</Label>
                                     <Input
                                         id="name"
                                         type="text"
@@ -129,12 +133,12 @@ export default function LoginPage() {
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Your Name"
                                         required
-                                        className="bg-zinc-800 border-zinc-700 text-white"
+                                        className="bg-input border-border"
                                     />
                                 </div>
                             )}
                             <div>
-                                <Label htmlFor="email" className="text-zinc-400">Email</Label>
+                                <Label htmlFor="email" className="text-muted-foreground">Email</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -142,11 +146,11 @@ export default function LoginPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="name@example.com"
                                     required
-                                    className="bg-zinc-800 border-zinc-700 text-white"
+                                    className="bg-input border-border"
                                 />
                             </div>
                             <div>
-                                <Label htmlFor="password" className="text-zinc-400">Password</Label>
+                                <Label htmlFor="password" className="text-muted-foreground">Password</Label>
                                 <Input
                                     id="password"
                                     type="password"
@@ -154,7 +158,7 @@ export default function LoginPage() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="bg-zinc-800 border-zinc-700 text-white"
+                                    className="bg-input border-border"
                                 />
                             </div>
                         </div>
@@ -165,20 +169,20 @@ export default function LoginPage() {
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-zinc-700" />
+                            <span className="w-full border-t border-border" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-zinc-900 px-2 text-zinc-400">
+                            <span className="bg-card px-2 text-muted-foreground">
                                 Or continue with
                             </span>
                         </div>
                     </div>
 
-                    <Button variant="outline" className="w-full bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700" onClick={handleGoogleSignIn} disabled={isFormLoading}>
+                    <Button variant="outline" className="w-full bg-card border-border hover:bg-accent" onClick={handleGoogleSignIn} disabled={isFormLoading}>
                          {isGoogleLoading ? <Loader2 className="animate-spin" /> : <><GoogleIcon className="mr-2" /> Google</>}
                     </Button>
 
-                    <p className="text-center text-sm text-zinc-400 mt-6">
+                    <p className="text-center text-sm text-muted-foreground mt-6">
                         {mode === 'signin' ? "Don't have an account? " : "Already have an account? "}
                         <button onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')} className="font-medium text-primary hover:underline">
                             {mode === 'signin' ? 'Sign up' : 'Sign in'}

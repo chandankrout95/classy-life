@@ -89,7 +89,7 @@ const applyDemoDataFlow = ai.defineFlow(
     outputSchema: ApplyDemoDataOutputSchema,
   },
   async input => {
-    const {output} = await applyDemoDataFlow(input);
+    const {output} = await applyDemoDataPrompt(input);
     return output!;
   }
 );

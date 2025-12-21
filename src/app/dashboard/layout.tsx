@@ -5,11 +5,11 @@ import React, { useState } from 'react';
 import type { Post } from '@/lib/types';
 import { useUser, useFirestore } from '@/firebase';
 import { updateDoc, arrayUnion, doc } from 'firebase/firestore';
-import { BottomNav } from '@/components/bottom-nav';
 import { CreatePostSheet } from '@/components/create-post-sheet';
 import { Loader2 } from 'lucide-react';
 import { DashboardProvider, useDashboard } from './context';
 import { usePathname } from 'next/navigation';
+import { TopNav } from '@/components/top-nav';
 
 function DashboardCore({ children }: { children: React.ReactNode }) {
   const { user, loading: userLoading } = useUser();
@@ -56,29 +56,28 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
 
   const isReelPage = pathname.includes('/post/') && !pathname.includes('/insights');
   const isInsightsPage = pathname.includes('/insights');
-  const shouldShowBottomNav = !isReelPage;
+  const shouldShowTopNav = !isReelPage;
 
 
   return (
     <>
-      <div className={`bg-background text-foreground min-h-screen ${shouldShowBottomNav ? 'pb-24' : ''}`}>
-        {children}
-      </div>
-      
-      {shouldShowBottomNav && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800">
-          <BottomNav 
-            onPlusClick={() => setIsCreatingPost(true)}
-            userId={user.uid}
-          />
+        {shouldShowTopNav && (
+            <div className="fixed top-0 left-0 right-0 z-20 bg-background border-b border-zinc-800">
+                <TopNav 
+                    onPlusClick={() => setIsCreatingPost(true)}
+                    userId={user.uid}
+                />
+            </div>
+        )}
+        <div className={`bg-background text-foreground min-h-screen ${shouldShowTopNav ? 'pt-14' : ''}`}>
+            {children}
         </div>
-      )}
 
-      <CreatePostSheet
-        isOpen={isCreatingPost}
-        onOpenChange={setIsCreatingPost}
-        onPostCreate={handleCreatePost}
-      />
+        <CreatePostSheet
+            isOpen={isCreatingPost}
+            onOpenChange={setIsCreatingPost}
+            onPostCreate={handleCreatePost}
+        />
     </>
   );
 }

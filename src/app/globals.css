@@ -91,4 +91,47 @@
   .no-spinner {
     -moz-appearance: textfield;
   }
+
+  .top-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+    background-color: hsl(var(--background));
+  }
+
+  .nav-icon {
+    width: 26px;
+    height: 26px;
+    stroke: hsl(var(--foreground));
+    fill: none;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  .dark .nav-icon {
+      stroke: hsl(var(--foreground));
+  }
+
+  .profile-wrapper {
+    position: relative;
+  }
+
+  .profile-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+
+  .dot {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    border: 2px solid hsl(var(--background));
+  }
 }

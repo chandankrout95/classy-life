@@ -211,13 +211,13 @@ export default function ReelInsightsPage() {
 
         <div className="flex justify-around text-center border-b border-zinc-800 py-4">
           <div className="flex flex-col items-center">
-            <Heart size={20} className="fill-foreground" />
+            <Heart size={20} className="fill-current" />
             <span className="text-xs mt-1">{isEditing ? (
                 <Input type="number" value={post.likes || 0} onChange={(e) => handleSimpleFieldChange('likes', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center"/>
             ) : formatNumber(post.likes || 0)}</span>
           </div>
           <div className="flex flex-col items-center">
-            <MessageCircle size={20} className="fill-foreground" />
+            <MessageCircle size={20} className="fill-current" />
             <span className="text-xs mt-1">{isEditing ? (
                 <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center"/>
             ) : formatNumber(post.comments || 0)}</span>
@@ -235,7 +235,7 @@ export default function ReelInsightsPage() {
             ) : formatNumber(post.reposts || 0)}</span>
           </div>
           <div className="flex flex-col items-center">
-            <Bookmark size={20} className="fill-foreground"/>
+            <Bookmark size={20} className="fill-current"/>
             <span className="text-xs mt-1">{isEditing ? (
                 <Input type="number" value={post.saves || 0} onChange={(e) => handleSimpleFieldChange('saves', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center"/>
             ) : formatNumber(post.saves || 0)}</span>
@@ -351,8 +351,8 @@ export default function ReelInsightsPage() {
                   key={filter}
                   variant={activeFilter === filter ? "secondary" : "ghost"}
                   onClick={() => setActiveFilter(filter)}
-                  className={cn("rounded-full h-8 text-xs sm:text-sm", 
-                    activeFilter !== filter && "bg-zinc-800 hover:bg-zinc-700"
+                  className={cn("rounded-full h-8 px-4 text-xs sm:text-sm", 
+                    activeFilter !== filter && "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   )}
                 >
                   {filter}
@@ -524,6 +524,3 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
-
-    
-    

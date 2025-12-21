@@ -140,9 +140,9 @@ export function AudienceSection({
         </Button>
       </div>
 
-      <div className="flex flex-col gap-4" aria-live="polite">
+      <div className="flex flex-col gap-3" aria-live="polite">
         {currentData.map((item, idx) => (
-          <div key={idx} className="flex flex-col gap-2">
+          <div key={idx} className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center w-full">
               {isEditing ? (
                 <Input
@@ -150,11 +150,11 @@ export function AudienceSection({
                   onChange={(e) =>
                     handleDemographicChange(activeTab, idx, 'label', e.target.value)
                   }
-                  className="bg-transparent border-none p-0 h-auto text-[13px] font-semibold flex-1 min-w-[120px] text-foreground ring-1 ring-primary rounded-sm"
+                  className="bg-transparent border-none p-0 h-auto text-xs font-semibold flex-1 min-w-[120px] text-foreground ring-1 ring-primary rounded-sm"
                   disabled={activeTab === 'gender'}
                 />
               ) : (
-                <span className="font-semibold text-[13px] flex-1 min-w-0 text-foreground">
+                <span className="font-semibold text-xs flex-1 min-w-0 text-foreground">
                   {item.label}
                 </span>
               )}
@@ -167,17 +167,17 @@ export function AudienceSection({
                     onChange={(e) =>
                       handleDemographicChange(activeTab, idx, 'value', e.target.value)
                     }
-                    className="bg-transparent border-none p-0 h-auto text-right w-12 text-sm font-semibold text-zinc-400 ring-1 ring-primary rounded-sm"
+                    className="bg-transparent border-none p-0 h-auto text-right w-12 text-xs font-semibold text-zinc-400 ring-1 ring-primary rounded-sm"
                   />
                 ) : (
-                  <span className="font-semibold text-sm text-zinc-400">
+                  <span className="font-semibold text-xs text-zinc-400">
                     {clamp(item.value).toFixed(1)}
                   </span>
                 )}
-                <span className="text-sm text-zinc-400">%</span>
+                <span className="text-xs text-zinc-400">%</span>
               </div>
             </div>
-            <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
               <div
                 className={cn(
                   "h-full rounded-full",

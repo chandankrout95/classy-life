@@ -176,14 +176,15 @@ export default function ReelInsightsPage() {
       <main className="p-4 space-y-6">
         <div className="flex flex-col items-center text-center gap-4">
           {post.imageUrl && (
-            <Image
-              src={post.imageUrl}
-              alt="Reel thumbnail"
-              width={90}
-              height={160}
-              className="rounded-lg object-cover"
-              data-ai-hint={post.imageHint}
-            />
+            <div className="relative w-28 h-48">
+              <Image
+                src={post.imageUrl}
+                alt="Reel thumbnail"
+                fill
+                className="rounded-lg object-cover"
+                data-ai-hint={post.imageHint}
+              />
+            </div>
           )}
           <div className="flex-1">
             {isEditing ? (

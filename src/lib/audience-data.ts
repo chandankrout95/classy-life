@@ -17,3 +17,8 @@ export const DEMO_AGE_DATA = [
   { range: '25-34', percentage: 79.2 },
   { range: '35-44', percentage: 4.2 },
 ];
+
+export const DEMO_INTERACTIONS_BREAKDOWN = {
+  followers: 70,
+  nonFollowers: 30,
+};

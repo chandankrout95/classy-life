@@ -33,6 +33,7 @@ import { ViewSourcesSection } from "@/components/view-sources-section";
 import { AudienceSection } from "@/components/audience-section";
 import { ViewsBreakdownSection } from "@/components/views-breakdown-section";
 import { MonetizationSection } from "@/components/monetization-section";
+import { DEMO_INTERACTIONS_BREAKDOWN } from "@/lib/audience-data";
 
 
 export default function ReelInsightsPage() {
@@ -152,8 +153,7 @@ export default function ReelInsightsPage() {
   }
   
   const retentionData = post?.retentionData || [];
-  const defaultInteractionsBreakdown = { followers: 70, nonFollowers: 30 };
-  const interactionsData = post?.interactionsBreakdown || defaultInteractionsBreakdown;
+  const interactionsData = post?.interactionsBreakdown || DEMO_INTERACTIONS_BREAKDOWN;
   const likesOverTimeData = post?.likesOverTime || defaultLikesOverTime;
 
 
@@ -161,7 +161,7 @@ export default function ReelInsightsPage() {
     <div className="bg-background text-foreground min-h-screen">
        <header className="p-4 grid grid-cols-3 items-center sticky top-0 bg-background z-10">
         <div className="flex justify-start">
-          <Link href={`/dashboard/post/${id}`}>
+          <Link href={`/dashboard/reel/${id}`}>
             <ChevronLeft size={28} />
           </Link>
         </div>
@@ -286,7 +286,7 @@ export default function ReelInsightsPage() {
             <Info size={16} className="text-zinc-400" />
           </div>
           <div className="mt-4 flex justify-center">
-            <div className="relative bg-zinc-800 w-28 h-48 rounded-lg flex items-center justify-center overflow-hidden">
+            <div className="relative w-28 h-48 rounded-lg flex items-center justify-center overflow-hidden">
                 <Image
                     src={post.imageUrl}
                     alt={post.caption || "Reel thumbnail"}
@@ -524,5 +524,3 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
-
-    

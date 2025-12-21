@@ -181,12 +181,12 @@ export default function ReelInsightsPage() {
       <main className="p-4 space-y-6">
         <div className="flex flex-col items-center text-center gap-4">
           {post.imageUrl && (
-            <div className="relative w-28 h-96">
+            <div className="relative w-28 h-48">
               <Image
                 src={post.imageUrl}
                 alt="Reel thumbnail"
                 width={112}
-                height={384}
+                height={192}
                 className="rounded-lg object-cover"
                 data-ai-hint={post.imageHint}
               />
@@ -407,14 +407,14 @@ export default function ReelInsightsPage() {
                         <span className="w-2 h-2 rounded-full bg-chart-1"></span>
                         <span>Followers</span>
                     </div>
-                   <Input type="number" value={interactionsData.followers || 0} onChange={(e) => handleBreakdownChange('interactionsBreakdown', 'followers', e.target.value)} className="w-20 text-right bg-transparent"/>
+                   {isEditing ? <Input type="number" value={interactionsData.followers || 0} onChange={(e) => handleBreakdownChange('interactionsBreakdown', 'followers', e.target.value)} className="w-20 text-right bg-transparent"/> : <p>{interactionsData.followers}%</p>}
                 </div>
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-chart-2"></span>
                         <span>Non-followers</span>
                     </div>
-                    <Input type="number" value={interactionsData.nonFollowers || 0} onChange={(e) => handleBreakdownChange('interactionsBreakdown', 'nonFollowers', e.target.value)} className="w-20 text-right bg-transparent"/>
+                    {isEditing ? <Input type="number" value={interactionsData.nonFollowers || 0} onChange={(e) => handleBreakdownChange('interactionsBreakdown', 'nonFollowers', e.target.value)} className="w-20 text-right bg-transparent"/> : <p>{interactionsData.nonFollowers}%</p>}
                 </div>
             </div>
           </div>
@@ -529,9 +529,3 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
-
-    
-
-    
-
-    

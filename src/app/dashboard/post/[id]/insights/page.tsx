@@ -20,7 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Post, RetentionData } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useDashboard } from "@/app/dashboard/context";
 import { Progress } from "@/components/ui/progress";
@@ -351,7 +351,9 @@ export default function ReelInsightsPage() {
                   key={filter}
                   variant={activeFilter === filter ? "secondary" : "ghost"}
                   onClick={() => setActiveFilter(filter)}
-                  className={`rounded-full h-8 text-xs sm:text-sm ${activeFilter === filter ? 'bg-zinc-200 text-black hover:bg-zinc-300' : 'bg-zinc-800 hover:bg-zinc-700'}`}
+                  className={cn("rounded-full h-8 text-xs sm:text-sm", 
+                    activeFilter !== filter && "bg-zinc-800 hover:bg-zinc-700"
+                  )}
                 >
                   {filter}
                 </Button>
@@ -359,7 +361,7 @@ export default function ReelInsightsPage() {
             </div>
             <div className="space-y-3">
                 <div className="space-y-2">
-                    <Progress value={post.viewRate || 0} className="h-2" />
+                    <Progress value={post.viewRate || 0} className="h-2" indicatorClassName="bg-chart-1" />
                     <div className="flex justify-between items-center text-sm">
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-chart-1"></span>
@@ -522,3 +524,5 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
+
+    

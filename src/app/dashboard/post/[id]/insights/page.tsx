@@ -402,14 +402,14 @@ export default function ReelInsightsPage() {
                         <span className="w-2 h-2 rounded-full bg-chart-1"></span>
                         <span>Followers</span>
                     </div>
-                    {isEditing ? <Input type="number" value={interactionsData.followers || 0} onChange={(e) => handleBreakdownChange('interactionsBreakdown', 'followers', e.target.value)} className="w-20 text-right bg-transparent"/> : <span>{interactionsData.followers || 0}%</span>}
+                   {isEditing ? <p className="ring-1 ring-primary rounded-sm px-2 py-1 w-20 text-right bg-transparent">{interactionsData.followers || 0}%</p> : <span>{interactionsData.followers || 0}%</span>}
                 </div>
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-chart-2"></span>
                         <span>Non-followers</span>
                     </div>
-                    {isEditing ? <Input type="number" value={interactionsData.nonFollowers || 0} onChange={(e) => handleBreakdownChange('interactionsBreakdown', 'nonFollowers', e.target.value)} className="w-20 text-right bg-transparent"/> : <span>{interactionsData.nonFollowers || 0}%</span>}
+                    {isEditing ? <p className="ring-1 ring-primary rounded-sm px-2 py-1 w-20 text-right bg-transparent">{interactionsData.nonFollowers || 0}%</p> : <span>{interactionsData.nonFollowers || 0}%</span>}
                 </div>
             </div>
           </div>
@@ -524,3 +524,5 @@ export default function ReelInsightsPage() {
     </div>
   );
 }
+
+    

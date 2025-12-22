@@ -280,8 +280,8 @@ export function UserProfile() {
       </div>
 
       <Button
-        variant="ghost"
-        className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto bg-zinc-900 hover:bg-zinc-800"
+        variant="secondary"
+        className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto"
         onClick={() => router.push("/dashboard")}
       >
         <div>
@@ -381,6 +381,5 @@ export function UserProfile() {
     </>
   );
 }
-
     
     

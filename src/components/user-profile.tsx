@@ -65,6 +65,8 @@ export function UserProfile() {
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
   const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
+  const [activeTab, setActiveTab] = useState('grid');
+
 
   useEffect(() => {
     if (formData) {
@@ -304,18 +306,40 @@ export function UserProfile() {
         </Button>
       </div>
 
-      <div className="flex justify-around border-t border-zinc-700">
-        <button className="p-3 border-t-2 border-foreground flex-1">
-          <Grid3x3 size={24} className="mx-auto" />
+      <div className="profile-tabs">
+        <button onClick={() => setActiveTab('grid')}>
+          <svg className={`tab-icon ${activeTab === 'grid' ? 'active' : ''}`} viewBox="0 0 24 24">
+            <rect x="3" y="3" width="4" height="4"/>
+            <rect x="10" y="3" width="4" height="4"/>
+            <rect x="17" y="3" width="4" height="4"/>
+            <rect x="3" y="10" width="4" height="4"/>
+            <rect x="10" y="10" width="4" height="4"/>
+            <rect x="17" y="10" width="4" height="4"/>
+            <rect x="3" y="17" width="4" height="4"/>
+            <rect x="10" y="17" width="4" height="4"/>
+            <rect x="17" y="17" width="4" height="4"/>
+          </svg>
         </button>
-        <button className="p-3 text-zinc-500 flex-1">
-          <PlaySquare size={24} className="mx-auto" />
+        <button onClick={() => setActiveTab('reels')}>
+          <svg className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`} viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="4"/>
+            <polygon points="10,8 16,12 10,16"/>
+          </svg>
         </button>
-        <button className="p-3 text-zinc-500 flex-1">
-          <Repeat size={24} className="mx-auto" style={{ transform: 'scaleX(-1)' }} />
+        <button onClick={() => setActiveTab('repost')}>
+          <svg className={`tab-icon ${activeTab === 'repost' ? 'active' : ''}`} viewBox="0 0 24 24">
+            <path d="M17 1l4 4-4 4"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
         </button>
-        <button className="p-3 text-zinc-500 flex-1">
-          <Contact size={24} className="mx-auto" />
+        <button onClick={() => setActiveTab('tagged')}>
+          <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24">
+            <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/>
+            <circle cx="12" cy="11" r="3"/>
+            <path d="M7 18c1.5-2 8.5-2 10 0"/>
+          </svg>
         </button>
       </div>
 

@@ -134,4 +134,38 @@
     border-radius: 50%;
     border: 2px solid hsl(var(--background));
   }
+
+  .profile-tabs {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+  }
+
+  .tab-icon {
+    width: 26px;
+    height: 26px;
+    stroke: #888;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .dark .tab-icon {
+    stroke: #888;
+  }
+  
+  .tab-icon.active {
+    stroke: hsl(var(--foreground));
+    fill: hsl(var(--foreground));
+  }
+
+  .dark .tab-icon.active {
+    stroke: hsl(var(--foreground));
+    fill: hsl(var(--foreground));
+  }
+
 }

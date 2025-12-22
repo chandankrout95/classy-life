@@ -1,5 +1,5 @@
 import {
-  BarChart2,
+  BarChart,
   Clock,
   Eye,
   Heart,
@@ -28,7 +28,7 @@ const metricConfig: {
   { key: "saves", label: "Saves", icon: Bookmark, editable: true },
   { key: "shares", label: "Shares", icon: Share2, editable: true },
   { key: "reach", label: "Reach", icon: Users, editable: true },
-  { key: "impressions", label: "Impressions", icon: BarChart2, editable: true },
+  { key: "impressions", label: "Impressions", icon: BarChart, editable: true },
   { key: "avg_watch_time", label: "Avg. Watch Time (s)", icon: Clock, editable: true },
 ];
 

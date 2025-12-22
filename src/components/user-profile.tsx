@@ -281,7 +281,7 @@ export function UserProfile() {
 
       <Button
         variant="ghost"
-        className="w-full bg-zinc-800 hover:bg-zinc-700 p-3 rounded-lg mb-4 text-left justify-between h-auto"
+        className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto hover:bg-zinc-800"
         onClick={() => router.push("/dashboard")}
       >
         <div>

@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import {
   Sheet,
@@ -10,48 +9,55 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import { Post, VideoInsight } from "@/lib/types";
-import { Film, Grid, X, ChevronLeft, Folder } from "lucide-react";
+import { 
+  PlaySquare, 
+  Grid3x3, 
+  ChevronLeft, 
+  X, 
+  Loader2, 
+  Scissors, 
+  Clapperboard, 
+  MonitorPlay, 
+  Sparkles, 
+  Megaphone 
+} from "lucide-react";
 import { applyDemoDataAction } from "@/app/actions";
-import { PublicMediaSelectionDialog } from "./public-media-selection-dialog";
-
-interface CreatePostSheetProps {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  onPostCreate: (newPost: Omit<Post, "id" | "createdAt">) => void;
-}
-
-type Stage = "selectType" | "createPost";
-type MediaType = "image" | "reel";
+import { useFirebase } from "@/firebase";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
 export function CreatePostSheet({
   isOpen,
   onOpenChange,
   onPostCreate,
-}: CreatePostSheetProps) {
-  const [stage, setStage] = useState<Stage>("selectType");
-  const [media, setMedia] = useState<{ uri: string; type: MediaType, hint: string } | null>(
-    null
-  );
+}: {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  onPostCreate: (newPost: Omit<Post, "id" | "createdAt">) => void;
+}) {
+  const { storage } = useFirebase();
+  const [stage, setStage] = useState<"selectType" | "createPost">("selectType");
+  const [isUploading, setIsUploading] = useState(false);
+  const [media, setMedia] = useState<{ uri: string; type: "image" | "reel"; hint: string } | null>(null);
   const [caption, setCaption] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isPublicMediaDialogOpen, setIsPublicMediaDialogOpen] = useState(false);
+  const [pendingType, setPendingType] = useState<"image" | "reel" | null>(null);
 
+  const handleTypeClick = (type: "image" | "reel") => {
+    setPendingType(type);
+    fileInputRef.current?.click();
+  };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    if (e.target.files && e.target.files[0]) {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0] && pendingType) {
       const file = e.target.files[0];
-      const type = file.type.startsWith('video/') ? 'reel' : 'image';
       const reader = new FileReader();
       reader.onload = (loadEvent) => {
         if (loadEvent.target?.result) {
           setMedia({
             uri: loadEvent.target.result as string,
-            type: type,
+            type: pendingType,
             hint: file.name,
           });
           setStage("createPost");
@@ -60,53 +66,87 @@ export function CreatePostSheet({
       reader.readAsDataURL(file);
     }
   };
-  
-  const handlePublicMediaSelect = (media: {url: string, hint: string, type: MediaType}) => {
-     setMedia({ uri: media.url, type: media.type, hint: media.hint });
-     setCaption(media.hint);
-     setStage('createPost');
-     setIsPublicMediaDialogOpen(false);
-  }
 
+  const uploadMedia = async (): Promise<string> => {
+    if (!media) return "";
+
+    const formData = new FormData();
+    formData.append("file", media.uri);
+    
+    // Check if it's a reel or image to set the correct preset and resource type
+    const isReel = media.type === "reel";
+    
+    // If it's a reel, use your video preset. If image, Cloudinary handles it as 'image' by default.
+    formData.append("upload_preset", isReel ? "video_reels" : "photo_posts"); 
+    formData.append("resource_type", isReel ? "video" : "image");
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/dlprwkqzj/${isReel ? 'video' : 'image'}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error?.message || "Upload to Cloudinary failed");
+      }
+
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary Error:", error);
+      throw error;
+    }
+  };
   const handleShare = async () => {
-    if (media) {
-      let newPostData: Omit<Post, "id" | "createdAt"> = {
-        imageUrl: media.uri,
+    if (!media) return;
+    setIsUploading(true);
+
+    try {
+      // 1. Upload file to Cloudinary or Firebase
+      const remoteUrl = await uploadMedia();
+      
+      // 2. Base post data with default metrics
+      let finalPostData: Omit<Post, "id" | "createdAt"> = {
+        imageUrl: remoteUrl,
         imageHint: media.hint,
         caption,
         type: media.type,
+        views: 0,
+        likes: 0,
+        comments: 0
       };
 
+      // 3. Attempt to get AI Demo Data (failsafe wrapper)
       try {
         const mockInsight: VideoInsight = {
-            videoId: `temp-${Date.now()}`,
-            title: caption || "New Post",
-            thumbnailUrl: media.uri,
-            metrics: { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, reach: 0, impressions: 0, avg_watch_time: 0 },
-            timeseries: [],
-            countryBreakdown: [],
-            lastEdited: new Date().toISOString(),
-            isDemo: false
+          videoId: `temp-${Date.now()}`,
+          title: caption || "New Post",
+          thumbnailUrl: remoteUrl,
+          metrics: { views: 0, likes: 0, comments: 0, saves: 0, shares: 0, reach: 0, impressions: 0, avg_watch_time: 0 },
+          timeseries: [],
+          countryBreakdown: [],
+          lastEdited: new Date().toISOString(),
+          isDemo: false
         };
 
         const aiResult = await applyDemoDataAction(mockInsight);
-
-        newPostData = {
-          ...newPostData,
-          ...aiResult,
-        };
-      } catch (error) {
-        console.error("Failed to apply demo data, creating post with default metrics.", error);
-        newPostData = {
-            ...newPostData,
-            views: 0,
-            likes: 0,
-            comments: 0
-        }
+        finalPostData = { ...finalPostData, ...aiResult };
+      } catch (aiError) {
+        console.warn("AI insights failed, using default metrics", aiError);
+        // We continue anyway so the post is created
       }
 
-      onPostCreate(newPostData);
+      onPostCreate(finalPostData);
       reset();
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Error: " + (error as Error).message);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -114,132 +154,78 @@ export function CreatePostSheet({
     setStage("selectType");
     setMedia(null);
     setCaption("");
+    setPendingType(null);
     onOpenChange(false);
   };
 
-  const handleBack = () => {
-    if (stage === "createPost") {
-      setStage("selectType");
-      setMedia(null);
-      setCaption("");
-    } else {
-      reset();
-    }
-  };
-
-  const getTitle = () => {
-    switch (stage) {
-      case "selectType":
-        return "Create";
-      case "createPost":
-        return "New post";
-      default:
-        return "Create";
-    }
-  };
-  
-
   return (
-    <>
-      <Sheet open={isOpen} onOpenChange={onOpenChange}>
-        <SheetContent
-          side="bottom"
-          className="bg-zinc-900 text-white border-t-zinc-800 rounded-t-2xl h-[90vh]"
-          showClose={false}
-        >
-          <SheetHeader className="text-left relative border-b border-zinc-800">
-            <SheetTitle className="text-center text-lg font-semibold">
-              {getTitle()}
-            </SheetTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-0 top-1/2 -translate-y-1/2"
-              onClick={handleBack}
-            >
-              {stage === "selectType" ? <X /> : <ChevronLeft />}
-            </Button>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <SheetContent side="bottom" className="bg-[#121212] text-white border-t-zinc-800 rounded-t-[20px] p-0 overflow-hidden h-auto max-h-[90vh]">
+        <div className="w-10 h-1 bg-zinc-700 rounded-full mx-auto my-3" />
+        
+        <SheetHeader className="px-4 pb-2 border-b border-zinc-800 flex-row items-center justify-between space-y-0">
+          <Button variant="ghost" size="icon" onClick={() => (stage === "createPost" ? setStage("selectType") : onOpenChange(false))}>
+            {stage === "selectType" ? <X /> : <ChevronLeft />}
+          </Button>
+          <SheetTitle className="text-white font-bold text-base">
+            {stage === "selectType" ? "Create" : "New post"}
+          </SheetTitle>
+          <div className="w-10 flex justify-end">
             {stage === "createPost" && (
-              <Button
-                variant="link"
-                className="absolute right-0 top-1/2 -translate-y-1/2"
-                onClick={handleShare}
-              >
-                Share
+              <Button variant="link" className="text-blue-500 font-bold p-0" onClick={handleShare} disabled={isUploading}>
+                {isUploading ? <Loader2 className="animate-spin w-4 h-4" /> : "Share"}
               </Button>
             )}
-          </SheetHeader>
+          </div>
+        </SheetHeader>
 
-          {stage === "selectType" && (
-            <div className="p-4 flex flex-col justify-center items-center h-full">
-              <div className="space-y-4">
-                <Button
-                  variant="ghost"
-                  className="flex items-center gap-4 text-xl p-6"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <Grid size={28} />
-                  <span>From gallery</span>
-                </Button>
-                 <Button
-                  variant="ghost"
-                  className="flex items-center gap-4 text-xl p-6"
-                  onClick={() => setIsPublicMediaDialogOpen(true)}
-                >
-                  <Folder size={28} />
-                  <span>From public folder</span>
-                </Button>
+        {stage === "selectType" ? (
+          <div className="flex flex-col py-2 mb-4">
+            <MenuOption icon={<PlaySquare />} label="Reel" onClick={() => handleTypeClick("reel")} />
+            <MenuOption icon={<Scissors />} label="Edits" />
+            <MenuOption icon={<Grid3x3 />} label="Post" onClick={() => handleTypeClick("image")} />
+            <MenuOption icon={<Clapperboard />} label="Story" />
+            <MenuOption icon={<MonitorPlay />} label="Highlight" />
+            <MenuOption icon={<Sparkles />} label="AI" />
+            <MenuOption icon={<Megaphone />} label="Ad" />
+          </div>
+        ) : (
+          <div className="p-4 space-y-4 pb-10">
+            <div className="flex gap-4">
+              <div className="w-20 h-20 bg-zinc-800 rounded-md overflow-hidden flex-shrink-0">
+                {media?.type === "image" ? (
+                  <img src={media.uri} alt="preview" className="object-cover h-full w-full" />
+                ) : (
+                  <video key={media?.uri} src={media?.uri} className="object-cover h-full w-full" muted autoPlay playsInline loop />
+                )}
               </div>
-              <Input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                accept="image/*,video/*"
+              <Textarea 
+                placeholder="Write a caption..." 
+                className="bg-transparent border-none focus-visible:ring-0 text-white resize-none p-0"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
               />
             </div>
-          )}
+          </div>
+        )}
 
-          {stage === "createPost" && media && (
-            <div className="p-4 space-y-4">
-              <div className="flex items-start gap-4">
-                {media.type === "image" ? (
-                  <Image
-                    src={media.uri}
-                    alt="New post preview"
-                    width={80}
-                    height={80}
-                    className="rounded-md object-cover"
-                  />
-                ) : (
-                  <video
-                    src={media.uri}
-                    width={80}
-                    height={142}
-                    className="rounded-md object-cover aspect-[9/16]"
-                    autoPlay
-                    loop
-                    muted
-                  />
-                )}
-                <Textarea
-                  placeholder="Write a caption..."
-                  value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                  className="bg-transparent border-none focus:ring-0 text-base p-0"
-                  rows={4}
-                />
-              </div>
-            </div>
-          )}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          className="hidden" 
+          accept={pendingType === "reel" ? "video/*" : "image/*"} 
+          onChange={handleFileChange} 
+        />
+      </SheetContent>
+    </Sheet>
+  );
+}
 
-        </SheetContent>
-      </Sheet>
-      <PublicMediaSelectionDialog
-        isOpen={isPublicMediaDialogOpen}
-        onOpenChange={setIsPublicMediaDialogOpen}
-        onMediaSelect={handlePublicMediaSelect}
-      />
-    </>
+function MenuOption({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick?: () => void }) {
+  return (
+    <button onClick={onClick} className="flex items-center gap-4 px-4 py-4 hover:bg-zinc-800/50 transition-colors w-full text-left border-b border-zinc-900/30">
+      {icon}
+      <span className="text-[16px] font-normal">{label}</span>
+    </button>
   );
 }

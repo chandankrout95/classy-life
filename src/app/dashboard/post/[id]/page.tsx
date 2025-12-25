@@ -177,7 +177,7 @@ export default function PostPage() {
             </div>
 
             {/* like comment sound */}
-            <div className="absolute right-3 bottom-0 flex flex-col gap-5 items-center pointer-events-auto">
+            <div className="absolute right-3 bottom-0 flex flex-col gap-5 items-center pointer-events-auto text-white">
               <div className="flex flex-col items-center">
                 <div className="p-1 rounded-full hover:bg-foreground/10 cursor-pointer">
                   <Heart className="w-6 h-6" />
@@ -207,7 +207,7 @@ export default function PostPage() {
               </div>
 
 
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
                 <MoreHorizontal size={28} />
               </Button>
               <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden">
@@ -230,7 +230,8 @@ export default function PostPage() {
           <Separator className="bg-foreground/20 mt-3.5" />
 
 
-          <div className="flex justify-around bg-gradient-to-t from-black/50 to-transparent gap-2 text-sm p-3">
+          <div className="flex justify-around bg-gradient-to-t from-black/50 to-transparent
+                gap-2 text-sm p-3 pointer-events-auto">
             <Button
               variant="ghost"
               className="text-foreground flex-1 justify-center p-0 h-auto"
@@ -239,6 +240,7 @@ export default function PostPage() {
               <BarChart className="mr-2 h-4 w-4" />
               View insights
             </Button>
+
             <Button
               variant="ghost"
               className="text-foreground flex-1 justify-center p-0 h-auto"
@@ -247,6 +249,7 @@ export default function PostPage() {
               Boost reel
             </Button>
           </div>
+
         </div>
       </div>
       <div className="shrink-0 z-30 bg-background border-t px-3 py-3 border-zinc-800 pointer-events-auto">
@@ -270,3 +273,5 @@ export default function PostPage() {
     </div>
   );
 }
+
+    

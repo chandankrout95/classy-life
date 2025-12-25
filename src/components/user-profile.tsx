@@ -460,7 +460,7 @@ export function UserProfile() {
                   )
                 )}
                 {/* Play icon and view count overlays */}
-                <div className="absolute top-2 right-2 text-foreground">
+                <div className="absolute top-2 right-2 text-white">
                   {post.type === 'reel' && <svg
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
@@ -482,7 +482,7 @@ export function UserProfile() {
                     />
                   </svg>}
                 </div>
-                <div className="absolute bottom-1   flex items-center gap-1 text-foreground text-sm font-bold  px-1.5 py-0.5 rounded-md">
+                <div className="absolute bottom-1   flex items-center gap-1 text-white text-sm font-bold  px-1.5 py-0.5 rounded-md">
                   <Eye size={16} />
                   {formatNumber(post.views || 0)}
                 </div>

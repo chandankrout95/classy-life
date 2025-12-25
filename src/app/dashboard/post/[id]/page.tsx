@@ -166,7 +166,7 @@ export default function PostPage() {
                   />
                 </div>
               )}
-              <span className="font-bold text-foreground">{profile.username}</span>
+              <span className="font-bold text-white">{profile.username}</span>
             </div>
             <p className="text-sm text-foreground/90">
               {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
@@ -234,7 +234,7 @@ export default function PostPage() {
                 gap-2 text-sm p-3 pointer-events-auto">
             <Button
               variant="ghost"
-              className="text-foreground flex-1 justify-center p-0 h-auto"
+              className="text-white flex-1 justify-center p-0 h-auto"
               onClick={() => router.push(`/dashboard/post/${id}/insights`)}
             >
               <BarChart className="mr-2 h-4 w-4" />
@@ -243,7 +243,7 @@ export default function PostPage() {
 
             <Button
               variant="ghost"
-              className="text-foreground flex-1 justify-center p-0 h-auto"
+              className="text-white flex-1 justify-center p-0 h-auto"
             >
               <Zap className="mr-2 h-4 w-4" />
               Boost reel

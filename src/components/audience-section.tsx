@@ -36,19 +36,13 @@ export function AudienceSection({
     () => post.countryBreakdown || DEMO_COUNTRY_DATA,
     [post.countryBreakdown]
   );
-  const genderData = React.useMemo(
-    () =>
-      post.genderBreakdown
-        ? Object.entries(post.genderBreakdown).map(([key, value]) => ({
-            label: key.charAt(0).toUpperCase() + key.slice(1),
-            value: value,
-          }))
-        : Object.entries(DEMO_GENDER_DATA).map(([key, value]) => ({
-            label: key.charAt(0).toUpperCase() + key.slice(1),
-            value: value,
-          })),
-    [post.genderBreakdown]
-  );
+  const genderData = React.useMemo(() => {
+    const source = post.genderBreakdown || DEMO_GENDER_DATA;
+    return [
+        { label: 'Men', value: source.men || 0 },
+        { label: 'Women', value: source.women || 0 }
+    ];
+  }, [post.genderBreakdown]);
   const ageData = React.useMemo(
     () => post.ageBreakdown || DEMO_AGE_DATA,
     [post.ageBreakdown]

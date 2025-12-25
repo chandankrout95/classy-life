@@ -1,7 +1,7 @@
 
 export const DEMO_GENDER_DATA = {
-  women: 62,
   men: 38,
+  women: 62,
 };
 
 export const DEMO_COUNTRY_DATA = [

@@ -227,7 +227,7 @@ export default function PostPage() {
 
           </div>
 
-          <Separator className="bg-foreground/20 mt-3.5" />
+          <Separator className="bg-white/20 mt-3.5" />
 
 
           <div className="flex justify-around bg-gradient-to-t from-black/50 to-transparent
@@ -273,5 +273,3 @@ export default function PostPage() {
     </div>
   );
 }
-
-    

@@ -91,20 +91,20 @@ export default function PublicPostPage() {
   }
 
   return (
-    <div className="bg-background text-foreground h-dvh flex flex-col overflow-hidden">
-        <header className="p-4 flex items-center justify-between text-foreground z-20 shrink-0">
+    <div className="bg-black text-white h-dvh flex flex-col overflow-hidden">
+        <header className="p-4 flex items-center justify-between z-20 shrink-0">
           <div className="flex items-center gap-4">
             <Link href="/dashboard/profile">
               <ChevronLeft size={28} />
             </Link>
             <span className="text-xl font-bold">Reels</span>
           </div>
-          <Button variant="ghost" size="icon" className="text-foreground rounded-full">
+          <Button variant="ghost" size="icon" className="text-white rounded-full">
             <MoreHorizontal size={28} />
           </Button>
         </header>
 
-      <div className="relative flex-1 overflow-y-auto">
+      <div className="relative flex-1 overflow-y-auto -mt-16">
         <div className="absolute inset-0">
           {post.imageUrl && (
             post.type === 'reel' ? (
@@ -127,28 +127,28 @@ export default function PublicPostPage() {
           )}
         </div>
         
-        <div className="absolute inset-0 flex flex-col justify-end z-10 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end z-10 pointer-events-none">
           
           <div className="absolute right-3 bottom-4 flex flex-col gap-5 items-center pointer-events-auto">
             <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <Heart size={28} />
               </Button>
-              <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.likes || 0)}</span>
+              <span className="text-xs font-semibold mt-1">{formatNumber(post.likes || 0)}</span>
             </div>
             <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <MessageCircle size={28} />
               </Button>
-              <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.comments || 0)}</span>
+              <span className="text-xs font-semibold mt-1">{formatNumber(post.comments || 0)}</span>
             </div>
             <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <Send size={28} />
               </Button>
-              <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.shares || 0)}</span>
+              <span className="text-xs font-semibold mt-1">{formatNumber(post.shares || 0)}</span>
             </div>
-             <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
+             <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <MoreHorizontal size={28} />
             </Button>
             <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden">
@@ -175,14 +175,14 @@ export default function PublicPostPage() {
                   className="rounded-full"
                 />
               )}
-              <span className="font-bold text-foreground">{profile.username}</span>
+              <span className="font-bold text-white">{profile.username}</span>
             </div>
-            <p className="text-sm text-foreground/90">
+            <p className="text-sm text-white/90">
               {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
             </p>
             <div className="flex items-center gap-2 mt-2">
-              <Music2 size={16} className="text-foreground"/>
-              <p className="text-sm text-foreground/90 truncate">Original audio - {profile.username}</p>
+              <Music2 size={16} className="text-white"/>
+              <p className="text-sm text-white/90 truncate">Original audio - {profile.username}</p>
             </div>
             
           </div>
@@ -191,3 +191,5 @@ export default function PublicPostPage() {
     </div>
   );
 }
+
+    

@@ -83,11 +83,11 @@ export default function PostPage() {
         <header className="absolute w-full  p-2 flex items-center justify-between z-20 shrink-0">
           <div className="flex items-center gap-2">
             <Link href="/dashboard/profile">
-              <ChevronLeft size={28} />
+              <ChevronLeft size={28} className="text-white"/>
             </Link>
             {/* <span className="text-lg font-bold">Your reels</span> */}
           </div>
-          <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setIsOptionsOpen(true)}>
+          <Button variant="ghost" size="icon" className="rounded-full text-white" onClick={() => setIsOptionsOpen(true)}>
             <MoreHorizontal size={28} />
           </Button>
         </header>
@@ -118,41 +118,6 @@ export default function PostPage() {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end z-10 pointer-events-none">
 
-          {/* <div className="absolute right-3 bottom-8 flex flex-col gap-5 items-center pointer-events-auto">
-            <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
-                <Heart size={28} />
-              </Button>
-              <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.likes || 0)}</span>
-            </div>
-            <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
-                <MessageCircle size={28} />
-              </Button>
-              <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.comments || 0)}</span>
-            </div>
-            <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
-                <Send size={28} />
-              </Button>
-              <span className="text-xs font-semibold mt-1 opacity-95">{formatNumber(post.shares || 0)}</span>
-            </div>
-            <Button variant="ghost" size="icon" className="text-foreground hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
-              <MoreHorizontal size={28} />
-            </Button>
-            <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden">
-              {profile.avatarUrl && (
-                <Image
-                  src={profile.avatarUrl}
-                  alt="User avatar"
-                  width={40}
-                  height={40}
-                  className="object-cover"
-                />
-              )}
-            </div>
-          </div> */}
-
           <div className="relative p-4 pb-0 z-10  pointer-events-auto">
             <div className="flex items-center gap-2 mb-2">
               {profile.avatarUrl && (
@@ -179,7 +144,7 @@ export default function PostPage() {
             {/* like comment sound */}
             <div className="absolute right-3 bottom-0 flex flex-col gap-5 items-center pointer-events-auto text-white">
               <div className="flex flex-col items-center">
-                <div className="p-1 rounded-full hover:bg-foreground/10 cursor-pointer">
+                <div className="p-1 rounded-full hover:bg-white/10 cursor-pointer">
                   <Heart className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-semibold">
@@ -188,7 +153,7 @@ export default function PostPage() {
               </div>
 
               <div className="flex flex-col items-center  cursor-pointer">
-                <div className="p-1 rounded-full hover:bg-foreground/10">
+                <div className="p-1 rounded-full hover:bg-white/10">
                   <MessageCircle className="w-6 h-6 -scale-x-100" />
                 </div>
                 <span className="text-xs font-semibold opacity-95">
@@ -198,7 +163,7 @@ export default function PostPage() {
 
 
               <div className="flex flex-col items-center  cursor-pointer">
-                <div className="p-1 rounded-full hover:bg-foreground/10">
+                <div className="p-1 rounded-full hover:bg-white/10">
                   <Send className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-semibold opacity-95">
@@ -207,7 +172,7 @@ export default function PostPage() {
               </div>
 
 
-              <Button variant="ghost" size="icon" className="text-white hover:bg-foreground/10 rounded-full h-auto p-1.5 text-2xl">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <MoreHorizontal size={28} />
               </Button>
               <div className="w-10 h-10 border-2 border-zinc-500 rounded-lg overflow-hidden">
@@ -252,8 +217,10 @@ export default function PostPage() {
 
         </div>
       </div>
-      <div className="shrink-0 z-30 bg-background border-t px-3 py-3 border-zinc-800 pointer-events-auto">
-        <button className=" w-full py-2 px-6 bg-zinc-700 text-start text-[13px] rounded-[20px]">Add comment...</button>
+      <div className="shrink-0 z-30 bg-black border-t px-3 py-3 border-zinc-800 pointer-events-auto">
+        <button className="w-full py-2 px-6 bg-zinc-900 text-start text-[13px] rounded-[20px] text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-shadow">
+          Add comment...
+        </button>
       </div>
 
       <PostOptionsSheet
@@ -273,3 +240,5 @@ export default function PostPage() {
     </div>
   );
 }
+
+    

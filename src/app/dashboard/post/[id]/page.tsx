@@ -168,12 +168,12 @@ export default function PostPage() {
               )}
               <span className="font-bold text-white">{profile.username}</span>
             </div>
-            <p className="text-sm text-foreground/90">
+            <p className="text-sm text-white/90">
               {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
             </p>
             <div className="flex items-center gap-2 mt-2">
-              <Music2 size={16} className="text-foreground" />
-              <p className="text-sm text-foreground/90 truncate">Original audio - {profile.username}</p>
+              <Music2 size={16} className="text-white" />
+              <p className="text-sm text-white/90 truncate">Original audio - {profile.username}</p>
             </div>
 
             {/* like comment sound */}

@@ -386,7 +386,7 @@ export default function ViewsPage() {
                                     )}
                                     </div>
                                 </div>
-                                <Progress value={item.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={slide.title === 'Gender' && item.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
+                                <Progress value={item.percentage} className="h-2 bg-zinc-700 flex-1" indicatorClassName={slide.title === 'Gender' && item.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
                               </div>
                           ))}
                         </div>
@@ -483,6 +483,8 @@ export default function ViewsPage() {
 
 
 
+
+    
 
     
 

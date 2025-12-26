@@ -28,7 +28,6 @@ export const mockProfile: UserProfileData = {
         { name: '25-34', percentage: 45 },
         { name: '35-44', percentage: 15 },
         { name: '45-54', percentage: 7 },
-        { name: '55+', percentage: 3 },
     ],
     genderBreakdown: [
         { name: 'Women', percentage: 65 },

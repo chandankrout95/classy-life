@@ -181,7 +181,7 @@ export default function ViewsPage() {
     const audienceSlides = [
       {
         title: "Top towns/cities",
-        data: topCities,
+        data: topCities.slice(0, 4),
       },
       {
         title: "Gender",
@@ -374,7 +374,7 @@ export default function ViewsPage() {
                                     itemIndex, 
                                     'percentage'
                                   )}
-                                  <span className="text-xs sm:text-sm">%</span>
+                                  
                                 </div>
                               </div>
                               <Progress value={item.percentage} className="h-2 flex-1" indicatorClassName={cn("bg-chart-1", slide.title === 'Gender' && item.name === 'Women' && "bg-chart-2")} />
@@ -465,4 +465,5 @@ export default function ViewsPage() {
 
 
     
+
 

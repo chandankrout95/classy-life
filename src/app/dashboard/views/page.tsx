@@ -184,12 +184,12 @@ export default function ViewsPage() {
         data: topCities.slice(0, 4),
       },
       {
-        title: "Top age ranges",
-        data: topAgeRanges,
-      },
-      {
         title: "Top countries",
         data: topCountries,
+      },
+      {
+        title: "Top age ranges",
+        data: topAgeRanges,
       },
       {
         title: "Gender",
@@ -465,6 +465,7 @@ export default function ViewsPage() {
 
 
     
+
 
 
 

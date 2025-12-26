@@ -162,7 +162,7 @@ export default function PostPage() {
 
               <div className="flex flex-col items-center">
                 <div className="p-1 rounded-full hover:bg-white/10 cursor-pointer">
-                  <MessageCircle className="w-6 h-6" />
+                  <MessageCircle className="w-6 h-6 transform -scale-x-100" />
                 </div>
                 <span className="text-xs font-semibold">
                   {formatNumber(post.comments || 0)}

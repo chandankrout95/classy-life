@@ -9,7 +9,7 @@ import { formatNumber, cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { StackedProgress } from "@/components/ui/stacked-progress";
+import { StackedProgress } from "@/components/stacked-progress";
 import { ViewsBreakdownChart } from "@/components/views-breakdown-chart";
 import { produce } from "immer";
 import type { UserProfileData } from "@/lib/types";
@@ -466,3 +466,5 @@ export default function ViewsPage() {
     );
 }
 
+
+    

@@ -192,7 +192,7 @@ export default function ViewsPage() {
 
         <main className="p-4 space-y-8">
             <div className="flex justify-between items-center text-sm sm:text-base">
-                <Button variant="ghost" className="bg-zinc-800 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm">
+                <Button variant="ghost" className="bg-black text-white rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm">
                     Last 30 days
                     <ChevronDown size={20} className="ml-2" />
                 </Button>
@@ -475,3 +475,4 @@ export default function ViewsPage() {
         </div>
     );
 }
+

@@ -16,7 +16,6 @@ export const mockProfile: UserProfileData = {
       { name: 'Brazil', percentage: 8.2 },
       { name: 'India', percentage: 6.9 },
       { name: 'United Kingdom', percentage: 3.1 },
-      { name: 'Germany', percentage: 2.5 },
     ],
     topCities: [
         { name: 'New York', percentage: 2.1 },

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -24,8 +23,7 @@ import {
   Megaphone 
 } from "lucide-react";
 import { applyDemoDataAction } from "@/app/actions";
-import { useFirebase } from "@/firebase";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { useToast } from "@/hooks/use-toast";
 
 export function CreatePostSheet({
   isOpen,
@@ -36,80 +34,109 @@ export function CreatePostSheet({
   onOpenChange: (isOpen: boolean) => void;
   onPostCreate: (newPost: Omit<Post, "id" | "createdAt">) => void;
 }) {
-  const { storage } = useFirebase();
+  const { toast } = useToast();
   const [stage, setStage] = useState<"selectType" | "createPost">("selectType");
   const [isUploading, setIsUploading] = useState(false);
   const [media, setMedia] = useState<{ uri: string; type: "image" | "reel"; hint: string } | null>(null);
   const [caption, setCaption] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pendingType, setPendingType] = useState<"image" | "reel" | null>(null);
+  
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
-  const handleTypeClick = (type: "image" | "reel") => {
-    setPendingType(type);
-    fileInputRef.current?.click();
+  // --- COMPRESSION LOGIC FOR IMAGES ---
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 1080; // Instagram standard
+          let width = img.width;
+          let height = img.height;
+
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", 0.8)); // 80% quality
+        };
+      };
+    });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0] && pendingType) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        if (loadEvent.target?.result) {
-          setMedia({
-            uri: loadEvent.target.result as string,
-            type: pendingType,
-            hint: file.name,
-          });
-          setStage("createPost");
-        }
-      };
-      reader.readAsDataURL(file);
+  const handleFileSelection = async (e: React.ChangeEvent<HTMLInputElement>, type: "image" | "reel") => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 1. Size Validation (10MB limit for better UX, Cloudinary Free tier handles this well)
+    const MAX_SIZE = type === "reel" ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      toast({
+        title: "File too large",
+        description: `Please select a ${type} smaller than ${type === "reel" ? '10MB' : '5MB'}.`,
+        variant: "destructive"
+      });
+      e.target.value = "";
+      return;
+    }
+
+    try {
+      let finalUri: string;
+      if (type === "image") {
+        finalUri = await compressImage(file);
+      } else {
+        finalUri = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (le) => resolve(le.target?.result as string);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      setMedia({
+        uri: finalUri,
+        type: type,
+        hint: file.name,
+      });
+      setStage("createPost");
+    } catch (err) {
+      toast({ title: "Error processing file", variant: "destructive" });
     }
   };
 
   const uploadMedia = async (): Promise<string> => {
     if (!media) return "";
-
-    const formData = new FormData();
-    formData.append("file", media.uri);
-    
-    // Check if it's a reel or image to set the correct preset and resource type
     const isReel = media.type === "reel";
     
-    // If it's a reel, use your video preset. If image, Cloudinary handles it as 'image' by default.
+    const formData = new FormData();
+    formData.append("file", media.uri);
     formData.append("upload_preset", isReel ? "video_reels" : "photo_posts"); 
     formData.append("resource_type", isReel ? "video" : "image");
 
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/dlprwkqzj/${isReel ? 'video' : 'image'}/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error?.message || "Upload to Cloudinary failed");
-      }
-
-      return data.secure_url;
-    } catch (error) {
-      console.error("Cloudinary Error:", error);
-      throw error;
-    }
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/dlprwkqzj/${isReel ? 'video' : 'image'}/upload`,
+      { method: "POST", body: formData }
+    );
+    
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || "Cloudinary upload failed");
+    return data.secure_url;
   };
+
   const handleShare = async () => {
     if (!media) return;
     setIsUploading(true);
 
     try {
-      // 1. Upload file to Cloudinary or Firebase
       const remoteUrl = await uploadMedia();
       
-      // 2. Base post data with default metrics
       let finalPostData: Omit<Post, "id" | "createdAt"> = {
         imageUrl: remoteUrl,
         imageHint: media.hint,
@@ -120,7 +147,6 @@ export function CreatePostSheet({
         comments: 0
       };
 
-      // 3. Attempt to get AI Demo Data (failsafe wrapper)
       try {
         const mockInsight: VideoInsight = {
           videoId: `temp-${Date.now()}`,
@@ -132,19 +158,21 @@ export function CreatePostSheet({
           lastEdited: new Date().toISOString(),
           isDemo: false
         };
-
         const aiResult = await applyDemoDataAction(mockInsight);
         finalPostData = { ...finalPostData, ...aiResult };
       } catch (aiError) {
-        console.warn("AI insights failed, using default metrics", aiError);
-        // We continue anyway so the post is created
+        console.warn("AI insights failed", aiError);
       }
 
       onPostCreate(finalPostData);
       reset();
+      toast({ title: "Post shared successfully!" });
     } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Error: " + (error as Error).message);
+      toast({ 
+        title: "Upload failed", 
+        description: (error as Error).message, 
+        variant: "destructive" 
+      });
     } finally {
       setIsUploading(false);
     }
@@ -154,7 +182,8 @@ export function CreatePostSheet({
     setStage("selectType");
     setMedia(null);
     setCaption("");
-    setPendingType(null);
+    if (imageInputRef.current) imageInputRef.current.value = "";
+    if (videoInputRef.current) videoInputRef.current.value = "";
     onOpenChange(false);
   };
 
@@ -181,9 +210,9 @@ export function CreatePostSheet({
 
         {stage === "selectType" ? (
           <div className="flex flex-col py-2 mb-4">
-            <MenuOption icon={<PlaySquare />} label="Reel" onClick={() => handleTypeClick("reel")} />
+            <MenuOption icon={<PlaySquare />} label="Reel" onClick={() => videoInputRef.current?.click()} />
             <MenuOption icon={<Scissors />} label="Edits" />
-            <MenuOption icon={<Grid3x3 />} label="Post" onClick={() => handleTypeClick("image")} />
+            <MenuOption icon={<Grid3x3 />} label="Post" onClick={() => imageInputRef.current?.click()} />
             <MenuOption icon={<Clapperboard />} label="Story" />
             <MenuOption icon={<MonitorPlay />} label="Highlight" />
             <MenuOption icon={<Sparkles />} label="AI" />
@@ -192,11 +221,20 @@ export function CreatePostSheet({
         ) : (
           <div className="p-4 space-y-4 pb-10">
             <div className="flex gap-4">
-              <div className="w-20 h-20 bg-zinc-800 rounded-md overflow-hidden flex-shrink-0">
+              <div className="w-20 h-20 bg-zinc-800 rounded-md overflow-hidden flex-shrink-0 relative">
                 {media?.type === "image" ? (
                   <img src={media.uri} alt="preview" className="object-cover h-full w-full" />
                 ) : (
                   <video key={media?.uri} src={media?.uri} className="object-cover h-full w-full" muted autoPlay playsInline loop />
+                )}
+                
+                {media?.type === "reel" && (
+                  <div className="absolute top-1 right-1 drop-shadow-md">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="2" y="2" width="20" height="20" rx="6" fill="white" />
+                      <path d="M9.5 7.5L16.5 12L9.5 16.5V7.5Z" fill="black" />
+                    </svg>
+                  </div>
                 )}
               </div>
               <Textarea 
@@ -209,13 +247,8 @@ export function CreatePostSheet({
           </div>
         )}
 
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          className="hidden" 
-          accept={pendingType === "reel" ? "video/*" : "image/*"} 
-          onChange={handleFileChange} 
-        />
+        <input type="file" ref={imageInputRef} className="hidden" accept="image/*" onChange={(e) => handleFileSelection(e, "image")} />
+        <input type="file" ref={videoInputRef} className="hidden" accept="video/*" onChange={(e) => handleFileSelection(e, "reel")} />
       </SheetContent>
     </Sheet>
   );

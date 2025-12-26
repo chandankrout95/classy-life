@@ -169,3 +169,61 @@
   }
 
 }
+
+
+@keyframes apple-spinner {
+  from { opacity: 1; }
+  to { opacity: 0.15; }
+}
+
+.apple-loader-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.spinner-blade {
+  position: absolute;
+  left: 44.5%;
+  top: 37%;
+  width: 7%;
+  height: 19%;
+  border-radius: 50%/20%;
+  background-color: #8E8E93; /* iOS Gray */
+  animation: apple-spinner 1s linear infinite;
+}
+
+/* 12 Blades for the circle */
+.spinner-blade:nth-child(1) { transform: rotate(0deg) translate(0, -150%); animation-delay: 0s; }
+.spinner-blade:nth-child(2) { transform: rotate(30deg) translate(0, -150%); animation-delay: -0.916s; }
+.spinner-blade:nth-child(3) { transform: rotate(60deg) translate(0, -150%); animation-delay: -0.833s; }
+.spinner-blade:nth-child(4) { transform: rotate(90deg) translate(0, -150%); animation-delay: -0.75s; }
+.spinner-blade:nth-child(5) { transform: rotate(120deg) translate(0, -150%); animation-delay: -0.666s; }
+.spinner-blade:nth-child(6) { transform: rotate(150deg) translate(0, -150%); animation-delay: -0.583s; }
+.spinner-blade:nth-child(7) { transform: rotate(180deg) translate(0, -150%); animation-delay: -0.5s; }
+.spinner-blade:nth-child(8) { transform: rotate(210deg) translate(0, -150%); animation-delay: -0.416s; }
+.spinner-blade:nth-child(9) { transform: rotate(240deg) translate(0, -150%); animation-delay: -0.333s; }
+.spinner-blade:nth-child(10) { transform: rotate(270deg) translate(0, -150%); animation-delay: -0.25s; }
+.spinner-blade:nth-child(11) { transform: rotate(300deg) translate(0, -150%); animation-delay: -0.166s; }
+.spinner-blade:nth-child(12) { transform: rotate(330deg) translate(0, -150%); animation-delay: -0.083s; }
+
+
+/* Standard Reset */
+html, body {
+  height: 100%;
+  width: 100%;
+  /* Hides scrollbar but allows smooth touch scrolling */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background-color: #000; /* Match your dark theme */
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Prevent text selection to feel more like an app */
+body {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}

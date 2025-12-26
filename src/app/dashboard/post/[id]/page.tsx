@@ -1,9 +1,10 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+// 1. IMPORT MOTION
+import { motion } from "framer-motion";
 import {
   ChevronLeft,
   MoreHorizontal,
@@ -60,7 +61,6 @@ export default function PostPage() {
     router.push("/dashboard/profile");
   };
 
-
   const handleEdit = () => {
     setIsOptionsOpen(false);
     setIsEditing(true);
@@ -76,22 +76,31 @@ export default function PostPage() {
   }
 
   return (
-    <div className="bg-background text-foreground h-dvh flex flex-col overflow-hidden">
-
-
+    // 2. WRAP WITH MOTION.DIV
+    <motion.div 
+      // Animation Settings
+      initial={{ opacity: 0, scale: 0.9 }} // Starts smaller in center
+      animate={{ opacity: 1, scale: 1 }}    // Grows to full size
+      exit={{ opacity: 0, scale: 0.9 }}     // Shrinks back to center on leave
+      transition={{ 
+        type: "spring", 
+        damping: 25, 
+        stiffness: 350,
+        opacity: { duration: 0.2 } 
+      }}
+      className="bg-background text-foreground h-dvh flex flex-col overflow-hidden origin-center"
+    >
       <div className="relative flex-1 overflow-y-auto">
-        <header className="absolute w-full  p-2 flex items-center justify-between z-20 shrink-0">
+        <header className="absolute w-full p-2 flex items-center justify-between z-20 shrink-0">
           <div className="flex items-center gap-2">
             <Link href="/dashboard/profile">
               <ChevronLeft size={28} className="text-white"/>
             </Link>
-            {/* <span className="text-lg font-bold">Your reels</span> */}
           </div>
           <Button variant="ghost" size="icon" className="rounded-full text-white" onClick={() => setIsOptionsOpen(true)}>
             <MoreHorizontal size={28} />
           </Button>
         </header>
-
 
         <div className="absolute inset-0">
           {post.imageUrl && (
@@ -117,11 +126,10 @@ export default function PostPage() {
         </div>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end z-10 pointer-events-none">
-
-          <div className="relative p-4 pb-0 z-10  pointer-events-auto">
+          <div className="relative p-4 pb-0 z-10 pointer-events-auto">
             <div className="flex items-center gap-2 mb-2">
               {profile.avatarUrl && (
-                <div className=" h-[40px] w-[40px] rounded-full overflow-hidden">
+                <div className="h-[40px] w-[40px] rounded-full overflow-hidden">
                   <Image
                     src={profile.avatarUrl}
                     alt="Avatar"
@@ -141,7 +149,6 @@ export default function PostPage() {
               <p className="text-sm text-white/90 truncate">Original audio - {profile.username}</p>
             </div>
 
-            {/* like comment sound */}
             <div className="absolute right-3 bottom-0 flex flex-col gap-5 items-center pointer-events-auto text-white">
               <div className="flex flex-col items-center">
                 <div className="p-1 rounded-full hover:bg-white/10 cursor-pointer">
@@ -152,7 +159,7 @@ export default function PostPage() {
                 </span>
               </div>
 
-              <div className="flex flex-col items-center  cursor-pointer">
+              <div className="flex flex-col items-center cursor-pointer">
                 <div className="p-1 rounded-full hover:bg-white/10">
                   <MessageCircle className="w-6 h-6 -scale-x-100" />
                 </div>
@@ -161,8 +168,7 @@ export default function PostPage() {
                 </span>
               </div>
 
-
-              <div className="flex flex-col items-center  cursor-pointer">
+              <div className="flex flex-col items-center cursor-pointer">
                 <div className="p-1 rounded-full hover:bg-white/10">
                   <Send className="w-6 h-6" />
                 </div>
@@ -170,7 +176,6 @@ export default function PostPage() {
                   {formatNumber(post.shares || 0)}
                 </span>
               </div>
-
 
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
                 <MoreHorizontal size={28} />
@@ -187,16 +192,11 @@ export default function PostPage() {
                 )}
               </div>
             </div>
-
-
-
           </div>
 
           <Separator className="bg-white/20 mt-3.5" />
 
-
-          <div className="flex justify-around bg-gradient-to-t from-black/50 to-transparent
-                gap-2 text-sm p-3 pointer-events-auto">
+          <div className="flex justify-around bg-gradient-to-t from-black/50 to-transparent gap-2 text-sm p-3 pointer-events-auto">
             <Button
               variant="ghost"
               className="text-white flex-1 justify-center p-0 h-auto"
@@ -214,9 +214,9 @@ export default function PostPage() {
               Boost reel
             </Button>
           </div>
-
         </div>
       </div>
+
       <div className="shrink-0 z-30 bg-black border-t px-3 py-3 border-zinc-800 pointer-events-auto">
         <button className="w-full py-2 px-6 bg-zinc-900 text-start text-[13px] rounded-[20px] text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-shadow">
           Add comment...
@@ -237,8 +237,6 @@ export default function PostPage() {
         post={post}
         onPostUpdate={handlePostUpdate}
       />}
-    </div>
+    </motion.div>
   );
 }
-
-    

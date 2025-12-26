@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -156,6 +157,15 @@ export default function PostPage() {
                 </div>
                 <span className="text-xs font-semibold">
                   {formatNumber(post.likes || 0)}
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <div className="p-1 rounded-full hover:bg-white/10 cursor-pointer">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-semibold">
+                  {formatNumber(post.comments || 0)}
                 </span>
               </div>
 

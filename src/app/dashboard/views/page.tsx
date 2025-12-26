@@ -21,6 +21,8 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { Slider } from "@/components/ui/slider";
+
 
 type EditableField = {
     list: 'countries' | 'cities' | 'ageRanges' | 'gender';
@@ -36,6 +38,21 @@ export default function ViewsPage() {
     const [tempProfile, setTempProfile] = useState<UserProfileData | null>(null);
     const [isPageEditing, setIsPageEditing] = useState(false);
     const [activeFilter, setActiveFilter] = useState("All");
+
+    const [contentTypeValues, setContentTypeValues] = useState([
+        { name: "Reels", percentage: 98.7, followers: 80, nonFollowers: 20 },
+        { name: "Stories", percentage: 0.8, followers: 60, nonFollowers: 40 },
+        { name: "Posts", percentage: 0.5, followers: 90, nonFollowers: 10 },
+    ]);
+    const [showSliders, setShowSliders] = useState(false);
+
+    const handleSliderChange = (index: number, value: number[]) => {
+        const newValues = produce(contentTypeValues, draft => {
+            draft[index].followers = value[0];
+            draft[index].nonFollowers = 100 - value[0];
+        });
+        setContentTypeValues(newValues);
+    };
 
     useEffect(() => {
         if (profile) {
@@ -99,7 +116,7 @@ export default function ViewsPage() {
         : "bg-transparent border-none p-0 h-auto w-12 text-right text-xs sm:text-sm font-semibold no-spinner";
 
         if (!isPageEditing) {
-            return <span className={cn(className.replace(/w-\d+/,''), "w-auto")}>{value}</span>;
+            return <span className={cn(className.replace(/w-\d+/,''), "w-auto")}>{value}{field === 'percentage' && '%'}</span>;
         }
 
       return (
@@ -117,7 +134,6 @@ export default function ViewsPage() {
                 const listData = (tempProfile.stats as any)[listPath.split('.')[1]] || [];
 
                 const updatedList = produce(listData, (draft: any[]) => {
-                    // Ensure the item exists before trying to modify it
                     if (!draft[index]) {
                       if (listName === 'gender' || listName === 'ageRanges' || listName === 'cities' || listName === 'countries') {
                         draft[index] = { name: '', percentage: 0 };
@@ -153,11 +169,6 @@ export default function ViewsPage() {
         profileActivity = { total: 0, change: 0, vsDate: '', visits: { total: 0, change: 0 }, linkTaps: { total: 0, changeText: '' } },
     } = stats;
 
-    const contentTypes = [
-        { name: "Reels", percentage: 98.7, followers: 80, nonFollowers: 20 },
-        { name: "Stories", percentage: 0.8, followers: 60, nonFollowers: 40 },
-        { name: "Posts", percentage: 0.5, followers: 90, nonFollowers: 10 },
-    ];
 
     const audienceSlides = [
       {
@@ -320,23 +331,18 @@ export default function ViewsPage() {
 
 
             <section>
-                <h3 className="text-base sm:text-lg font-bold mb-4">By content type</h3>
-                <div className="flex gap-2 mb-4">
-                    {["All", "Followers", "Non-followers"].map(filter => (
-                        <Button
-                            key={filter}
-                            variant={activeFilter === filter ? 'secondary' : 'ghost'}
-                            onClick={() => setActiveFilter(filter)}
-                            className={cn("rounded-full h-8 px-4 text-xs sm:text-sm",
-                                activeFilter === filter ? "bg-zinc-200 text-black hover:bg-zinc-300" : "bg-zinc-800 text-white hover:bg-zinc-700"
-                            )}
-                        >
-                            {filter}
-                        </Button>
-                    ))}
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-base sm:text-lg font-bold">By content type</h3>
+                    <Button
+                        variant={showSliders ? "default" : "secondary"}
+                        onClick={() => setShowSliders(!showSliders)}
+                        className="rounded-full h-8 px-4 text-xs sm:text-sm"
+                    >
+                        {showSliders ? 'Done' : 'Adjust'}
+                    </Button>
                 </div>
                 <div className="space-y-4">
-                    {contentTypes.map(type => (
+                    {contentTypeValues.map((type, index) => (
                         <div key={type.name} className="space-y-1">
                             <div className="flex justify-between text-sm">
                                 <span>{type.name}</span>
@@ -348,6 +354,16 @@ export default function ViewsPage() {
                                 total={100}
                                 className="h-2"
                             />
+                            {showSliders && (
+                                <div className="pt-2">
+                                     <Slider
+                                        defaultValue={[type.followers]}
+                                        max={100}
+                                        step={1}
+                                        onValueChange={(value) => handleSliderChange(index, value)}
+                                    />
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -419,7 +435,6 @@ export default function ViewsPage() {
                                         itemIndex, 
                                         'percentage'
                                     )}
-                                    %
                                     </div>
                                 </div>
                                 <Progress value={item.percentage} className="h-2 flex-1" indicatorClassName={slide.title === 'Gender' && item.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>

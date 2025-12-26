@@ -13,6 +13,7 @@ import {
   BarChart,
   PlaySquare,
   Loader2,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -159,6 +160,17 @@ export default function ProfessionalDashboardPage() {
                 ))}
             </div>
         </section>
+        
+        <section>
+            <h2 className="text-base sm:text-lg font-bold mb-4">Placeholder Section</h2>
+            <div className="p-4 border-2 border-dashed border-zinc-700 rounded-lg">
+                <div className="flex flex-col items-center justify-center text-center text-zinc-500">
+                    <HelpCircle className="w-12 h-12 mb-2" />
+                    <p className="text-sm">This is a placeholder. Provide content to be displayed here.</p>
+                </div>
+            </div>
+        </section>
+
       </main>
     </div>
   );

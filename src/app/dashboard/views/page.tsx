@@ -193,7 +193,7 @@ export default function ViewsPage() {
       },
       {
         title: "Gender",
-        data: genderBreakdown.sort((a,b) => a.name === 'Men' ? -1 : 1),
+        data: [...genderBreakdown].sort((a,b) => a.name === 'Men' ? -1 : 1),
       },
     ].sort((a, b) => {
         if (a.title === "Top towns/cities") return -1;
@@ -480,5 +480,7 @@ export default function ViewsPage() {
 
 
 
+
+    
 
     

@@ -141,12 +141,12 @@ export default function PostPage() {
               )}
               <span className="font-bold text-white">{profile.username}</span>
             </div>
-            <p className="text-sm text-white/90">
+            <p className="text-sm text-white">
               {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
             </p>
             <div className="flex items-center gap-2 mt-2">
               <Music2 size={16} className="text-white" />
-              <p className="text-sm text-white/90 truncate">Original audio - {profile.username}</p>
+              <p className="text-sm text-white">Original audio - {profile.username}</p>
             </div>
 
             <div className="absolute right-3 bottom-0 flex flex-col gap-5 items-center pointer-events-auto text-white">
@@ -156,26 +156,6 @@ export default function PostPage() {
                 </div>
                 <span className="text-xs font-semibold">
                   {formatNumber(post.likes || 0)}
-                </span>
-              </div>
-
-              <div className="flex flex-col items-center cursor-pointer">
-                <div className="p-1 rounded-full hover:bg-white/10">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </div>
-                <span className="text-xs font-semibold opacity-95">
-                  {formatNumber(post.comments || 0)}
                 </span>
               </div>
 

@@ -18,8 +18,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
   CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
 
 type EditableField = {
@@ -180,10 +180,6 @@ export default function ViewsPage() {
 
     const audienceSlides = [
       {
-        title: "Top towns/cities",
-        data: topCities.slice(0, 4),
-      },
-      {
         title: "Top countries",
         data: topCountries,
       },
@@ -192,10 +188,20 @@ export default function ViewsPage() {
         data: topAgeRanges,
       },
       {
-        title: "Gender",
-        data: genderBreakdown.sort((a,b) => a.name === 'Men' ? -1 : 1),
+        title: "Top towns/cities",
+        data: topCities.slice(0, 4),
       },
-    ];
+      {
+        title: "Gender",
+        data: [...genderBreakdown].sort((a,b) => a.name === 'Men' ? -1 : 1),
+      },
+    ].sort((a, b) => {
+        if (a.title === "Top age ranges") return 1;
+        if (b.title === "Top age ranges") return -1;
+        if (a.title === "Gender") return 1;
+        if (b.title === "Gender") return -1;
+        return 0;
+    });
 
     return (
         <div className="bg-background text-foreground min-h-screen pb-8">
@@ -284,7 +290,9 @@ export default function ViewsPage() {
                             key={filter}
                             variant={activeFilter === filter ? 'secondary' : 'ghost'}
                             onClick={() => setActiveFilter(filter)}
-                            className={`rounded-full h-8 text-xs sm:text-sm ${activeFilter === filter ? 'bg-zinc-200 text-black hover:bg-zinc-300' : 'bg-zinc-800 hover:bg-zinc-700'}`}
+                            className={cn("rounded-full h-8 px-4 text-xs sm:text-sm",
+                                activeFilter === filter ? "bg-zinc-200 text-black hover:bg-zinc-300" : "bg-zinc-800 text-white hover:bg-zinc-700"
+                            )}
                         >
                             {filter}
                         </Button>
@@ -377,6 +385,7 @@ export default function ViewsPage() {
                                   
                                 </div>
                               </div>
+                               <Progress value={item.percentage} className="h-2 bg-zinc-800 flex-1 mt-1" indicatorClassName={cn("bg-chart-1", {'bg-chart-2': slide.title === 'Gender' && item.name === 'Women'})}/>
                             </div>
                           ))}
                         </div>
@@ -464,6 +473,7 @@ export default function ViewsPage() {
 
 
     
+
 
 
 

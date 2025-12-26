@@ -14,6 +14,13 @@ import { ViewsBreakdownChart } from "@/components/views-breakdown-chart";
 import { produce } from "immer";
 import type { UserProfileData } from "@/lib/types";
 import { useDashboard } from "@/app/dashboard/context";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type EditableField = {
     list: 'countries' | 'cities' | 'ageRanges' | 'gender';
@@ -171,6 +178,25 @@ export default function ViewsPage() {
         { name: "Posts", percentage: 0.5, followers: 90, nonFollowers: 10 },
     ];
 
+    const audienceSlides = [
+      {
+        title: "Gender",
+        data: genderBreakdown.sort((a,b) => a.name === 'Men' ? -1 : 1),
+      },
+      {
+        title: "Top age ranges",
+        data: topAgeRanges,
+      },
+      {
+        title: "Top countries",
+        data: topCountries,
+      },
+      {
+        title: "Top towns/cities",
+        data: topCities,
+      },
+    ];
+
     return (
         <div className="bg-background text-foreground min-h-screen pb-8">
         <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b border-zinc-800">
@@ -316,81 +342,52 @@ export default function ViewsPage() {
             </section>
 
             <section>
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full"
+              >
                 <div className="flex items-center gap-2 mb-4">
                     <h3 className="text-base sm:text-lg font-bold">Audience</h3>
                     <Info size={16} className="text-zinc-400" />
                 </div>
-                
-                <div className="flex space-x-4 overflow-x-auto no-scrollbar">
-                    <div className="border border-zinc-800 p-4 rounded-lg flex-shrink-0 w-[85vw] sm:w-72">
-                        <h4 className="font-bold mb-4 text-sm sm:text-base">Top towns/cities</h4>
+                <CarouselContent>
+                  {audienceSlides.map((slide, index) => (
+                    <CarouselItem key={index} className="basis-auto pr-4">
+                      <div className="border border-zinc-800 p-4 rounded-lg w-[85vw] sm:w-72">
+                        <h4 className="font-bold mb-4 text-sm sm:text-base">{slide.title}</h4>
                         <div className="space-y-3">
-                            {topCities.map((city, index) => (
-                                <div key={index} className="space-y-1">
-                                    <div className="flex justify-between items-center text-sm">
-                                        {renderInput('cities', city, index, 'name')}
-                                        <div className="flex items-center gap-1">
-                                            {renderInput('cities', city, index, 'percentage')}
-                                            <span className="text-xs sm:text-sm">%</span>
-                                        </div>
-                                    </div>
-                                    <Progress value={city.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1"/>
+                          {(slide.data as {name: string, percentage: number}[]).map((item, itemIndex) => (
+                            <div key={itemIndex} className="space-y-1">
+                              <div className="flex justify-between items-center text-sm">
+                                {renderInput(
+                                  slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
+                                  item, 
+                                  itemIndex, 
+                                  'name'
+                                )}
+                                <div className="flex items-center gap-1">
+                                  {renderInput(
+                                    slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
+                                    item, 
+                                    itemIndex, 
+                                    'percentage'
+                                  )}
+                                  <span className="text-xs sm:text-sm">%</span>
                                 </div>
-                            ))}
+                              </div>
+                              <Progress value={item.percentage} className="h-2 flex-1" indicatorClassName={cn("bg-chart-1", slide.title === 'Gender' && item.name === 'Women' && "bg-chart-2")} />
+                            </div>
+                          ))}
                         </div>
-                    </div>
-                    <div className="border border-zinc-800 p-4 rounded-lg flex-shrink-0 w-[85vw] sm:w-72">
-                        <h4 className="font-bold mb-4 text-sm sm:text-base">Top countries</h4>
-                        <div className="space-y-3">
-                            {topCountries.map((country, index) => (
-                                <div key={index} className="space-y-1">
-                                    <div className="flex justify-between items-center text-sm">
-                                        {renderInput('countries', country, index, 'name')}
-                                        <div className="flex items-center gap-1">
-                                            {renderInput('countries', country, index, 'percentage')}
-                                            <span className="text-xs sm:text-sm">%</span>
-                                        </div>
-                                    </div>
-                                    <Progress value={country.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1"/>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="border border-zinc-800 p-4 rounded-lg flex-shrink-0 w-[85vw] sm:w-72">
-                        <h4 className="font-bold mb-4 text-sm sm:text-base">Top age ranges</h4>
-                        <div className="space-y-3">
-                            {topAgeRanges.map((ageRange, index) => (
-                                <div key={index} className="space-y-1">
-                                    <div className="flex justify-between items-center text-sm">
-                                        {renderInput('ageRanges', ageRange, index, 'name')}
-                                        <div className="flex items-center gap-1">
-                                            {renderInput('ageRanges', ageRange, index, 'percentage')}
-                                            <span className="text-xs sm:text-sm">%</span>
-                                        </div>
-                                    </div>
-                                    <Progress value={ageRange.percentage} className="h-2 flex-1" indicatorClassName="bg-chart-1"/>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="border border-zinc-800 p-4 rounded-lg flex-shrink-0 w-[85vw] sm:w-72">
-                        <h4 className="font-bold mb-4 text-sm sm:text-base">Gender</h4>
-                        <div className="space-y-3">
-                            {genderBreakdown.map((gender, index) => (
-                                <div key={index} className="space-y-1">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="text-xs sm:text-sm">{gender.name}</span>
-                                        <div className="flex items-center gap-1">
-                                            {renderInput('gender', gender, index, 'percentage')}
-                                            <span className="text-xs sm:text-sm">%</span>
-                                        </div>
-                                    </div>
-                                    <Progress value={gender.percentage} className="h-2 flex-1" indicatorClassName={gender.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="-left-2" />
+                <CarouselNext className="-right-2" />
+              </Carousel>
             </section>
 
             <div className="space-y-3">

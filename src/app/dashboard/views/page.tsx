@@ -384,6 +384,7 @@ export default function ViewsPage() {
                                         itemIndex, 
                                         'percentage'
                                     )}
+                                    %
                                     </div>
                                 </div>
                                 <Progress value={item.percentage} className="h-2 flex-1" indicatorClassName={slide.title === 'Gender' && item.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>

@@ -333,13 +333,15 @@ export default function ViewsPage() {
             <section>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-base sm:text-lg font-bold">By content type</h3>
-                    <Button
-                        variant={showSliders ? "default" : "secondary"}
-                        onClick={() => setShowSliders(!showSliders)}
-                        className="rounded-full h-8 px-4 text-xs sm:text-sm"
-                    >
-                        {showSliders ? 'Done' : 'Adjust'}
-                    </Button>
+                    {isPageEditing && (
+                        <Button
+                            variant={showSliders ? "default" : "secondary"}
+                            onClick={() => setShowSliders(!showSliders)}
+                            className="rounded-full h-8 px-4 text-xs sm:text-sm"
+                        >
+                            {showSliders ? 'Done' : 'Adjust'}
+                        </Button>
+                    )}
                 </div>
                 <div className="space-y-4">
                     {contentTypeValues.map((type, index) => (

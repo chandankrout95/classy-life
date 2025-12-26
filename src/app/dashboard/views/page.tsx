@@ -180,6 +180,10 @@ export default function ViewsPage() {
 
     const audienceSlides = [
       {
+        title: "Top towns/cities",
+        data: topCities,
+      },
+      {
         title: "Gender",
         data: genderBreakdown.sort((a,b) => a.name === 'Men' ? -1 : 1),
       },
@@ -190,10 +194,6 @@ export default function ViewsPage() {
       {
         title: "Top countries",
         data: topCountries,
-      },
-      {
-        title: "Top towns/cities",
-        data: topCities,
       },
     ];
 
@@ -465,3 +465,4 @@ export default function ViewsPage() {
 
 
     
+

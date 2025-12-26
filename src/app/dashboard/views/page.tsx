@@ -22,6 +22,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { Slider } from "@/components/ui/slider";
+import { format } from "date-fns";
 
 
 type EditableField = {
@@ -150,11 +151,9 @@ export default function ViewsPage() {
     };
     
 
-    const topContent = tempProfile?.posts?.slice(0, 4).map((post, i) => ({
-        ...post,
-        views: [14000, 10000, 7900, 7000][i],
-        date: ["26 Sep", "13 Sep", "11 Sep", "7 Oct"][i]
-    })) || [];
+    const topContent = tempProfile?.posts
+        ?.sort((a, b) => (b.views || 0) - (a.views || 0))
+        .slice(0, 4) || [];
 
     const { stats = {} } = tempProfile;
     const { 
@@ -390,15 +389,38 @@ export default function ViewsPage() {
                     {topContent.map(post => (
                         <div key={post.id} className="flex-shrink-0 space-y-2">
                             <div className="relative aspect-[9/16] w-full">
-                                <Image src={post.imageUrl} alt={post.caption || "Top content"} fill className="rounded-lg object-cover" />
-                                <div className="absolute top-2 right-2 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
-                                    <div className="w-4 h-4 border-2 border-white rounded-full border-t-transparent animate-spin"></div>
+                                {post.type === 'reel' ? (
+                                    <video
+                                        src={post.imageUrl}
+                                        poster={post.imageUrl.replace(/\.[^/.]+$/, ".jpg")}
+                                        className="rounded-lg object-cover w-full h-full"
+                                        muted
+                                        playsInline
+                                        webkit-playsinline="true"
+                                        preload="metadata"
+                                    />
+                                ) : (
+                                    <Image 
+                                        src={post.imageUrl} 
+                                        alt={post.caption || "Top content"} 
+                                        fill 
+                                        className="rounded-lg object-cover" 
+                                    />
+                                )}
+                                <div className="absolute top-2 right-2">
+                                     {post.type === 'reel' && (
+                                        <svg viewBox="0 0 24 24" className="w-5 h-5 text-white drop-shadow-lg">
+                                            <path d="M6.5 5.4v13.2l11-6.6-11-6.6z" fill="currentColor"/>
+                                        </svg>
+                                     )}
                                 </div>
                                 <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                                     {formatNumber(post.views || 0)}
                                 </div>
                             </div>
-                            <p className="text-center text-xs text-zinc-400">{post.date}</p>
+                            <p className="text-center text-xs text-zinc-400">
+                                {post.createdAt ? format(new Date(post.createdAt), "dd MMM") : ''}
+                            </p>
                         </div>
                     ))}
                 </div>
@@ -553,5 +575,7 @@ export default function ViewsPage() {
         </div>
     );
 }
+
+    
 
     

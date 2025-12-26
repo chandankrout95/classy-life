@@ -34,8 +34,7 @@ export default function ViewsPage() {
     const { profile, onProfileUpdate, loading } = useDashboard();
     
     const [tempProfile, setTempProfile] = useState<UserProfileData | null>(null);
-    const [editingField, setEditingField] = useState<EditableField>(null);
-    const [tempValue, setTempValue] = useState<string>("");
+    const [isPageEditing, setIsPageEditing] = useState(false);
     const [activeFilter, setActiveFilter] = useState("All");
 
     useEffect(() => {
@@ -79,51 +78,13 @@ export default function ViewsPage() {
             onProfileUpdate(updatedProfile);
         }
     };
-
-    const handleFocus = (list: 'countries' | 'cities' | 'ageRanges' | 'gender', index: number, field: 'name' | 'percentage', value: string | number) => {
-        setEditingField({ list, index, field, value });
-        setTempValue(String(value));
-    };
     
-    const handleDone = () => {
-        if (!editingField || !tempProfile) return;
-
-        const { list, index, field } = editingField;
-        const valueToSave = (field === 'percentage') ? parseFloat(tempValue) || 0 : tempValue;
-        
-        let statsPath: string;
-        let listData: any[];
-
-        switch(list) {
-            case 'cities': 
-                statsPath = 'stats.topCities';
-                listData = tempProfile.stats?.topCities || [];
-                break;
-            case 'countries':
-                statsPath = 'stats.topCountries';
-                listData = tempProfile.stats?.topCountries || [];
-                break;
-            case 'ageRanges':
-                statsPath = 'stats.topAgeRanges';
-                listData = tempProfile.stats?.topAgeRanges || [];
-                break;
-            case 'gender':
-                statsPath = 'stats.genderBreakdown';
-                listData = tempProfile.stats?.genderBreakdown || [];
-                break;
-            default:
-                return;
+    const handleToggleEdit = () => {
+        if (isPageEditing && tempProfile) {
+            onProfileUpdate(tempProfile);
         }
-
-        const newList = produce(listData, draft => {
-            (draft[index] as any)[field] = valueToSave;
-        });
-        
-        handleUpdate(statsPath, newList);
-        setEditingField(null);
+        setIsPageEditing(!isPageEditing);
     };
-
-    const isEditing = editingField !== null;
 
     const renderInput = (
       listName: 'countries' | 'cities' | 'ageRanges' | 'gender', 
@@ -131,23 +92,35 @@ export default function ViewsPage() {
       index: number, 
       field: 'name' | 'percentage'
     ) => {
-      const isCurrentlyEditing = editingField?.list === listName && editingField?.index === index && editingField?.field === field;
-      
-      const value = isCurrentlyEditing ? tempValue : item[field];
+      const value = item[field];
       const type = field === 'percentage' ? 'number' : 'text';
       const className = field === 'name' 
         ? "bg-transparent border-none p-0 h-auto text-xs sm:text-sm"
         : "bg-transparent border-none p-0 h-auto w-12 text-right text-xs sm:text-sm font-semibold no-spinner";
 
+        if (!isPageEditing) {
+            return <span className={cn(className.replace(/w-\d+/,''), "w-auto")}>{value}</span>;
+        }
+
       return (
         <Input 
           value={value} 
-          onFocus={() => handleFocus(listName, index, field, item[field])}
-          onChange={(e) => setTempValue(e.target.value)}
-          onBlur={handleDone}
-          onKeyDown={(e) => e.key === 'Enter' && handleDone()}
+          onChange={(e) => {
+                if (!tempProfile) return;
+                const pathMap = {
+                    'cities': 'stats.topCities',
+                    'countries': 'stats.topCountries',
+                    'ageRanges': 'stats.topAgeRanges',
+                    'gender': 'stats.genderBreakdown'
+                }
+                const listPath = pathMap[listName];
+                const updatedList = produce((tempProfile.stats as any)[listName.replace('top','top').toLowerCase()] || [], (draft: any[]) => {
+                    (draft[index] as any)[field] = type === 'number' ? Number(e.target.value) : e.target.value;
+                });
+                handleUpdate(listPath, updatedList);
+          }}
           type={type}
-          className={cn(className, { 'ring-2 ring-primary rounded-md': isCurrentlyEditing })}
+          className={cn(className, { 'ring-1 ring-primary rounded-sm': isPageEditing })}
         />
       );
     };
@@ -209,18 +182,16 @@ export default function ViewsPage() {
         <div className="bg-background text-foreground min-h-screen pb-8">
         <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b border-zinc-800">
             <div className="flex items-center gap-4">
-            {!isEditing && (
+            {!isPageEditing && (
                 <Link href="/dashboard">
                 <ChevronLeft size={28} />
                 </Link>
             )}
             <span className="text-xl font-bold">Views</span>
             </div>
-            {isEditing ? (
-            <Button onClick={handleDone}>Done</Button>
-            ) : (
-            <Info size={24} />
-            )}
+            <Button variant={isPageEditing ? "default" : "ghost"} size="icon" onClick={handleToggleEdit}>
+                <Info size={24} />
+            </Button>
         </header>
 
         <main className="p-4 space-y-8">
@@ -229,11 +200,15 @@ export default function ViewsPage() {
                     Last 30 days
                     <ChevronDown size={20} className="ml-2" />
                 </Button>
-                <Input 
-                    value={dateRangeText}
-                    onChange={(e) => handleUpdate('stats.dateRangeText', e.target.value)}
-                    className="bg-transparent border-none text-zinc-400 text-xs sm:text-sm text-right p-0 h-auto w-28"
-                />
+                {isPageEditing ? (
+                    <Input 
+                        value={dateRangeText}
+                        onChange={(e) => handleUpdate('stats.dateRangeText', e.target.value)}
+                        className="bg-transparent border-none text-zinc-400 text-xs sm:text-sm text-right p-0 h-auto w-28 ring-1 ring-primary rounded-sm"
+                    />
+                ) : (
+                    <span className="text-zinc-400 text-xs sm:text-sm text-right p-0 h-auto w-28">{dateRangeText}</span>
+                )}
             </div>
             
             <section>
@@ -264,19 +239,28 @@ export default function ViewsPage() {
                         <h3 className="text-base sm:text-lg font-semibold">Accounts reached</h3>
                     </div>
                     <div className="text-right">
-                        <Input
-                        type="number"
-                        value={accountsReached.value}
-                        onChange={(e) => handleUpdate('stats.accountsReached.value', parseInt(e.target.value) || 0)}
-                        className="bg-transparent border-none text-base sm:text-lg font-bold text-right p-0 h-auto w-28 no-spinner"
-                        />
+                        {isPageEditing ? (
+                            <Input
+                                type="number"
+                                value={accountsReached.value}
+                                onChange={(e) => handleUpdate('stats.accountsReached.value', parseInt(e.target.value) || 0)}
+                                className="bg-transparent border-none text-base sm:text-lg font-bold text-right p-0 h-auto w-28 no-spinner ring-1 ring-primary rounded-sm"
+                            />
+                        ) : (
+                           <p className="text-base sm:text-lg font-bold">{formatNumber(accountsReached.value)}</p>
+                        )}
                         <div className="flex items-center justify-end">
-                        <Input
-                            type="number"
-                            value={accountsReached.change}
-                            onChange={(e) => handleUpdate('stats.accountsReached.change', parseFloat(e.target.value) || 0)}
-                            className="bg-transparent border-none text-sm text-red-500 text-right p-0 h-auto w-16 no-spinner"
-                        />
+                            {isPageEditing ? (
+                                <Input
+                                    type="number"
+                                    value={accountsReached.change}
+                                    onChange={(e) => handleUpdate('stats.accountsReached.change', parseFloat(e.target.value) || 0)}
+                                    className="bg-transparent border-none text-sm text-red-500 text-right p-0 h-auto w-16 no-spinner ring-1 ring-primary rounded-sm"
+                                />
+
+                            ) : (
+                                <p className="text-sm text-red-500">{accountsReached.change}%</p>
+                            )}
                         <span className="text-sm text-red-500">%</span>
                         </div>
                     </div>
@@ -407,45 +391,65 @@ export default function ViewsPage() {
                         <Info size={16} className="text-zinc-400" />
                     </div>
                     <div className="text-right">
-                        <Input
-                            type="number"
-                            value={profileActivity?.total}
-                            onChange={(e) => handleUpdate('stats.profileActivity.total', parseInt(e.target.value) || 0)}
-                            className="bg-transparent border-none text-lg sm:text-xl font-bold p-0 h-auto text-right w-24 no-spinner"
-                        />
-                        <div className="flex items-center justify-end">
-                            <Input
+                        {isPageEditing ? (
+                             <Input
                                 type="number"
-                                value={profileActivity?.change}
-                                onChange={(e) => handleUpdate('stats.profileActivity.change', parseFloat(e.target.value) || 0)}
-                                className="bg-transparent border-none text-sm text-red-500 p-0 h-auto text-right w-16 no-spinner"
+                                value={profileActivity?.total}
+                                onChange={(e) => handleUpdate('stats.profileActivity.total', parseInt(e.target.value) || 0)}
+                                className="bg-transparent border-none text-lg sm:text-xl font-bold p-0 h-auto text-right w-24 no-spinner ring-1 ring-primary rounded-sm"
                             />
+                        ) : (
+                            <p className="text-lg sm:text-xl font-bold">{formatNumber(profileActivity?.total)}</p>
+                        )}
+                        <div className="flex items-center justify-end">
+                            {isPageEditing ? (
+                                <Input
+                                    type="number"
+                                    value={profileActivity?.change}
+                                    onChange={(e) => handleUpdate('stats.profileActivity.change', parseFloat(e.target.value) || 0)}
+                                    className="bg-transparent border-none text-sm text-red-500 p-0 h-auto text-right w-16 no-spinner ring-1 ring-primary rounded-sm"
+                                />
+                            ) : (
+                                <p className="text-sm text-red-500">{profileActivity?.change}%</p>
+                            )}
                             <span className="text-sm text-red-500">%</span>
                         </div>
                     </div>
                 </div>
-                <Input
-                    value={profileActivity?.vsDate}
-                    onChange={(e) => handleUpdate('stats.profileActivity.vsDate', e.target.value)}
-                    className="bg-transparent border-none text-sm text-zinc-400 p-0 h-auto w-full"
-                />
+                 {isPageEditing ? (
+                    <Input
+                        value={profileActivity?.vsDate}
+                        onChange={(e) => handleUpdate('stats.profileActivity.vsDate', e.target.value)}
+                        className="bg-transparent border-none text-sm text-zinc-400 p-0 h-auto w-full ring-1 ring-primary rounded-sm"
+                    />
+                 ) : (
+                    <p className="text-sm text-zinc-400">{profileActivity?.vsDate}</p>
+                 )}
                 
                 <div className="flex justify-between items-center pt-2 text-sm sm:text-base">
                     <p>Profile visits</p>
                     <div className="text-right">
-                        <Input
-                            type="number"
-                            value={profileActivity?.visits.total}
-                            onChange={(e) => handleUpdate('stats.profileActivity.visits.total', parseInt(e.target.value) || 0)}
-                            className="bg-transparent border-none font-bold p-0 h-auto text-right w-24 no-spinner"
-                        />
-                        <div className="flex items-center justify-end">
-                        <Input
+                        {isPageEditing ? (
+                            <Input
                                 type="number"
-                                value={profileActivity?.visits.change}
-                                onChange={(e) => handleUpdate('stats.profileActivity.visits.change', parseFloat(e.target.value) || 0)}
-                                className="bg-transparent border-none text-xs text-red-500 p-0 h-auto text-right w-16 no-spinner"
+                                value={profileActivity?.visits.total}
+                                onChange={(e) => handleUpdate('stats.profileActivity.visits.total', parseInt(e.target.value) || 0)}
+                                className="bg-transparent border-none font-bold p-0 h-auto text-right w-24 no-spinner ring-1 ring-primary rounded-sm"
                             />
+                        ) : (
+                            <p className="font-bold">{formatNumber(profileActivity?.visits.total)}</p>
+                        )}
+                        <div className="flex items-center justify-end">
+                            {isPageEditing ? (
+                                <Input
+                                        type="number"
+                                        value={profileActivity?.visits.change}
+                                        onChange={(e) => handleUpdate('stats.profileActivity.visits.change', parseFloat(e.target.value) || 0)}
+                                        className="bg-transparent border-none text-xs text-red-500 p-0 h-auto text-right w-16 no-spinner ring-1 ring-primary rounded-sm"
+                                    />
+                            ): (
+                                <p className="text-xs text-red-500">{profileActivity?.visits.change}%</p>
+                            )}
                             <span className="text-xs text-red-500">%</span>
                         </div>
                     </div>
@@ -453,17 +457,26 @@ export default function ViewsPage() {
                 <div className="flex justify-between items-center text-sm sm:text-base">
                     <p>External link taps</p>
                     <div className="text-right">
-                        <Input
-                            type="number"
-                            value={profileActivity?.linkTaps.total}
-                            onChange={(e) => handleUpdate('stats.profileActivity.linkTaps.total', parseInt(e.target.value) || 0)}
-                            className="bg-transparent border-none font-bold p-0 h-auto text-right w-24 no-spinner"
-                        />
-                        <Input
-                            value={profileActivity?.linkTaps.changeText}
-                            onChange={(e) => handleUpdate('stats.profileActivity.linkTaps.changeText', e.target.value)}
-                            className="bg-transparent border-none text-xs text-zinc-500 p-0 h-auto text-right w-12 no-spinner"
-                        />
+                        {isPageEditing ? (
+                             <Input
+                                type="number"
+                                value={profileActivity?.linkTaps.total}
+                                onChange={(e) => handleUpdate('stats.profileActivity.linkTaps.total', parseInt(e.target.value) || 0)}
+                                className="bg-transparent border-none font-bold p-0 h-auto text-right w-24 no-spinner ring-1 ring-primary rounded-sm"
+                            />
+                        ) : (
+                            <p className="font-bold">{profileActivity?.linkTaps.total}</p>
+                        )}
+
+                        {isPageEditing ? (
+                            <Input
+                                value={profileActivity?.linkTaps.changeText}
+                                onChange={(e) => handleUpdate('stats.profileActivity.linkTaps.changeText', e.target.value)}
+                                className="bg-transparent border-none text-xs text-zinc-500 p-0 h-auto text-right w-12 no-spinner ring-1 ring-primary rounded-sm"
+                            />
+                        ): (
+                            <p className="text-xs text-zinc-500">{profileActivity?.linkTaps.changeText}</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -472,27 +485,3 @@ export default function ViewsPage() {
         </div>
     );
 }
-
-
-    
-
-
-
-
-
-
-
-
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    

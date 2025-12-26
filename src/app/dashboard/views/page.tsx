@@ -386,7 +386,7 @@ export default function ViewsPage() {
                     <Button variant="link" className="p-0 h-auto text-blue-400 text-sm sm:text-base">See All</Button>
                 </div>
                 <div className="grid grid-cols-4 gap-2">
-                    {topContent.map(post => (
+                    {topContent.map((post, postIndex) => (
                         <div key={post.id} className="flex-shrink-0 space-y-2">
                             <div className="relative aspect-[9/16] w-full">
                                 {post.type === 'reel' ? (
@@ -418,9 +418,38 @@ export default function ViewsPage() {
                                     {formatNumber(post.views || 0)}
                                 </div>
                             </div>
-                            <p className="text-center text-xs text-zinc-400">
-                                {post.createdAt ? format(new Date(post.createdAt), "dd MMM") : ''}
-                            </p>
+                            {isPageEditing ? (
+                                <Input
+                                    value={post.createdAt ? format(new Date(post.createdAt), "dd MMM") : ''}
+                                    onChange={(e) => {
+                                        if (!tempProfile) return;
+                                        const newPosts = [...tempProfile.posts];
+                                        const postToUpdate = newPosts.find(p => p.id === post.id);
+                                        if (postToUpdate) {
+                                            try {
+                                                // This is a simplification. A real app might need a date picker.
+                                                // We'll just store the string for now.
+                                                const newDate = e.target.value;
+                                                const originalDate = new Date(postToUpdate.createdAt || Date.now());
+                                                const [day, month] = newDate.split(' ');
+                                                const monthIndex = new Date(Date.parse(month +" 1, 2012")).getMonth();
+                                                originalDate.setDate(parseInt(day));
+                                                originalDate.setMonth(monthIndex);
+
+                                                postToUpdate.createdAt = originalDate.toISOString();
+                                                handleUpdate('posts', newPosts);
+                                            } catch (error) {
+                                                // Handle invalid date format if necessary
+                                            }
+                                        }
+                                    }}
+                                    className="bg-transparent border-none text-center text-xs text-zinc-400 p-0 h-auto w-full ring-1 ring-primary rounded-sm"
+                                />
+                            ) : (
+                                <p className="text-center text-xs text-zinc-400">
+                                    {post.createdAt ? format(new Date(post.createdAt), "dd MMM") : ''}
+                                </p>
+                            )}
                         </div>
                     ))}
                 </div>

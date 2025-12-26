@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -254,7 +255,7 @@ if (dashboardLoading || !minWaitDone || !post) {
             ) : formatNumber(post.likes || 0)}</span>
           </div>
            <div className="flex flex-col items-center">
-            <MessageCircle size={20} />
+            <MessageCircle size={20} className="transform -scale-x-100" />
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
             ) : formatNumber(post.comments || 0)}</span>

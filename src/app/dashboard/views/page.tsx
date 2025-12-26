@@ -222,6 +222,17 @@ export default function ViewsPage() {
             <section>
             <div className="relative flex justify-center items-center">
                 <ViewsBreakdownChart data={viewsBreakdown} totalViews={totalViews} />
+                {isPageEditing && (
+                    <div className="absolute flex flex-col items-center">
+                        <span className="text-sm text-zinc-400">Views</span>
+                        <Input
+                            type="number"
+                            value={totalViews}
+                            onChange={(e) => handleUpdate('stats.totalViews', parseInt(e.target.value) || 0)}
+                            className="bg-transparent border-none text-3xl font-bold text-center h-auto p-0 w-48 no-spinner ring-1 ring-primary rounded-sm"
+                        />
+                    </div>
+                )}
             </div>
             <div className="mt-6 space-y-2 text-sm">
                 <div className="flex justify-between items-center">
@@ -387,8 +398,8 @@ export default function ViewsPage() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="-left-2 hidden" />
-                <CarouselNext className="-right-2 hidden" />
+                <CarouselPrevious className="hidden" />
+                <CarouselNext className="hidden" />
               </Carousel>
             </section>
 
@@ -493,3 +504,5 @@ export default function ViewsPage() {
         </div>
     );
 }
+
+    

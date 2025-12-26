@@ -359,7 +359,7 @@ export default function ViewsPage() {
                         <h4 className="font-bold mb-4 text-sm sm:text-base">{slide.title}</h4>
                         <div className="space-y-3">
                           {(slide.data as {name: string, percentage: number}[]).map((item, itemIndex) => (
-                            <div key={itemIndex} className="space-y-1">
+                            <div key={itemIndex}>
                               <div className="flex justify-between items-center text-sm">
                                 {renderInput(
                                   slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
@@ -377,7 +377,6 @@ export default function ViewsPage() {
                                   
                                 </div>
                               </div>
-                              <Progress value={item.percentage} className="h-2 flex-1" indicatorClassName={cn("bg-chart-1", slide.title === 'Gender' && item.name === 'Women' && "bg-chart-2")} />
                             </div>
                           ))}
                         </div>
@@ -465,6 +464,7 @@ export default function ViewsPage() {
 
 
     
+
 
 
 

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -135,12 +134,6 @@ export default function PublicPostPage() {
                 <Heart size={28} />
               </Button>
               <span className="text-xs font-semibold mt-1">{formatNumber(post.likes || 0)}</span>
-            </div>
-            <div className="flex flex-col items-center cursor-pointer">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">
-                <MessageCircle size={28} />
-              </Button>
-              <span className="text-xs font-semibold mt-1">{formatNumber(post.comments || 0)}</span>
             </div>
             <div className="flex flex-col items-center cursor-pointer">
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full h-auto p-1.5 text-2xl">

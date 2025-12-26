@@ -383,7 +383,6 @@ export default function ViewsPage() {
                                     itemIndex, 
                                     'percentage'
                                   )}
-                                  %
                                 </div>
                               </div>
                           ))}
@@ -480,3 +479,6 @@ export default function ViewsPage() {
 
 
 
+
+
+    

@@ -394,8 +394,8 @@ export default function ViewsPage() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="-left-2" />
-                <CarouselNext className="-right-2" />
+                <CarouselPrevious className="-left-2 hidden" />
+                <CarouselNext className="-right-2 hidden" />
               </Carousel>
             </section>
 
@@ -483,6 +483,8 @@ export default function ViewsPage() {
 
 
 
+
+    
 
     
 

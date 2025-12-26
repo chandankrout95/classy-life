@@ -369,21 +369,24 @@ export default function ViewsPage() {
                         <h4 className="font-bold mb-4 text-sm sm:text-base">{slide.title}</h4>
                         <div className="space-y-3">
                           {(slide.data as {name: string, percentage: number}[]).map((item, itemIndex) => (
-                            <div key={itemIndex} className="flex justify-between items-center text-sm">
-                                {renderInput(
-                                  slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
-                                  item, 
-                                  itemIndex, 
-                                  'name'
-                                )}
-                                <div className="flex items-center gap-1">
-                                  {renderInput(
+                            <div key={itemIndex} className="space-y-1">
+                                <div className="flex justify-between items-center text-sm">
+                                    {renderInput(
                                     slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
                                     item, 
                                     itemIndex, 
-                                    'percentage'
-                                  )}
+                                    'name'
+                                    )}
+                                    <div className="flex items-center gap-1">
+                                    {renderInput(
+                                        slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
+                                        item, 
+                                        itemIndex, 
+                                        'percentage'
+                                    )}
+                                    </div>
                                 </div>
+                                <Progress value={item.percentage} className="h-2 bg-zinc-800 flex-1" indicatorClassName={slide.title === 'Gender' && item.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>
                               </div>
                           ))}
                         </div>

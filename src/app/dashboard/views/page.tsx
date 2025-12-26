@@ -151,9 +151,9 @@ export default function ViewsPage() {
     };
     
 
-    const topContent = tempProfile?.posts
-        ?.sort((a, b) => (b.views || 0) - (a.views || 0))
-        .slice(0, 4) || [];
+    const topContent = [...(tempProfile?.posts || [])]
+        .sort((a, b) => (b.views || 0) - (a.views || 0))
+        .slice(0, 4);
 
     const { stats = {} } = tempProfile;
     const { 
@@ -608,3 +608,4 @@ export default function ViewsPage() {
     
 
     
+

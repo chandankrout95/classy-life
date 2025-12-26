@@ -184,16 +184,16 @@ export default function ViewsPage() {
         data: topCities.slice(0, 4),
       },
       {
-        title: "Gender",
-        data: genderBreakdown.sort((a,b) => a.name === 'Men' ? -1 : 1),
-      },
-      {
         title: "Top age ranges",
         data: topAgeRanges,
       },
       {
         title: "Top countries",
         data: topCountries,
+      },
+      {
+        title: "Gender",
+        data: genderBreakdown.sort((a,b) => a.name === 'Men' ? -1 : 1),
       },
     ];
 
@@ -465,5 +465,6 @@ export default function ViewsPage() {
 
 
     
+
 
 

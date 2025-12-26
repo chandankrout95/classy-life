@@ -414,7 +414,7 @@ export default function ViewsPage() {
                                         </svg>
                                      )}
                                 </div>
-                                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-2 py-0.5 rounded-full">
                                     {formatNumber(post.views || 0)}
                                 </div>
                             </div>
@@ -608,4 +608,5 @@ export default function ViewsPage() {
     
 
     
+
 

@@ -13,7 +13,8 @@ import {
   BarChart,
   PlaySquare,
   Loader2,
-  HelpCircle,
+  TrendingUp,
+  Link2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -91,6 +92,11 @@ export default function ProfessionalDashboardPage() {
         { icon: PlaySquare, label: "Trial reels" },
     ]
 
+    const tipsAndResources = [
+        { icon: TrendingUp, label: "Trending audio" },
+        { icon: Link2, label: "Other helpful resources" },
+    ]
+
   return (
     <div className="bg-background text-foreground min-h-screen pb-24">
       <header className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b border-zinc-800">
@@ -162,12 +168,17 @@ export default function ProfessionalDashboardPage() {
         </section>
         
         <section>
-            <h2 className="text-base sm:text-lg font-bold mb-4">Placeholder Section</h2>
-            <div className="p-4 border-2 border-dashed border-zinc-700 rounded-lg">
-                <div className="flex flex-col items-center justify-center text-center text-zinc-500">
-                    <HelpCircle className="w-12 h-12 mb-2" />
-                    <p className="text-sm">This is a placeholder. Provide content to be displayed here.</p>
-                </div>
+            <h2 className="text-base sm:text-lg font-bold mb-4">Tips and resources</h2>
+            <div className="space-y-2">
+                {tipsAndResources.map(item => (
+                    <div key={item.label} className="flex items-center p-2 rounded-lg hover:bg-zinc-900 cursor-pointer">
+                        <item.icon size={24} className="mr-4"/>
+                        <div className="flex-1">
+                            <span className="text-sm sm:text-base">{item.label}</span>
+                        </div>
+                        <ChevronRight size={20} className="text-zinc-500" />
+                    </div>
+                ))}
             </div>
         </section>
 

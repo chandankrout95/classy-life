@@ -23,7 +23,6 @@ export const mockProfile: UserProfileData = {
         { name: 'London', percentage: 1.8 },
         { name: 'Sao Paulo', percentage: 1.5 },
         { name: 'Los Angeles', percentage: 1.2 },
-        { name: 'Mumbai', percentage: 1.1 },
     ],
     topAgeRanges: [
         { name: '18-24', percentage: 30 },
@@ -107,7 +106,6 @@ export const mockProfile: UserProfileData = {
         { name: 'London', percentage: 1.8 },
         { name: 'Sao Paulo', percentage: 1.5 },
         { name: 'Los Angeles', percentage: 1.2 },
-        { name: 'Mumbai', percentage: 1.1 },
       ],
       viewSources: [
         { source: 'Your profile', percentage: 45.2 },

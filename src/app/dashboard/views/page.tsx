@@ -189,7 +189,7 @@ export default function ViewsPage() {
       },
       {
         title: "Top age ranges",
-        data: topAgeRanges,
+        data: topAgeRanges.slice(0, 4),
       },
       {
         title: "Gender",
@@ -484,6 +484,8 @@ export default function ViewsPage() {
 
 
 
+
+    
 
     
 

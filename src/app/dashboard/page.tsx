@@ -13,7 +13,7 @@ import {
   BarChart,
   PlaySquare,
   Loader2,
-  TrendingUp,
+  ArrowUpRight,
   Link2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -93,7 +93,7 @@ export default function ProfessionalDashboardPage() {
     ]
 
     const tipsAndResources = [
-        { icon: TrendingUp, label: "Trending audio" },
+        { icon: ArrowUpRight, label: "Trending audio" },
         { icon: Link2, label: "Other helpful resources" },
     ]
 

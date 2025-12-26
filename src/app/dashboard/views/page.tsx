@@ -180,6 +180,10 @@ export default function ViewsPage() {
 
     const audienceSlides = [
       {
+        title: "Top towns/cities",
+        data: topCities.slice(0, 4),
+      },
+      {
         title: "Top countries",
         data: topCountries,
       },
@@ -188,18 +192,16 @@ export default function ViewsPage() {
         data: topAgeRanges,
       },
       {
-        title: "Top towns/cities",
-        data: topCities.slice(0, 4),
-      },
-      {
         title: "Gender",
         data: [...genderBreakdown].sort((a,b) => a.name === 'Men' ? -1 : 1),
       },
     ].sort((a, b) => {
-        if (a.title === "Top age ranges") return 1;
-        if (b.title === "Top age ranges") return -1;
+        if (a.title === "Top towns/cities") return -1;
+        if (b.title === "Top towns/cities") return 1;
         if (a.title === "Gender") return 1;
         if (b.title === "Gender") return -1;
+        if (a.title === "Top age ranges") return 1;
+        if (b.title === "Top age ranges") return -1;
         return 0;
     });
 
@@ -367,8 +369,7 @@ export default function ViewsPage() {
                         <h4 className="font-bold mb-4 text-sm sm:text-base">{slide.title}</h4>
                         <div className="space-y-3">
                           {(slide.data as {name: string, percentage: number}[]).map((item, itemIndex) => (
-                            <div key={itemIndex}>
-                              <div className="flex justify-between items-center text-sm">
+                            <div key={itemIndex} className="flex justify-between items-center text-sm">
                                 {renderInput(
                                   slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
                                   item, 
@@ -382,11 +383,8 @@ export default function ViewsPage() {
                                     itemIndex, 
                                     'percentage'
                                   )}
-                                  
                                 </div>
                               </div>
-                               <Progress value={item.percentage} className="h-2 bg-zinc-800 flex-1 mt-1" indicatorClassName={cn("bg-chart-1", {'bg-chart-2': slide.title === 'Gender' && item.name === 'Women'})}/>
-                            </div>
                           ))}
                         </div>
                       </div>
@@ -473,6 +471,7 @@ export default function ViewsPage() {
 
 
     
+
 
 
 

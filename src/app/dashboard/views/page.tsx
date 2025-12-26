@@ -9,7 +9,7 @@ import { formatNumber, cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { StackedProgress } from "@/components/stacked-progress";
+import { StackedProgress } from "@/components/ui/stacked-progress";
 import { ViewsBreakdownChart } from "@/components/views-breakdown-chart";
 import { produce } from "immer";
 import type { UserProfileData } from "@/lib/types";
@@ -191,7 +191,7 @@ export default function ViewsPage() {
 
         <main className="p-4 space-y-8">
             <div className="flex justify-between items-center text-sm sm:text-base">
-                <Button variant="ghost" className="bg-zinc-700 text-zinc-400 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm" disabled>
+                <Button variant="ghost" className="bg-black text-white border border-zinc-700 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm" disabled>
                     Last 30 days
                     <ChevronDown size={20} className="ml-2" />
                 </Button>
@@ -465,3 +465,4 @@ export default function ViewsPage() {
         </div>
     );
 }
+

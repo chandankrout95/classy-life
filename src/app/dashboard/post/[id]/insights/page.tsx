@@ -253,6 +253,12 @@ if (dashboardLoading || !minWaitDone || !post) {
               <Input type="number" value={post.likes || 0} onChange={(e) => handleSimpleFieldChange('likes', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
             ) : formatNumber(post.likes || 0)}</span>
           </div>
+           <div className="flex flex-col items-center">
+            <MessageCircle size={20} />
+            <span className="text-xs mt-1">{isEditing ? (
+              <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
+            ) : formatNumber(post.comments || 0)}</span>
+          </div>
           <div className="flex flex-col items-center">
             <Send size={20} />
             <span className="text-xs mt-1">{isEditing ? (

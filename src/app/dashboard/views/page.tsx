@@ -240,14 +240,46 @@ export default function ViewsPage() {
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: viewsBreakdown.find(d => d.name === 'followers')?.color }}></span>
                     <span>Followers</span>
                 </div>
-                <span>{viewsBreakdown.find(d => d.name === 'followers')?.value}%</span>
+                 {isPageEditing ? (
+                  <Input
+                    type="number"
+                    value={viewsBreakdown.find(d => d.name === 'followers')?.value || 0}
+                    onChange={(e) => {
+                        const newValue = parseInt(e.target.value) || 0;
+                        const newBreakdown = produce(viewsBreakdown, draft => {
+                            const item = draft.find(d => d.name === 'followers');
+                            if (item) item.value = newValue;
+                        });
+                        handleUpdate('stats.viewsBreakdown', newBreakdown);
+                    }}
+                    className="bg-transparent border-none p-0 h-auto w-12 text-right text-xs sm:text-sm font-semibold no-spinner ring-1 ring-primary rounded-sm"
+                    />
+                ) : (
+                    <span>{viewsBreakdown.find(d => d.name === 'followers')?.value}%</span>
+                )}
                 </div>
                 <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: viewsBreakdown.find(d => d.name === 'non-followers')?.color }}></span>
                     <span>Non-followers</span>
                 </div>
-                <span>{viewsBreakdown.find(d => d.name === 'non-followers')?.value}%</span>
+                {isPageEditing ? (
+                    <Input
+                    type="number"
+                     value={viewsBreakdown.find(d => d.name === 'non-followers')?.value || 0}
+                     onChange={(e) => {
+                        const newValue = parseInt(e.target.value) || 0;
+                        const newBreakdown = produce(viewsBreakdown, draft => {
+                            const item = draft.find(d => d.name === 'non-followers');
+                            if (item) item.value = newValue;
+                        });
+                        handleUpdate('stats.viewsBreakdown', newBreakdown);
+                    }}
+                    className="bg-transparent border-none p-0 h-auto w-12 text-right text-xs sm:text-sm font-semibold no-spinner ring-1 ring-primary rounded-sm"
+                    />
+                ) : (
+                    <span>{viewsBreakdown.find(d => d.name === 'non-followers')?.value}%</span>
+                )}
                 </div>
             </div>
             </section>

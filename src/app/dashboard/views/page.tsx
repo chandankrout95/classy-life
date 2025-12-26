@@ -114,7 +114,15 @@ export default function ViewsPage() {
                     'gender': 'stats.genderBreakdown'
                 }
                 const listPath = pathMap[listName];
-                const updatedList = produce((tempProfile.stats as any)[listName.replace('top','top').toLowerCase()] || [], (draft: any[]) => {
+                const listData = (tempProfile.stats as any)[listPath.split('.')[1]] || [];
+
+                const updatedList = produce(listData, (draft: any[]) => {
+                    // Ensure the item exists before trying to modify it
+                    if (!draft[index]) {
+                      if (listName === 'gender' || listName === 'ageRanges' || listName === 'cities' || listName === 'countries') {
+                        draft[index] = { name: '', percentage: 0 };
+                      }
+                    }
                     (draft[index] as any)[field] = type === 'number' ? Number(e.target.value) : e.target.value;
                 });
                 handleUpdate(listPath, updatedList);

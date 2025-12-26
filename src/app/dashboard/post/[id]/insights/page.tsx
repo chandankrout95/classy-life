@@ -254,7 +254,19 @@ if (dashboardLoading || !minWaitDone || !post) {
             ) : formatNumber(post.likes || 0)}</span>
           </div>
           <div className="flex flex-col items-center">
-              <MessageCircle className="w-6 h-5 -scale-x-100" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-6 h-5"
+            >
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
             ) : formatNumber(post.comments || 0)}</span>

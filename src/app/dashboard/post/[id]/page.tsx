@@ -161,7 +161,18 @@ export default function PostPage() {
 
               <div className="flex flex-col items-center cursor-pointer">
                 <div className="p-1 rounded-full hover:bg-white/10">
-                  <MessageCircle className="w-6 h-6 -scale-x-100" />
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
                 </div>
                 <span className="text-xs font-semibold opacity-95">
                   {formatNumber(post.comments || 0)}

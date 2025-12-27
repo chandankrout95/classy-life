@@ -105,8 +105,8 @@ export default function ProfessionalDashboardPage() {
             <ChevronLeft size={28} />
           </Link>
         </div>
-        <div className="text-center">
-            <span className="text-sm font-bold">Professional dashboard</span>
+        <div className="text-center overflow-hidden">
+            <span className="text-sm font-bold whitespace-nowrap">Professional dashboard</span>
         </div>
         <div className="flex justify-end">
             <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size={isEditing ? "default" : "icon"}>

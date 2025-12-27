@@ -100,9 +100,9 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
                     <InsightForgeLogo className="w-12 h-12 text-primary mx-auto" />
-                    <h1 className="text-3xl font-bold mt-4">Welcome to Classy Life</h1>
+                    <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">
-                        Sign in to continue
+                        by 578 SaaS Agency
                     </p>
                 </div>
 

@@ -101,11 +101,12 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
                     <Image
-                        src="https://picsum.photos/seed/logo/100/100"
+                        src="https://storage.googleapis.com/aai-web-samples/578-team-logo.png"
                         alt="Insight Phantom Logo"
-                        width={48}
-                        height={48}
-                        className="mx-auto rounded-full"
+                        width={100}
+                        height={100}
+                        className="mx-auto rounded-md"
+                        data-ai-hint="gaming team logo"
                     />
                     <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">

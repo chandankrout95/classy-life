@@ -47,14 +47,6 @@ export function TopNav({ onPlusClick, userId }: TopNavProps) {
         </svg>
       </Link>
 
-      {/* REELS (PLUS) */}
-      <button onClick={onPlusClick} className="nav-item">
-        <svg className="nav-icon" viewBox="0 0 24 24">
-          <rect x="3" y="3" width="18" height="18" rx="4" ry="4"/>
-          <polygon points="10,8 16,12 10,16"/>
-        </svg>
-      </button>
-
       {/* SEND */}
       <Link href="#" className="nav-item">
         <svg className="nav-icon" viewBox="0 0 24 24">
@@ -62,6 +54,14 @@ export function TopNav({ onPlusClick, userId }: TopNavProps) {
           <path d="M22 2 15 22 11 13 2 9 22 2"/>
         </svg>
       </Link>
+
+      {/* REELS (PLUS) */}
+      <button onClick={onPlusClick} className="nav-item">
+        <svg className="nav-icon" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4" ry="4"/>
+          <polygon points="10,8 16,12 10,16"/>
+        </svg>
+      </button>
 
       {/* PROFILE */}
       <button onClick={handleProfileClick} className="profile-wrapper">

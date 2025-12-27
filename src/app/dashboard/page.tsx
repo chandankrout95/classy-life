@@ -99,7 +99,7 @@ export default function ProfessionalDashboardPage() {
 
   return (
     <div className="bg-background text-foreground min-h-screen pb-24">
-      <header className="p-4 grid grid-cols-3 items-center sticky top-0 bg-background z-10 border-b border-zinc-800">
+      <header className="p-2 grid grid-cols-3 items-center sticky top-0 bg-background z-10 border-b border-zinc-800">
         <div className="flex justify-start">
           <Link href="/dashboard/profile">
             <ChevronLeft size={28} />

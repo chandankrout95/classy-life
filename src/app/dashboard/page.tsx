@@ -106,7 +106,7 @@ export default function ProfessionalDashboardPage() {
           </Link>
         </div>
         <div className="text-center overflow-hidden">
-            <span className="text-sm font-bold whitespace-nowrap">Professional dashboard</span>
+            <span className="text-xs font-bold whitespace-nowrap">Professional dashboard</span>
         </div>
         <div className="flex justify-end">
             <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size={isEditing ? "default" : "icon"}>

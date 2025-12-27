@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, TouchEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -64,11 +64,55 @@ export function UserProfile() {
   const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
   const [activeTab, setActiveTab] = useState('grid');
   
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [wasRefreshed, setWasRefreshed] = useState(false);
+  const [pullPosition, setPullPosition] = useState(0);
+  const touchStartY = useRef(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+
   useEffect(() => {
     if (formData) {
       setLocalProfile(formData);
     }
   }, [formData]);
+  
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    if (scrollContainerRef.current?.scrollTop === 0) {
+      touchStartY.current = e.touches[0].clientY;
+    } else {
+      touchStartY.current = 0;
+    }
+  };
+
+  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    if (touchStartY.current === 0) return;
+    const pullDistance = e.touches[0].clientY - touchStartY.current;
+    if (pullDistance > 0) {
+      e.preventDefault();
+      setPullPosition(Math.min(pullDistance, 100));
+    }
+  };
+
+  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+    if (touchStartY.current === 0) return;
+
+    if (pullPosition > 80) { // Threshold to trigger refresh
+      handleRefresh();
+    }
+    setPullPosition(0);
+    touchStartY.current = 0;
+  };
+  
+  const handleRefresh = () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    setWasRefreshed(true);
+    setTimeout(() => {
+        setIsRefreshing(false);
+    }, 1500);
+  };
+
 
   const handleSignOut = async () => {
     if (auth) {
@@ -162,7 +206,7 @@ export function UserProfile() {
 
   const isActionPending = isSaving;
 
-  if (isComponentLoading || !localProfile) {
+  if ((isComponentLoading && !wasRefreshed) || !localProfile) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <Loader2 className="w-16 h-16 text-primary animate-spin" />
@@ -254,7 +298,11 @@ export function UserProfile() {
     <>
       <div className="bg-background h-screen flex flex-col">
         <div 
+          ref={scrollContainerRef}
           className="flex-1 overflow-y-auto no-scrollbar relative"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           <header className="p-4 bg-background border-b border-zinc-800">
             <div className="grid grid-cols-3 items-center">
@@ -267,10 +315,9 @@ export function UserProfile() {
                   <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
                 </div>
               </div>
-              <div className="flex items-center gap-1 relative justify-self-center">
+              <div className="flex items-center gap-1 justify-self-center">
                 <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
                 <ChevronDown size={20} />
-                <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
               </div>
               <div className="flex items-center gap-4 justify-self-end">
                 <span className="font-bold text-xl">@</span>
@@ -278,8 +325,26 @@ export function UserProfile() {
               </div>
             </div>
           </header>
+
+          <div
+              className="absolute top-0 left-0 right-0 flex justify-center items-center"
+              style={{ 
+                  transform: `translateY(${Math.min(pullPosition, 60) - 60}px)`,
+                  transition: 'transform 0.2s',
+                  height: '60px',
+                  opacity: isRefreshing ? 1 : Math.max(0, Math.min(pullPosition / 60, 1))
+              }}
+          >
+              <div className="apple-loader-container">
+                  {[...Array(12)].map((_, i) => (
+                      <div key={i} className="spinner-blade" style={{ animationPlayState: isRefreshing ? 'running' : 'paused' }}/>
+                  ))}
+              </div>
+          </div>
+
           <div 
             className="max-w-4xl mx-auto"
+            style={{ transform: `translateY(${isRefreshing ? 60 : pullPosition}px)`, transition: 'transform 0.2s' }}
           >
             <div className="p-4">
               <div className="flex items-center gap-2 sm:gap-4 mb-4">
@@ -341,7 +406,7 @@ export function UserProfile() {
                 >
                   Edit profile
                 </Button>
-                <Button variant="secondary" className="flex-1">
+                <Button variant="secondary" className="flex-1" onClick={handleRefresh}>
                   Share Profile
                 </Button>
               </div>

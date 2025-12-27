@@ -253,32 +253,31 @@ export function UserProfile() {
   return (
     <>
       <div className="bg-background h-screen flex flex-col">
-        <header className="sticky top-0 z-20 p-4 bg-background border-b border-zinc-800">
-          <div className="grid grid-cols-3 items-center">
-            <div className="justify-self-start">
-              <div
-                className="relative cursor-pointer active:scale-95 transition-transform"
-                onClick={() => setIsCreatingPost(true)}
-              >
-                <PlusSquare size={24} />
-                <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 relative justify-self-center">
-              <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
-              <ChevronDown size={20} />
-              <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
-            </div>
-            <div className="flex items-center gap-4 justify-self-end">
-              <span className="font-bold text-xl">@</span>
-              <Menu size={28} />
-            </div>
-          </div>
-        </header>
-
         <div 
           className="flex-1 overflow-y-auto no-scrollbar relative"
         >
+          <header className="p-4 bg-background border-b border-zinc-800">
+            <div className="grid grid-cols-3 items-center">
+              <div className="justify-self-start">
+                <div
+                  className="relative cursor-pointer active:scale-95 transition-transform"
+                  onClick={() => setIsCreatingPost(true)}
+                >
+                  <PlusSquare size={24} />
+                  <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 relative justify-self-center">
+                <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
+                <ChevronDown size={20} />
+                <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
+              </div>
+              <div className="flex items-center gap-4 justify-self-end">
+                <span className="font-bold text-xl">@</span>
+                <Menu size={28} />
+              </div>
+            </div>
+          </header>
           <div 
             className="max-w-4xl mx-auto"
           >
@@ -453,5 +452,3 @@ export function UserProfile() {
     </>
   );
 }
-
-    

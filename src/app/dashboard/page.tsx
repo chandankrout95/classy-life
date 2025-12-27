@@ -99,16 +99,20 @@ export default function ProfessionalDashboardPage() {
 
   return (
     <div className="bg-background text-foreground min-h-screen pb-24">
-      <header className="p-2 flex items-center justify-between sticky top-0 bg-background z-10 border-b border-zinc-800">
-        <div className="flex items-center gap-2">
+      <header className="p-2 grid grid-cols-3 items-center sticky top-0 bg-background z-10 border-b border-zinc-800">
+        <div className="flex justify-start">
           <Link href="/dashboard/profile">
             <ChevronLeft size={28} />
           </Link>
-          <span className="text-sm font-bold whitespace-nowrap">Professional dashboard</span>
         </div>
-        <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size={isEditing ? "default" : "icon"}>
-            {isEditing ? "Done" : <Settings size={24} />}
-        </Button>
+        <div className="text-center">
+            <span className="text-sm font-bold whitespace-nowrap">Professional dashboard</span>
+        </div>
+        <div className="flex justify-end">
+            <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size={isEditing ? "default" : "icon"}>
+                {isEditing ? "Done" : <Settings size={24} />}
+            </Button>
+        </div>
       </header>
 
       <main className="p-4 space-y-8">
@@ -194,5 +198,7 @@ export default function ProfessionalDashboardPage() {
     </div>
   );
 }
+
+    
 
     

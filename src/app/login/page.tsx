@@ -101,7 +101,7 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
                     <Image
-                        src="https://storage.googleapis.com/aai-web-samples/578-team-logo.png"
+                        src="/loginscreenlogo.png"
                         alt="Insight Phantom Logo"
                         width={100}
                         height={100}

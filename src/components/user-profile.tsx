@@ -406,7 +406,7 @@ export function UserProfile() {
               >
                 Edit profile
               </Button>
-              <Button variant="secondary" className="flex-1">
+              <Button variant="secondary" className="flex-1" onDoubleClick={handleRefresh}>
                 Share Profile
               </Button>
             </div>

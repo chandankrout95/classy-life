@@ -82,6 +82,7 @@ export function UserProfile() {
     if (isRefreshing) return;
     setIsRefreshing(true);
     setTimeout(() => {
+      // Intentionally not reloading to just show animation
       setIsRefreshing(false);
     }, 1500); // Show spinner for 1.5 seconds
   };

@@ -70,7 +70,7 @@ export default function LoginPage() {
                         width={100}
                         height={100}
                         className="mx-auto rounded-md"
-                        data-ai-hint="gaming team"
+                        data-ai-hint="gaming team logo"
                     />
                     <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">
@@ -111,9 +111,11 @@ export default function LoginPage() {
                         </Button>
                     </form>
 
-                    <Button variant="secondary" className="w-full mt-4 bg-amber-500 text-black hover:bg-amber-600 font-bold" disabled={isFormLoading}>
-                        BUY Now
-                    </Button>
+                    <a href="https://t.me/+Rj5caNIXxcI4OTBl" target="_blank" rel="noopener noreferrer" className="block w-full mt-4">
+                        <Button variant="secondary" className="w-full bg-amber-500 text-black hover:bg-amber-600 font-bold" disabled={isFormLoading}>
+                            BUY Now
+                        </Button>
+                    </a>
                 </div>
             </div>
         </div>

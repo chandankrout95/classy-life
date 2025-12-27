@@ -254,7 +254,7 @@ export function UserProfile() {
     <>
       <div className="bg-background h-screen flex flex-col">
         <div className="flex-1 overflow-y-auto no-scrollbar">
-          <header className="p-4 bg-background border-b border-zinc-800">
+          <header className="p-4 bg-background border-b border-zinc-700">
             <div className="grid grid-cols-3 items-center">
               <div className="justify-self-start">
                 <div
@@ -448,3 +448,5 @@ export function UserProfile() {
     </>
   );
 }
+
+    

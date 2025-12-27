@@ -185,18 +185,22 @@ export default function ViewsPage() {
       {
         title: "Top towns/cities",
         data: topCities.slice(0, 4),
+        listKey: 'cities' as const,
       },
       {
         title: "Top countries",
         data: topCountries.slice(0,4),
+        listKey: 'countries' as const,
       },
       {
         title: "Top age ranges",
         data: topAgeRanges.slice(0, 4),
+        listKey: 'ageRanges' as const,
       },
       {
         title: "Gender",
         data: [...genderBreakdown].sort((a,b) => a.name === 'Men' ? -1 : 1),
+        listKey: 'gender' as const,
       },
     ].sort((a, b) => {
         if (a.title === "Top towns/cities") return -1;
@@ -220,7 +224,7 @@ export default function ViewsPage() {
             <span className="text-xl font-bold">Views</span>
             </div>
             <Button variant={isPageEditing ? "default" : "ghost"} size="icon" onClick={handleToggleEdit}>
-                <Info size={24} />
+                {isPageEditing ? 'Done' : <Info size={24} />}
             </Button>
         </header>
 
@@ -487,19 +491,9 @@ export default function ViewsPage() {
                           {(slide.data as {name: string, percentage: number}[]).map((item, itemIndex) => (
                             <div key={itemIndex} className="space-y-1">
                                 <div className="flex justify-between items-center text-sm">
-                                    {renderInput(
-                                    slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
-                                    item, 
-                                    itemIndex, 
-                                    'name'
-                                    )}
+                                    {renderInput(slide.listKey, item, itemIndex, 'name')}
                                     <div className="flex items-center gap-1">
-                                    {renderInput(
-                                        slide.title.toLowerCase().replace(/ /g, '').replace('towns/', '') as 'cities' | 'countries' | 'ageRanges' | 'gender', 
-                                        item, 
-                                        itemIndex, 
-                                        'percentage'
-                                    )}
+                                        {renderInput(slide.listKey, item, itemIndex, 'percentage')}
                                     </div>
                                 </div>
                                 <Progress value={item.percentage} className="h-2 flex-1" indicatorClassName={slide.title === 'Gender' && item.name === 'Women' ? "bg-chart-2" : "bg-chart-1"}/>

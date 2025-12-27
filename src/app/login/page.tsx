@@ -65,12 +65,12 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
                     <Image
-                        src="/loginscreenlogo.png"
+                        src="https://images.unsplash.com/photo-1759317823175-f95dcd289997?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxoYXBweSUyMG5ldyUyMHllYXIlMjAyMDI2fGVufDB8fHx8MTc2NjgxNzQxN3ww&ixlib=rb-4.1.0&q=80&w=1080"
                         alt="Insight Phantom Logo"
                         width={100}
                         height={100}
                         className="mx-auto rounded-md"
-                        data-ai-hint="gaming team logo"
+                        data-ai-hint="gaming team"
                     />
                     <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">

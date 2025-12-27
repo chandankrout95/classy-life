@@ -81,8 +81,8 @@ export function UserProfile() {
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
-      window.location.reload();
-    }, 1500); // Simulate network request
+      setIsRefreshing(false);
+    }, 1500); // Show spinner for 1.5 seconds
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -92,7 +92,7 @@ export function UserProfile() {
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (pullStartY === 0) return;
+    if (pullStartY === 0 || isRefreshing) return;
     const currentY = e.touches[0].clientY;
     const distance = currentY - pullStartY;
     if (distance > 0) {
@@ -102,6 +102,7 @@ export function UserProfile() {
   };
 
   const handleTouchEnd = () => {
+    if (isRefreshing) return;
     if (pullDistance > 80) { // Threshold to trigger refresh
       handleRefresh();
     }
@@ -294,7 +295,7 @@ export function UserProfile() {
     <>
       <div 
         ref={containerRef}
-        className="p-4 max-w-4xl mx-auto h-full overflow-y-auto"
+        className="p-4 max-w-4xl mx-auto h-full overflow-y-auto no-scrollbar"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -302,8 +303,10 @@ export function UserProfile() {
         <div 
           className="fixed top-0 left-0 right-0 flex justify-center items-center bg-background/80 backdrop-blur-sm z-50 transition-transform duration-300"
           style={{ 
-            transform: `translateY(${isRefreshing ? 0 : -100}%) translateY(${pullDistance}px)`,
-            height: '60px',
+            transform: `translateY(${isRefreshing || pullDistance > 0 ? 0 : '-100%'})`,
+            opacity: isRefreshing || pullDistance > 0 ? 1 : 0,
+            height: `${Math.min(pullDistance, 60)}px`,
+            maxHeight: '60px',
           }}
         >
           {isRefreshing ? (
@@ -316,7 +319,7 @@ export function UserProfile() {
           )}
         </div>
         
-        <div style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: 'transform 0.2s' }}>
+        <div style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: pullDistance > 0 ? 'none' : 'transform 0.3s ease' }}>
           <header className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-1 relative">
               <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>

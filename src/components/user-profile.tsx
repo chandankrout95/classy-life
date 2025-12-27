@@ -70,6 +70,7 @@ export function UserProfile() {
   const [pullStartY, setPullStartY] = useState(0);
   const [pullDistance, setPullDistance] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [wasRefreshed, setWasRefreshed] = useState(false);
 
 
   useEffect(() => {
@@ -81,8 +82,8 @@ export function UserProfile() {
   const handleRefresh = () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
+    setWasRefreshed(true); // Flag that a refresh occurred
     setTimeout(() => {
-      // Intentionally not reloading to just show animation
       setIsRefreshing(false);
     }, 1500); // Show spinner for 1.5 seconds
   };
@@ -205,7 +206,7 @@ export function UserProfile() {
 
   const isActionPending = isSaving;
 
-  if (isComponentLoading || !localProfile) {
+  if ((isComponentLoading && !wasRefreshed) || !localProfile) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <Loader2 className="w-16 h-16 text-primary animate-spin" />

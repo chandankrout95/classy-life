@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronDown,
-  PlusSquare,
+  Plus,
   Menu,
   PlaySquare,
   ChevronRight,
@@ -261,7 +261,7 @@ export function UserProfile() {
                   className="relative cursor-pointer active:scale-95 transition-transform"
                   onClick={() => setIsCreatingPost(true)}
                 >
-                  <PlusSquare size={24} />
+                  <Plus size={28} />
                   <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
                 </div>
               </div>

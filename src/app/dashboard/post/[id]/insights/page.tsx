@@ -354,7 +354,30 @@ if (dashboardLoading || !minWaitDone || !post) {
           <div className="h-[200px] -mb-4 mt-4">
             <RetentionChart data={retentionData} yAxisTicks={[0, 50, 99]} yAxisDomain={[0, 99]} />
           </div>
-          {/* ... Rest of your original sections ... */}
+          {isEditing && (
+            <div className="mt-8 space-y-2">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                <p className="text-xs text-muted-foreground">Timestamp (s)</p>
+                <p className="text-xs text-muted-foreground">Retention (%)</p>
+              </div>
+              {retentionData.map((dataPoint, index) => (
+                <div key={index} className="grid grid-cols-2 gap-x-4">
+                  <Input
+                    type="number"
+                    value={dataPoint.timestamp}
+                    onChange={(e) => handleRetentionDataChange(index, 'timestamp', e.target.value)}
+                    className="bg-transparent"
+                  />
+                  <Input
+                    type="number"
+                    value={dataPoint.retention}
+                    onChange={(e) => handleRetentionDataChange(index, 'retention', e.target.value)}
+                    className="bg-transparent"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </section>
 
         <section>

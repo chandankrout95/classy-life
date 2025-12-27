@@ -47,14 +47,6 @@ export function TopNav({ onPlusClick, userId }: TopNavProps) {
         </svg>
       </button>
 
-      {/* SEARCH */}
-      <Link href="#" className="nav-item">
-        <svg className="nav-icon" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="7" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-      </Link>
-
       {/* SEND */}
       <Link href="#" className="nav-item">
         <svg className="nav-icon" viewBox="0 0 24 24">
@@ -63,6 +55,14 @@ export function TopNav({ onPlusClick, userId }: TopNavProps) {
         </svg>
       </Link>
 
+      {/* SEARCH */}
+      <Link href="#" className="nav-item">
+        <svg className="nav-icon" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+      </Link>
+      
       {/* PROFILE */}
       <button onClick={handleProfileClick} className="profile-wrapper">
         {profile && !loading && profile.avatarUrl ? (

@@ -428,61 +428,27 @@ export function UserProfile() {
                 </svg>
               </button>
               <button onClick={() => setActiveTab('reels')}>
-
-                <svg
+                 <svg
                   className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`}
-                  width={28}
-                  height={28}
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  {/* Clapper diagonal lines */}
-                  <path
-                    d="M17 7.5 L13 2"
+                  <rect
+                    x="3"
+                    y="3"
+                    width="18"
+                    height="18"
+                    rx="4"
+                    fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
+                    strokeWidth="2"
                   />
-
                   <path
-                    d="M10 7.5 L6 2"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-
-
-
-                  {/* Divider line (IMPORTANT for real Reels look) */}
-                  <line
-                    x1="3"
-                    y1="7.5"
-                    x2="21"
-                    y2="7.5"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-
-
-                  {/* Play icon */}
-                  <path
-                    d="
-                      M10.3 10.4
-                      Q10.3 9.8 11 10.2
-                      L15.6 12.8
-                      Q16.2 13.2 15.6 13.6
-                      L11 16
-                      Q10.3 16.4 10.3 15.8
-                      Z
-                    "
+                    d="M9 7L17 12L9 17V7Z"
                     fill="currentColor"
                   />
-
-
                 </svg>
-
               </button>
               <button onClick={() => setActiveTab('tagged')}>
                 <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

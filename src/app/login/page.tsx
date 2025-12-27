@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
 import { useFirebase } from '@/firebase';
@@ -99,7 +100,13 @@ export default function LoginPage() {
             </div>
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
-                    <InsightForgeLogo className="w-12 h-12 text-primary mx-auto" />
+                    <Image
+                        src="https://picsum.photos/seed/logo/100/100"
+                        alt="Insight Phantom Logo"
+                        width={48}
+                        height={48}
+                        className="mx-auto rounded-full"
+                    />
                     <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">
                         by 578 SaaS Agency

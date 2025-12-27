@@ -296,221 +296,228 @@ export function UserProfile() {
 
   return (
     <>
-      <div 
-        ref={containerRef}
-        className="bg-background h-full overflow-y-auto no-scrollbar"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div 
-          className="fixed top-0 left-0 right-0 flex justify-center items-center bg-background/80 backdrop-blur-sm z-50 transition-transform duration-300"
-          style={{ 
-            height: `60px`,
-            transform: `translateY(${pullDistance - 60}px)`,
-            opacity: Math.min(pullDistance / 60, 1),
-            pointerEvents: isRefreshing ? 'auto' : 'none'
-          }}
-        >
-          {isRefreshing ? (
-             <div className="apple-loader-container">
-                {[...Array(12)].map((_, i) => (
-                    <div key={i} className="spinner-blade" />
-                ))}
-            </div>
-          ) : (
-             <ArrowDown 
-                className="w-6 h-6 text-muted-foreground transition-transform" 
-                style={{ transform: `rotate(${pullDistance > 80 ? 180 : 0}deg)`}}
-            />
-          )}
-        </div>
-        
-        <div style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: pullDistance > 0 ? 'none' : 'transform 0.3s ease' }}>
-          <div className="p-4 max-w-4xl mx-auto">
-            <header className="grid grid-cols-3 items-center mb-4">
-              <div className="justify-self-start">
-                <div
-                  className="relative cursor-pointer active:scale-95 transition-transform"
-                  onClick={() => setIsCreatingPost(true)}
-                >
-                  <PlusSquare size={24} />
-                  <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 relative justify-self-center">
-                <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
-                <ChevronDown size={20} />
+      <div className="bg-background h-screen flex flex-col">
+        <header className="sticky top-0 z-20 p-4 bg-background border-b border-zinc-800">
+          <div className="grid grid-cols-3 items-center">
+            <div className="justify-self-start">
+              <div
+                className="relative cursor-pointer active:scale-95 transition-transform"
+                onClick={() => setIsCreatingPost(true)}
+              >
+                <PlusSquare size={24} />
                 <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
               </div>
-              <div className="flex items-center gap-4 justify-self-end">
-                <span className="font-bold text-xl">@</span>
-                <Menu size={28} />
-              </div>
-            </header>
-
-            <div className="flex items-center gap-2 sm:gap-4 mb-4">
-              <div className="relative flex-shrink-0 w-[90px] h-[90px]">
-                {localProfile.avatarUrl && <Image
-                  src={localProfile.avatarUrl}
-                  alt="Profile"
-                  width={90}
-                  height={90}
-                  className="rounded-full border-2 border-zinc-700 object-cover w-[90px] h-[90px]"
-                />}
-              </div>
-              <div className="flex-1 flex justify-around items-center">
-                <div className="text-center">
-                  <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
-                  <div className="text-xs sm:text-sm text-zinc-400">posts</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
-                  <div className="text-xs sm:text-sm text-zinc-400">followers</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
-                  <div className="text-xs sm:text-sm text-zinc-400">following</div>
-                </div>
-              </div>
             </div>
-
-            <div className="mb-4 space-y-1">
-              <div className="font-semibold text-sm sm:text-base">{localProfile.name}</div>
-              {Array.isArray(localProfile.bio) && <BioWithMentions bio={localProfile.bio} />}
-              {localProfile.link && (
-                <a href={`https://${localProfile.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs sm:text-sm text-blue-400">
-                  <Link2 size={16} />
-                  <span>{localProfile.link}</span>
-                </a>
-              )}
+            <div className="flex items-center gap-1 relative justify-self-center">
+              <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
+              <ChevronDown size={20} />
+              <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
             </div>
+            <div className="flex items-center gap-4 justify-self-end">
+              <span className="font-bold text-xl">@</span>
+              <Menu size={28} />
+            </div>
+          </div>
+        </header>
 
-            <Button
-              variant="secondary"
-              className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto"
-              onClick={() => router.push("/dashboard")}
-            >
-              <div>
-                <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
-                <div className="text-xs text-zinc-400">
-                  {localProfile.professionalDashboard.views} views in the last 30 days
+        <div 
+          ref={containerRef}
+          className="flex-1 overflow-y-auto no-scrollbar relative"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div 
+            className="absolute top-0 left-0 right-0 flex justify-center items-center bg-background/80 backdrop-blur-sm z-10 transition-transform duration-300"
+            style={{ 
+              height: `60px`,
+              transform: `translateY(${pullDistance - 60}px)`,
+              opacity: Math.min(pullDistance / 60, 1),
+              pointerEvents: isRefreshing ? 'auto' : 'none'
+            }}
+          >
+            {isRefreshing ? (
+               <div className="apple-loader-container">
+                  {[...Array(12)].map((_, i) => (
+                      <div key={i} className="spinner-blade" />
+                  ))}
+              </div>
+            ) : (
+               <ArrowDown 
+                  className="w-6 h-6 text-muted-foreground transition-transform" 
+                  style={{ transform: `rotate(${pullDistance > 80 ? 180 : 0}deg)`}}
+              />
+            )}
+          </div>
+          
+          <div 
+            style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: pullDistance > 0 ? 'none' : 'transform 0.3s ease' }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="p-4">
+              <div className="flex items-center gap-2 sm:gap-4 mb-4">
+                <div className="relative flex-shrink-0 w-[90px] h-[90px]">
+                  {localProfile.avatarUrl && <Image
+                    src={localProfile.avatarUrl}
+                    alt="Profile"
+                    width={90}
+                    height={90}
+                    className="rounded-full border-2 border-zinc-700 object-cover w-[90px] h-[90px]"
+                  />}
+                </div>
+                <div className="flex-1 flex justify-around items-center">
+                  <div className="text-center">
+                    <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
+                    <div className="text-xs sm:text-sm text-zinc-400">posts</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
+                    <div className="text-xs sm:text-sm text-zinc-400">followers</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
+                    <div className="text-xs sm:text-sm text-zinc-400">following</div>
+                  </div>
                 </div>
               </div>
-              <ChevronRight size={20} />
-            </Button>
 
-            <div className="flex gap-2 mb-4 text-sm">
+              <div className="mb-4 space-y-1">
+                <div className="font-semibold text-sm sm:text-base">{localProfile.name}</div>
+                {Array.isArray(localProfile.bio) && <BioWithMentions bio={localProfile.bio} />}
+                {localProfile.link && (
+                  <a href={`https://${localProfile.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs sm:text-sm text-blue-400">
+                    <Link2 size={16} />
+                    <span>{localProfile.link}</span>
+                  </a>
+                )}
+              </div>
+
               <Button
                 variant="secondary"
-                className="flex-1"
-                onClick={() => setIsEditing(true)}
+                className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto"
+                onClick={() => router.push("/dashboard")}
               >
-                Edit profile
+                <div>
+                  <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
+                  <div className="text-xs text-zinc-400">
+                    {localProfile.professionalDashboard.views} views in the last 30 days
+                  </div>
+                </div>
+                <ChevronRight size={20} />
               </Button>
-              <Button variant="secondary" className="flex-1" onClick={handleRefresh}>
-                Share Profile
-              </Button>
+
+              <div className="flex gap-2 mb-4 text-sm">
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit profile
+                </Button>
+                <Button variant="secondary" className="flex-1" onClick={handleRefresh}>
+                  Share Profile
+                </Button>
+              </div>
             </div>
 
             <div className="profile-tabs">
-              <button onClick={() => setActiveTab('grid')}>
-                <svg className={`tab-icon ${activeTab === 'grid' ? 'active' : ''}`} viewBox="0 0 24 24">
-                  <rect x="3" y="3" width="4" height="4" fill="currentColor" />
-                  <rect x="10" y="3" width="4" height="4" fill="currentColor" />
-                  <rect x="17" y="3" width="4" height="4" fill="currentColor" />
-                  <rect x="3" y="10" width="4" height="4" fill="currentColor" />
-                  <rect x="10" y="10" width="4" height="4" fill="currentColor" />
-                  <rect x="17" y="10" width="4" height="4" fill="currentColor" />
-                  <rect x="3" y="17" width="4" height="4" fill="currentColor" />
-                  <rect x="10" y="17" width="4" height="4" fill="currentColor" />
-                  <rect x="17" y="17" width="4" height="4" fill="currentColor" />
-                </svg>
-              </button>
-              <button onClick={() => setActiveTab('reels')}>
-                 <svg
-                  className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="3"
-                    y="3"
-                    width="18"
-                    height="18"
-                    rx="4"
+                <button onClick={() => setActiveTab('grid')}>
+                  <svg className={`tab-icon ${activeTab === 'grid' ? 'active' : ''}`} viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="4" height="4" fill="currentColor" />
+                    <rect x="10" y="3" width="4" height="4" fill="currentColor" />
+                    <rect x="17" y="3" width="4" height="4" fill="currentColor" />
+                    <rect x="3" y="10" width="4" height="4" fill="currentColor" />
+                    <rect x="10" y="10" width="4" height="4" fill="currentColor" />
+                    <rect x="17" y="10" width="4" height="4" fill="currentColor" />
+                    <rect x="3" y="17" width="4" height="4" fill="currentColor" />
+                    <rect x="10" y="17" width="4" height="4" fill="currentColor" />
+                    <rect x="17" y="17" width="4" height="4" fill="currentColor" />
+                  </svg>
+                </button>
+                <button onClick={() => setActiveTab('reels')}>
+                  <svg
+                    className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`}
+                    viewBox="0 0 24 24"
                     fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M9 7L17 12L9 17V7Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </button>
-              <button onClick={() => setActiveTab('tagged')}>
-                <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z" />
-                  <circle cx="12" cy="11" r="3" />
-                  <path d="M7 18c1.5-2 8.5-2 10 0" />
-                </svg>
-              </button>
-            </div>
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M9 7L17 12L9 17V7Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+                <button onClick={() => setActiveTab('tagged')}>
+                  <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z" />
+                    <circle cx="12" cy="11" r="3" />
+                    <path d="M7 18c1.5-2 8.5-2 10 0" />
+                  </svg>
+                </button>
+              </div>
 
-            <div className="grid grid-cols-3 gap-1">
-              {localProfile.posts?.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()).map((post) => (
-                <Link href={`/dashboard/post/${post.id}`} key={post.id}>
-                  <div className="relative aspect-[9/16] overflow-hidden rounded-md bg-zinc-800">
-                    {post.imageUrl && (
-                      post.type === 'reel' ? (
-                        <video
-                          src={post.imageUrl}
-                          poster={post.imageUrl.replace(/\.[^/.]+$/, ".jpg")}
-                          className="object-cover w-full h-full"
-                          muted
-                          playsInline
-                          webkit-playsinline="true"
-                          preload="metadata"
-                        />
-                      ) : (
-                        <Image
-                          src={post.imageUrl}
-                          alt="Post"
-                          fill
-                          className="object-cover"
-                        />
-                      )
-                    )}
-                    <div className="absolute top-2 right-2 text-white">
-                      {post.type === 'reel' && <svg
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={"w-6 h-6"}
-                      >
-                        <rect
-                          x="3"
-                          y="3"
-                          width="18"
-                          height="18"
-                          rx="5"
-                          fill="white"
-                        />
-                        <path
-                          d="M9 7L17 12L9 17V7Z"
-                          fill="black"
-                        />
-                      </svg>}
+              <div className="grid grid-cols-3 gap-1">
+                {localProfile.posts?.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()).map((post) => (
+                  <Link href={`/dashboard/post/${post.id}`} key={post.id}>
+                    <div className="relative aspect-[9/16] overflow-hidden rounded-md bg-zinc-800">
+                      {post.imageUrl && (
+                        post.type === 'reel' ? (
+                          <video
+                            src={post.imageUrl}
+                            poster={post.imageUrl.replace(/\.[^/.]+$/, ".jpg")}
+                            className="object-cover w-full h-full"
+                            muted
+                            playsInline
+                            webkit-playsinline="true"
+                            preload="metadata"
+                          />
+                        ) : (
+                          <Image
+                            src={post.imageUrl}
+                            alt="Post"
+                            fill
+                            className="object-cover"
+                          />
+                        )
+                      )}
+                      <div className="absolute top-2 right-2 text-white">
+                        {post.type === 'reel' && <svg
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={"w-6 h-6"}
+                        >
+                          <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="5"
+                            fill="white"
+                          />
+                          <path
+                            d="M9 7L17 12L9 17V7Z"
+                            fill="black"
+                          />
+                        </svg>}
+                      </div>
+                      <div className="absolute bottom-1   flex items-center gap-1 text-white text-sm font-bold  px-1.5 py-0.5 rounded-md">
+                        <Eye size={16} />
+                        {formatNumber(post.views || 0)}
+                      </div>
                     </div>
-                    <div className="absolute bottom-1   flex items-center gap-1 text-white text-sm font-bold  px-1.5 py-0.5 rounded-md">
-                      <Eye size={16} />
-                      {formatNumber(post.views || 0)}
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  </Link>
+                ))}
+              </div>
           </div>
         </div>
       </div>

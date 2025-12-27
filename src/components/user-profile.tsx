@@ -13,7 +13,6 @@ import {
   Eye,
   Link2,
   LogOut,
-  ArrowDown,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { UserProfileData, Post } from "@/lib/types";
@@ -65,54 +64,11 @@ export function UserProfile() {
   const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
   const [activeTab, setActiveTab] = useState('grid');
   
-  // Pull to refresh state
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [pullStartY, setPullStartY] = useState(0);
-  const [pullDistance, setPullDistance] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [wasRefreshed, setWasRefreshed] = useState(false);
-
-
   useEffect(() => {
     if (formData) {
       setLocalProfile(formData);
     }
   }, [formData]);
-
-  const handleRefresh = () => {
-    if (isRefreshing) return;
-    setIsRefreshing(true);
-    setWasRefreshed(true); // Flag that a refresh occurred
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1500); // Show spinner for 1.5 seconds
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (containerRef.current && containerRef.current.scrollTop === 0 && !isEditing) {
-      setPullStartY(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (pullStartY === 0 || isRefreshing) return;
-    const currentY = e.touches[0].clientY;
-    const distance = currentY - pullStartY;
-    if (distance > 0) {
-      // e.preventDefault(); // This can be too aggressive
-      setPullDistance(Math.min(distance, 120)); // Max pull distance
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (isRefreshing) return;
-    if (pullDistance > 80) { // Threshold to trigger refresh
-      handleRefresh();
-    }
-    setPullStartY(0);
-    setPullDistance(0);
-  };
-
 
   const handleSignOut = async () => {
     if (auth) {
@@ -206,7 +162,7 @@ export function UserProfile() {
 
   const isActionPending = isSaving;
 
-  if ((isComponentLoading && !wasRefreshed) || !localProfile) {
+  if (isComponentLoading || !localProfile) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <Loader2 className="w-16 h-16 text-primary animate-spin" />
@@ -321,37 +277,9 @@ export function UserProfile() {
         </header>
 
         <div 
-          ref={containerRef}
           className="flex-1 overflow-y-auto no-scrollbar relative"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           <div 
-            className="absolute top-0 left-0 right-0 flex justify-center items-center bg-background/80 backdrop-blur-sm z-10 transition-transform duration-300"
-            style={{ 
-              height: `60px`,
-              transform: `translateY(${pullDistance - 60}px)`,
-              opacity: Math.min(pullDistance / 60, 1),
-              pointerEvents: isRefreshing ? 'auto' : 'none'
-            }}
-          >
-            {isRefreshing ? (
-               <div className="apple-loader-container">
-                  {[...Array(12)].map((_, i) => (
-                      <div key={i} className="spinner-blade" />
-                  ))}
-              </div>
-            ) : (
-               <ArrowDown 
-                  className="w-6 h-6 text-muted-foreground transition-transform" 
-                  style={{ transform: `rotate(${pullDistance > 80 ? 180 : 0}deg)`}}
-              />
-            )}
-          </div>
-          
-          <div 
-            style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: pullDistance > 0 ? 'none' : 'transform 0.3s ease' }}
             className="max-w-4xl mx-auto"
           >
             <div className="p-4">
@@ -414,7 +342,7 @@ export function UserProfile() {
                 >
                   Edit profile
                 </Button>
-                <Button variant="secondary" className="flex-1" onClick={handleRefresh}>
+                <Button variant="secondary" className="flex-1">
                   Share Profile
                 </Button>
               </div>
@@ -448,8 +376,9 @@ export function UserProfile() {
                     height="18"
                     rx="4"
                     ry="4"
+                    stroke="currentColor"
                     />
-                    <polygon points="10,8 16,12 10,16" />
+                    <polygon points="10,8 16,12 10,16" fill="currentColor"/>
                 </svg>
                 </button>
                 <button onClick={() => setActiveTab('tagged')}>
@@ -524,3 +453,5 @@ export function UserProfile() {
     </>
   );
 }
+
+    

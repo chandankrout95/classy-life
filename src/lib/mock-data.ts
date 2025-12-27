@@ -47,6 +47,11 @@ export const mockProfile: UserProfileData = {
     totalViews: 14700,
     accountsReached: { value: 11800000, change: -12.5 },
     dateRangeText: '9 Sep - 8 Oct',
+    contentTypeStats: [
+      { name: "Reels", percentage: 98.7, followers: 80, nonFollowers: 20 },
+      { name: "Stories", percentage: 0.8, followers: 60, nonFollowers: 40 },
+      { name: "Posts", percentage: 0.5, followers: 90, nonFollowers: 10 },
+    ],
   },
   name: 'CLASSY LIFE ™',
   bio: [

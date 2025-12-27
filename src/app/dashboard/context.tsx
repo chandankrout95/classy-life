@@ -41,6 +41,20 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             };
             await setDoc(userDocRef, newProfile);
             setProfile(newProfile);
+        } else {
+            // Ensure contentTypeStats exists
+            const data = userDocSnap.data() as UserProfileData;
+            if (!data.stats?.contentTypeStats) {
+                const updatedData = {
+                    ...data,
+                    stats: {
+                        ...data.stats,
+                        contentTypeStats: mockProfile.stats.contentTypeStats
+                    }
+                };
+                await setDoc(userDocRef, updatedData, { merge: true });
+                setProfile(updatedData);
+            }
         }
     }, [firestore, user]);
 

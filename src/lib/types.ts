@@ -58,6 +58,13 @@ export interface Post {
   metrics?: Metric;
 }
 
+export interface ContentTypeStat {
+  name: string;
+  percentage: number;
+  followers: number;
+  nonFollowers: number;
+}
+
 export interface UserProfileData {
   id: string; // Firebase UID
   username: string;
@@ -83,6 +90,7 @@ export interface UserProfileData {
     totalViews?: number;
     accountsReached?: { value: number; change: number };
     dateRangeText?: string;
+    contentTypeStats?: ContentTypeStat[];
   };
   name: string;
   bio: string[];

@@ -12,7 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { StackedProgress } from "@/components/stacked-progress";
 import { ViewsBreakdownChart } from "@/components/views-breakdown-chart";
 import { produce } from "immer";
-import type { UserProfileData } from "@/lib/types";
+import type { ContentTypeStat, UserProfileData } from "@/lib/types";
 import { useDashboard } from "@/app/dashboard/context";
 import {
   Carousel,
@@ -40,26 +40,41 @@ export default function ViewsPage() {
     const [isPageEditing, setIsPageEditing] = useState(false);
     const [activeFilter, setActiveFilter] = useState("All");
 
-    const [contentTypeValues, setContentTypeValues] = useState([
-        { name: "Reels", percentage: 98.7, followers: 80, nonFollowers: 20 },
-        { name: "Stories", percentage: 0.8, followers: 60, nonFollowers: 40 },
-        { name: "Posts", percentage: 0.5, followers: 90, nonFollowers: 10 },
-    ]);
     const [showSliders, setShowSliders] = useState(false);
+    const [contentTypeValues, setContentTypeValues] = useState<ContentTypeStat[]>([]);
 
+    useEffect(() => {
+        if (profile) {
+            setTempProfile(profile);
+            if (profile.stats?.contentTypeStats) {
+                setContentTypeValues(profile.stats.contentTypeStats);
+            } else {
+                // Initialize with default if not present
+                const defaultValues = [
+                    { name: "Reels", percentage: 98.7, followers: 80, nonFollowers: 20 },
+                    { name: "Stories", percentage: 0.8, followers: 60, nonFollowers: 40 },
+                    { name: "Posts", percentage: 0.5, followers: 90, nonFollowers: 10 },
+                ];
+                setContentTypeValues(defaultValues);
+                if (onProfileUpdate && profile) {
+                    onProfileUpdate({ ...profile, stats: { ...profile.stats, contentTypeStats: defaultValues } });
+                }
+            }
+        }
+    }, [profile]);
+    
     const handleSliderChange = (index: number, value: number[]) => {
         const newValues = produce(contentTypeValues, draft => {
             draft[index].followers = value[0];
             draft[index].nonFollowers = 100 - value[0];
         });
         setContentTypeValues(newValues);
-    };
-
-    useEffect(() => {
-        if (profile) {
-            setTempProfile(profile);
+        // Persist change to tempProfile
+        if (tempProfile) {
+            handleUpdate('stats.contentTypeStats', newValues);
         }
-    }, [profile]);
+    };
+    
 
     if (loading) {
         return (
@@ -91,15 +106,12 @@ export default function ViewsPage() {
             }
             current[path[path.length - 1]] = value;
         });
-        setTempProfile(updatedProfile); // Optimistic update
-        if (onProfileUpdate) {
-            onProfileUpdate(updatedProfile);
-        }
+        setTempProfile(updatedProfile); // Optimistic update for UI
     };
     
     const handleToggleEdit = () => {
-        if (isPageEditing && tempProfile) {
-            onProfileUpdate(tempProfile);
+        if (isPageEditing && tempProfile && onProfileUpdate) {
+            onProfileUpdate(tempProfile); // Save changes on Done
         }
         setIsPageEditing(!isPageEditing);
     };
@@ -604,9 +616,3 @@ export default function ViewsPage() {
         </div>
     );
 }
-
-    
-
-    
-
-

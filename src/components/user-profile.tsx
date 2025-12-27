@@ -328,13 +328,14 @@ export function UserProfile() {
         
         <div style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: pullDistance > 0 ? 'none' : 'transform 0.3s ease' }}>
           <div className="p-4 max-w-4xl mx-auto">
-            <header className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-1 relative">
+            <header className="grid grid-cols-3 items-center mb-4">
+              <div className="justify-self-start"></div>
+              <div className="flex items-center gap-1 relative justify-self-center">
                 <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
                 <ChevronDown size={20} />
                 <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 justify-self-end">
                 <span className="font-bold text-xl">@</span>
                 <div
                   className="relative cursor-pointer active:scale-95 transition-transform"
@@ -565,5 +566,3 @@ export function UserProfile() {
     </>
   );
 }
-
-    

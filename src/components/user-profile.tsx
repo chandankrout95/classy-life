@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -14,6 +14,7 @@ import {
   Link2,
   Loader2,
   LogOut,
+  ArrowDown,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { UserProfileData, Post } from "@/lib/types";
@@ -57,20 +58,57 @@ export function UserProfile() {
   const { firestore } = useFirebase();
   const { toast } = useToast();
 
-  // --- NEW STATE ---
   const [isCreatingPost, setIsCreatingPost] = useState(false);
-
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
   const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
   const [activeTab, setActiveTab] = useState('grid');
+  
+  // Pull to refresh state
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [pullStartY, setPullStartY] = useState(0);
+  const [pullDistance, setPullDistance] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     if (formData) {
       setLocalProfile(formData);
     }
   }, [formData]);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500); // Simulate network request
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (containerRef.current && containerRef.current.scrollTop === 0) {
+      setPullStartY(e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (pullStartY === 0) return;
+    const currentY = e.touches[0].clientY;
+    const distance = currentY - pullStartY;
+    if (distance > 0) {
+      e.preventDefault(); // Prevent scrolling while pulling
+      setPullDistance(Math.min(distance, 120)); // Max pull distance
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (pullDistance > 80) { // Threshold to trigger refresh
+      handleRefresh();
+    }
+    setPullStartY(0);
+    setPullDistance(0);
+  };
+
 
   const handleSignOut = async () => {
     if (auth) {
@@ -128,8 +166,7 @@ export function UserProfile() {
     setIsEditing(false);
   }
 
-  // --- NEW HANDLER FOR CREATING POST ---
-  const handleCreatePost = async (newPost: Omit<Post, 'id' | 'createdAt'>) => {
+  const handleCreatePost = async (newPost: Omit<Post, "id" | "createdAt">) => {
     if (!user || !firestore) return;
 
     try {
@@ -149,7 +186,6 @@ export function UserProfile() {
         posts: arrayUnion(createdPost)
       });
 
-      // Update local UI state
       if (localProfile) {
         setLocalProfile({
           ...localProfile,
@@ -256,243 +292,259 @@ export function UserProfile() {
 
   return (
     <>
-      <div className="p-4 max-w-4xl mx-auto">
-        <header className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1 relative">
-            <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
-            <ChevronDown size={20} />
-            <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="font-bold text-xl">@</span>
-            {/* CLICK TRIGGER ATTACHED HERE */}
-            <div
-              className="relative cursor-pointer active:scale-95 transition-transform"
-              onClick={() => setIsCreatingPost(true)}
-            >
-              <PlusSquare size={24} />
-              <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
-            </div>
-            <Menu size={28} />
-          </div>
-        </header>
-
-        <div className="flex items-center gap-2 sm:gap-4 mb-4">
-          <div className="relative flex-shrink-0 w-[90px] h-[90px]">
-            {localProfile.avatarUrl && <Image
-              src={localProfile.avatarUrl}
-              alt="Profile"
-              width={90}
-              height={90}
-              className="rounded-full border-2 border-zinc-700 object-cover w-[90px] h-[90px]"
-            />}
-          </div>
-          <div className="flex-1 flex justify-around items-center">
-            <div className="text-center">
-              <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
-              <div className="text-xs sm:text-sm text-zinc-400">posts</div>
-            </div>
-            <div className="text-center">
-              <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
-              <div className="text-xs sm:text-sm text-zinc-400">followers</div>
-            </div>
-            <div className="text-center">
-              <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
-              <div className="text-xs sm:text-sm text-zinc-400">following</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-4 space-y-1">
-          <div className="font-semibold text-sm sm:text-base">{localProfile.name}</div>
-          {Array.isArray(localProfile.bio) && <BioWithMentions bio={localProfile.bio} />}
-          {localProfile.link && (
-            <a href={`https://${localProfile.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs sm:text-sm text-blue-400">
-              <Link2 size={16} />
-              <span>{localProfile.link}</span>
-            </a>
+      <div 
+        ref={containerRef}
+        className="p-4 max-w-4xl mx-auto h-full overflow-y-auto"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div 
+          className="fixed top-0 left-0 right-0 flex justify-center items-center bg-background/80 backdrop-blur-sm z-50 transition-transform duration-300"
+          style={{ 
+            transform: `translateY(${isRefreshing ? 0 : -100}%) translateY(${pullDistance}px)`,
+            height: '60px',
+          }}
+        >
+          {isRefreshing ? (
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+          ) : (
+             <ArrowDown 
+                className="w-6 h-6 text-muted-foreground transition-transform" 
+                style={{ transform: `rotate(${pullDistance > 80 ? 180 : 0}deg)`}}
+            />
           )}
         </div>
+        
+        <div style={{ transform: `translateY(${!isRefreshing ? pullDistance : 0}px)`, transition: 'transform 0.2s' }}>
+          <header className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-1 relative">
+              <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
+              <ChevronDown size={20} />
+              <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="font-bold text-xl">@</span>
+              <div
+                className="relative cursor-pointer active:scale-95 transition-transform"
+                onClick={() => setIsCreatingPost(true)}
+              >
+                <PlusSquare size={24} />
+                <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
+              </div>
+              <Menu size={28} />
+            </div>
+          </header>
 
-        <Button
-          variant="secondary"
-          className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto"
-          onClick={() => router.push("/dashboard")}
-        >
-          <div>
-            <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
-            <div className="text-xs text-zinc-400">
-              {localProfile.professionalDashboard.views} views in the last 30 days
+          <div className="flex items-center gap-2 sm:gap-4 mb-4">
+            <div className="relative flex-shrink-0 w-[90px] h-[90px]">
+              {localProfile.avatarUrl && <Image
+                src={localProfile.avatarUrl}
+                alt="Profile"
+                width={90}
+                height={90}
+                className="rounded-full border-2 border-zinc-700 object-cover w-[90px] h-[90px]"
+              />}
+            </div>
+            <div className="flex-1 flex justify-around items-center">
+              <div className="text-center">
+                <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
+                <div className="text-xs sm:text-sm text-zinc-400">posts</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
+                <div className="text-xs sm:text-sm text-zinc-400">followers</div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
+                <div className="text-xs sm:text-sm text-zinc-400">following</div>
+              </div>
             </div>
           </div>
-          <ChevronRight size={20} />
-        </Button>
 
-        <div className="flex gap-2 mb-4 text-sm">
+          <div className="mb-4 space-y-1">
+            <div className="font-semibold text-sm sm:text-base">{localProfile.name}</div>
+            {Array.isArray(localProfile.bio) && <BioWithMentions bio={localProfile.bio} />}
+            {localProfile.link && (
+              <a href={`https://${localProfile.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs sm:text-sm text-blue-400">
+                <Link2 size={16} />
+                <span>{localProfile.link}</span>
+              </a>
+            )}
+          </div>
+
           <Button
             variant="secondary"
-            className="flex-1"
-            onClick={() => setIsEditing(true)}
+            className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto"
+            onClick={() => router.push("/dashboard")}
           >
-            Edit profile
-          </Button>
-          <Button variant="secondary" className="flex-1">
-            Share Profile
-          </Button>
-        </div>
-
-        <div className="profile-tabs">
-          <button onClick={() => setActiveTab('grid')}>
-            <svg className={`tab-icon ${activeTab === 'grid' ? 'active' : ''}`} viewBox="0 0 24 24">
-              <rect x="3" y="3" width="4" height="4" fill="currentColor" />
-              <rect x="10" y="3" width="4" height="4" fill="currentColor" />
-              <rect x="17" y="3" width="4" height="4" fill="currentColor" />
-              <rect x="3" y="10" width="4" height="4" fill="currentColor" />
-              <rect x="10" y="10" width="4" height="4" fill="currentColor" />
-              <rect x="17" y="10" width="4" height="4" fill="currentColor" />
-              <rect x="3" y="17" width="4" height="4" fill="currentColor" />
-              <rect x="10" y="17" width="4" height="4" fill="currentColor" />
-              <rect x="17" y="17" width="4" height="4" fill="currentColor" />
-            </svg>
-          </button>
-          <button onClick={() => setActiveTab('reels')}>
-
-            <svg
-              className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`}
-              width={28}
-              height={28}
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Outer rounded square */}
-              <rect
-                x="2"
-                y="2"
-                width="20"
-                height="20"
-                rx="5"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              />
-
-              {/* Clapper diagonal lines */}
-              <path
-                d="M17 7.5 L13 2"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-
-              <path
-                d="M10 7.5 L6 2"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-
-
-
-              {/* Divider line (IMPORTANT for real Reels look) */}
-              <line
-                x1="3"
-                y1="7.5"
-                x2="21"
-                y2="7.5"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-              />
-
-
-              {/* Play icon */}
-              <path
-                d="
-                  M10.3 10.4
-                  Q10.3 9.8 11 10.2
-                  L15.6 12.8
-                  Q16.2 13.2 15.6 13.6
-                  L11 16
-                  Q10.3 16.4 10.3 15.8
-                  Z
-                "
-                fill="currentColor"
-              />
-
-
-            </svg>
-
-          </button>
-          <button onClick={() => setActiveTab('tagged')}>
-            <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z" />
-              <circle cx="12" cy="11" r="3" />
-              <path d="M7 18c1.5-2 8.5-2 10 0" />
-            </svg>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-1">
-          {localProfile.posts?.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()).map((post) => (
-            <Link href={`/dashboard/post/${post.id}`} key={post.id}>
-              <div className="relative aspect-[9/16] overflow-hidden rounded-md bg-zinc-800">
-                {post.imageUrl && (
-                  post.type === 'reel' ? (
-                    <video
-                      // 1. Point to the video source
-                      src={post.imageUrl}
-                      // 2. FORCE an image thumbnail from Cloudinary
-                      poster={post.imageUrl.replace(/\.[^/.]+$/, ".jpg")}
-                      className="object-cover w-full h-full"
-                      muted
-                      playsInline
-                      webkit-playsinline="true"
-                      // 3. metadata tells browser to look for the poster immediately
-                      preload="metadata"
-                    />
-                  ) : (
-                    <Image
-                      src={post.imageUrl}
-                      alt="Post"
-                      fill
-                      className="object-cover"
-                    />
-                  )
-                )}
-                {/* Play icon and view count overlays */}
-                <div className="absolute top-2 right-2 text-white">
-                  {post.type === 'reel' && <svg
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={"w-6 h-6"}
-                  >
-                    {/* The Solid White Rounded Square */}
-                    <rect
-                      x="3"
-                      y="3"
-                      width="18"
-                      height="18"
-                      rx="5"
-                      fill="white"
-                    />
-                    {/* The Black Play Triangle (Cut out) */}
-                    <path
-                      d="M9 7L17 12L9 17V7Z"
-                      fill="black"
-                    />
-                  </svg>}
-                </div>
-                <div className="absolute bottom-1   flex items-center gap-1 text-white text-sm font-bold  px-1.5 py-0.5 rounded-md">
-                  <Eye size={16} />
-                  {formatNumber(post.views || 0)}
-                </div>
+            <div>
+              <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
+              <div className="text-xs text-zinc-400">
+                {localProfile.professionalDashboard.views} views in the last 30 days
               </div>
-            </Link>
-          ))}
+            </div>
+            <ChevronRight size={20} />
+          </Button>
+
+          <div className="flex gap-2 mb-4 text-sm">
+            <Button
+              variant="secondary"
+              className="flex-1"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit profile
+            </Button>
+            <Button variant="secondary" className="flex-1">
+              Share Profile
+            </Button>
+          </div>
+
+          <div className="profile-tabs">
+            <button onClick={() => setActiveTab('grid')}>
+              <svg className={`tab-icon ${activeTab === 'grid' ? 'active' : ''}`} viewBox="0 0 24 24">
+                <rect x="3" y="3" width="4" height="4" fill="currentColor" />
+                <rect x="10" y="3" width="4" height="4" fill="currentColor" />
+                <rect x="17" y="3" width="4" height="4" fill="currentColor" />
+                <rect x="3" y="10" width="4" height="4" fill="currentColor" />
+                <rect x="10" y="10" width="4" height="4" fill="currentColor" />
+                <rect x="17" y="10" width="4" height="4" fill="currentColor" />
+                <rect x="3" y="17" width="4" height="4" fill="currentColor" />
+                <rect x="10" y="17" width="4" height="4" fill="currentColor" />
+                <rect x="17" y="17" width="4" height="4" fill="currentColor" />
+              </svg>
+            </button>
+            <button onClick={() => setActiveTab('reels')}>
+
+              <svg
+                className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`}
+                width={28}
+                height={28}
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Outer rounded square */}
+                <rect
+                  x="2"
+                  y="2"
+                  width="20"
+                  height="20"
+                  rx="5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
+
+                {/* Clapper diagonal lines */}
+                <path
+                  d="M17 7.5 L13 2"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+
+                <path
+                  d="M10 7.5 L6 2"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+
+
+
+                {/* Divider line (IMPORTANT for real Reels look) */}
+                <line
+                  x1="3"
+                  y1="7.5"
+                  x2="21"
+                  y2="7.5"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                />
+
+
+                {/* Play icon */}
+                <path
+                  d="
+                    M10.3 10.4
+                    Q10.3 9.8 11 10.2
+                    L15.6 12.8
+                    Q16.2 13.2 15.6 13.6
+                    L11 16
+                    Q10.3 16.4 10.3 15.8
+                    Z
+                  "
+                  fill="currentColor"
+                />
+
+
+              </svg>
+
+            </button>
+            <button onClick={() => setActiveTab('tagged')}>
+              <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z" />
+                <circle cx="12" cy="11" r="3" />
+                <path d="M7 18c1.5-2 8.5-2 10 0" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-1">
+            {localProfile.posts?.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()).map((post) => (
+              <Link href={`/dashboard/post/${post.id}`} key={post.id}>
+                <div className="relative aspect-[9/16] overflow-hidden rounded-md bg-zinc-800">
+                  {post.imageUrl && (
+                    post.type === 'reel' ? (
+                      <video
+                        src={post.imageUrl}
+                        poster={post.imageUrl.replace(/\.[^/.]+$/, ".jpg")}
+                        className="object-cover w-full h-full"
+                        muted
+                        playsInline
+                        webkit-playsinline="true"
+                        preload="metadata"
+                      />
+                    ) : (
+                      <Image
+                        src={post.imageUrl}
+                        alt="Post"
+                        fill
+                        className="object-cover"
+                      />
+                    )
+                  )}
+                  <div className="absolute top-2 right-2 text-white">
+                    {post.type === 'reel' && <svg
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={"w-6 h-6"}
+                    >
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="5"
+                        fill="white"
+                      />
+                      <path
+                        d="M9 7L17 12L9 17V7Z"
+                        fill="black"
+                      />
+                    </svg>}
+                  </div>
+                  <div className="absolute bottom-1   flex items-center gap-1 text-white text-sm font-bold  px-1.5 py-0.5 rounded-md">
+                    <Eye size={16} />
+                    {formatNumber(post.views || 0)}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
-
-      {/* NEW COMPONENT ADDED TO FRAGMENT */}
       <CreatePostSheet
         isOpen={isCreatingPost}
         onOpenChange={setIsCreatingPost}

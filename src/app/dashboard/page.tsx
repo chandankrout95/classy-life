@@ -115,7 +115,15 @@ export default function ProfessionalDashboardPage() {
         <section>
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-base sm:text-lg font-bold">Insights</h2>
-                <span className="text-xs sm:text-sm text-zinc-400">9 Sep-8 Oct</span>
+                {isEditing ? (
+                  <Input 
+                    value={tempProfile.stats.dateRangeText}
+                    onChange={(e) => handleUpdate('stats.dateRangeText', e.target.value)}
+                    className="bg-transparent border-none text-zinc-400 text-xs sm:text-sm text-right p-0 h-auto w-28 ring-1 ring-primary rounded-sm"
+                  />
+                ) : (
+                  <span className="text-xs sm:text-sm text-zinc-400">{tempProfile.stats.dateRangeText}</span>
+                )}
             </div>
             <div className="space-y-4 text-sm sm:text-base">
                 {insights.map(item => {

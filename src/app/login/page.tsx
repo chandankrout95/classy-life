@@ -40,7 +40,7 @@ export default function LoginPage() {
         } catch (error: any) {
             console.error('Firebase Auth Error:', error.code, error.message);
             let description = 'An unexpected error occurred. Please try again.';
-            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' ) {
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
                 description = 'Invalid email or password. Please check your credentials and try again.';
             } else if (error.code === 'auth/email-already-in-use') {
                 description = 'This email is already registered. Please sign in or use a different email.';
@@ -54,7 +54,7 @@ export default function LoginPage() {
             setIsLoading(false);
         }
     };
-    
+
     const isFormLoading = isLoading || isPending;
 
     return (
@@ -64,14 +64,22 @@ export default function LoginPage() {
             </div>
             <div className="w-full max-w-sm">
                 <div className="text-center mb-8">
-                    <Image
-                        src="https://images.unsplash.com/photo-1759317823175-f95dcd289997?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxoYXBweSUyMG5ldyUyMHllYXIlMjAyMDI2fGVufDB8fHx8MTc2NjgxNzQxN3ww&ixlib=rb-4.1.0&q=80&w=1080"
-                        alt="Insight Phantom Logo"
-                        width={100}
-                        height={100}
-                        className="mx-auto rounded-md"
-                        data-ai-hint="gaming team logo"
-                    />
+
+                    <div className="relative mx-auto w-24 sm:w-32 md:w-40 lg:w-48 aspect-square">
+                        <Image
+                            src="/images/578.png"
+                            alt="Insight Phantom Logo"
+                            fill
+                            sizes="(max-width: 640px) 96px,
+                                    (max-width: 768px) 128px,
+                                    (max-width: 1024px) 160px,
+                                    192px"
+                            className="rounded-md object-cover"
+                            data-ai-hint="gaming team logo"
+                            priority
+                        />
+                    </div>
+
                     <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">
                         by 578 SaaS Agency

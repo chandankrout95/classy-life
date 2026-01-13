@@ -29,6 +29,9 @@ import { EditProfileHeader } from "./edit-profile-header";
 import { useDashboard } from "../app/dashboard/context";
 import { CreatePostSheet } from "./create-post-sheet";
 import { Loader2 } from "lucide-react";
+import PullToRefresh from 'react-simple-pull-to-refresh';
+import AppleLoader from "./apple-loader";
+
 
 const BioWithMentions = ({ bio }: { bio: string[] }) => {
   return (
@@ -63,13 +66,13 @@ export function UserProfile() {
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
   const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
   const [activeTab, setActiveTab] = useState('grid');
-  
+
   useEffect(() => {
     if (formData) {
       setLocalProfile(formData);
     }
   }, [formData]);
-  
+
   const handleSignOut = async () => {
     if (auth) {
       await auth.signOut();
@@ -252,6 +255,8 @@ export function UserProfile() {
 
   return (
     <>
+
+
       <div className="bg-background h-screen flex flex-col">
         <div className="flex-1 overflow-y-auto no-scrollbar">
           <header className="p-4 bg-background">
@@ -276,74 +281,83 @@ export function UserProfile() {
             </div>
           </header>
 
-          <div className="max-w-4xl mx-auto">
-            <div className="p-4">
-              <div className="flex items-center gap-2 sm:gap-4 mb-4">
-                <div className="relative flex-shrink-0 w-[90px] h-[90px]">
-                  {localProfile.avatarUrl && <Image
-                    src={localProfile.avatarUrl}
-                    alt="Profile"
-                    width={90}
-                    height={90}
-                    className="rounded-full border-2 border-zinc-700 object-cover w-[90px] h-[90px]"
-                  />}
-                </div>
-                <div className="flex-1 flex justify-around items-center">
-                  <div className="text-center">
-                    <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
-                    <div className="text-xs sm:text-sm text-zinc-400">posts</div>
+          <PullToRefresh
+            onRefresh={() =>
+              new Promise((resolve) => setTimeout(resolve, 1000))
+            }
+            pullingContent={<AppleLoader />}
+            refreshingContent={<AppleLoader />}
+            resistance={2.5}
+            maxPullDownDistance={90}
+          >
+            <div className="max-w-4xl mx-auto">
+              <div className="p-4">
+                <div className="flex items-center gap-2 sm:gap-4 mb-4">
+                  <div className="relative flex-shrink-0 w-[90px] h-[90px]">
+                    {localProfile.avatarUrl && <Image
+                      src={localProfile.avatarUrl}
+                      alt="Profile"
+                      width={90}
+                      height={90}
+                      className="rounded-full border-2 border-zinc-700 object-cover w-[90px] h-[90px]"
+                    />}
                   </div>
-                  <div className="text-center">
-                    <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
-                    <div className="text-xs sm:text-sm text-zinc-400">followers</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
-                    <div className="text-xs sm:text-sm text-zinc-400">following</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-4 space-y-1">
-                <div className="font-semibold text-sm sm:text-base">{localProfile.name}</div>
-                {Array.isArray(localProfile.bio) && <BioWithMentions bio={localProfile.bio} />}
-                {localProfile.link && (
-                  <a href={`https://${localProfile.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs sm:text-sm text-blue-400">
-                    <Link2 size={16} />
-                    <span>{localProfile.link}</span>
-                  </a>
-                )}
-              </div>
-
-              <Button
-                variant="secondary"
-                className="w-full p-3 rounded-lg mb-4 text-left justify-between h-auto"
-                onClick={() => router.push("/dashboard")}
-              >
-                <div>
-                  <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
-                  <div className="text-xs text-zinc-400">
-                    {localProfile.professionalDashboard.views} views in the last 30 days
+                  <div className="flex-1 flex justify-around items-center">
+                    <div className="text-center">
+                      <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
+                      <div className="text-xs sm:text-sm text-zinc-400">posts</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
+                      <div className="text-xs sm:text-sm text-zinc-400">followers</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
+                      <div className="text-xs sm:text-sm text-zinc-400">following</div>
+                    </div>
                   </div>
                 </div>
-                <ChevronRight size={20} />
-              </Button>
 
-              <div className="flex gap-2 mb-4 text-sm">
+                <div className="mb-4 space-y-1">
+                  <div className="font-semibold text-sm sm:text-base">{localProfile.name}</div>
+                  {Array.isArray(localProfile.bio) && <BioWithMentions bio={localProfile.bio} />}
+                  {localProfile.link && (
+                    <a href={`https://${localProfile.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs sm:text-sm text-blue-400">
+                      <Link2 size={16} />
+                      <span>{localProfile.link}</span>
+                    </a>
+                  )}
+                </div>
+
                 <Button
                   variant="secondary"
-                  className="flex-1"
-                  onClick={() => setIsEditing(true)}
+                  className="w-full p-3 rounded-lg mb-2 text-left justify-between h-auto"
+                  onClick={() => router.push("/dashboard")}
                 >
-                  Edit profile
+                  <div>
+                    <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
+                    <div className="text-xs text-zinc-400">
+                      {localProfile.professionalDashboard.views} views in the last 30 days
+                    </div>
+                  </div>
+                  <ChevronRight size={20} />
                 </Button>
-                <Button variant="secondary" className="flex-1">
-                  Share Profile
-                </Button>
-              </div>
-            </div>
 
-            <div className="profile-tabs">
+                <div className="flex gap-2 mb-4 text-sm">
+                  <Button
+                    variant="secondary"
+                    className="flex-1"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit profile
+                  </Button>
+                  <Button variant="secondary" className="flex-1">
+                    Share Profile
+                  </Button>
+                </div>
+              </div>
+
+              <div className="profile-tabs">
                 <button onClick={() => setActiveTab('grid')}>
                   <svg className={`tab-icon ${activeTab === 'grid' ? 'active' : ''}`} viewBox="0 0 24 24">
                     <rect x="3" y="3" width="4" height="4" fill="currentColor" />
@@ -358,23 +372,23 @@ export function UserProfile() {
                   </svg>
                 </button>
                 <button onClick={() => setActiveTab('reels')}>
-                <svg
+                  <svg
                     className={`tab-icon ${activeTab === 'reels' ? 'active' : ''}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                >
+                  >
                     <rect
-                    x="3"
-                    y="3"
-                    width="18"
-                    height="18"
-                    rx="4"
-                    ry="4"
-                    stroke="currentColor"
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="4"
+                      ry="4"
+                      stroke="currentColor"
                     />
-                    <polygon points="10,8 16,12 10,16" fill="currentColor"/>
-                </svg>
+                    <polygon points="10,8 16,12 10,16" fill="currentColor" />
+                  </svg>
                 </button>
                 <button onClick={() => setActiveTab('tagged')}>
                   <svg className={`tab-icon ${activeTab === 'tagged' ? 'active' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -437,9 +451,13 @@ export function UserProfile() {
                   </Link>
                 ))}
               </div>
-          </div>
+            </div>
+
+          </PullToRefresh>
         </div>
       </div>
+
+
       <CreatePostSheet
         isOpen={isCreatingPost}
         onOpenChange={setIsCreatingPost}

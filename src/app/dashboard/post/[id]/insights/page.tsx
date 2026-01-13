@@ -188,19 +188,37 @@ if (dashboardLoading || !minWaitDone || !post) {
 
   return (
     <div className="bg-background text-foreground min-h-screen">
-      <header className="p-4 grid grid-cols-3 items-center sticky top-0 bg-background z-10">
-        <div className="flex justify-start">
-          <Link href={`/dashboard/post/${id}`}>
-            <ChevronLeft size={28} />
-          </Link>
-        </div>
-        <span className="text-lg font-bold text-center">Reel insights</span>
-        <div className="flex justify-end">
-          <Button onClick={handleToggleEdit} variant={isEditing ? "default" : "ghost"} size="icon">
-            <MoreHorizontal size={24} />
-          </Button>
-        </div>
-      </header>
+      <header className="relative p-4 flex items-center sticky top-0 bg-background z-10">
+  {/* Left */}
+  <div className="flex justify-start">
+    <Link href={`/dashboard/post/${id}`}>
+      <ChevronLeft size={28} />
+    </Link>
+  </div>
+
+  {/* Center title */}
+  <h1
+    className="
+      absolute left-1/2 -translate-x-1/2
+      text-base sm:text-lg font-bold
+      max-w-[60%] truncate text-center
+    "
+  >
+    Reel insights
+  </h1>
+
+  {/* Right */}
+  <div className="ml-auto flex justify-end">
+    <Button
+      onClick={handleToggleEdit}
+      variant={isEditing ? 'default' : 'ghost'}
+      size="icon"
+    >
+      <MoreHorizontal size={24} />
+    </Button>
+  </div>
+</header>
+
 
       <main className="p-4 space-y-6">
         <div className="flex flex-col items-center text-center gap-4">

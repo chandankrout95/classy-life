@@ -11,7 +11,15 @@ export function formatNumber(num: number): string {
   if (num === null || typeof num === 'undefined') {
     return '0';
   }
-  return num.toLocaleString('en-US');
+  if (num < 10000) {
+    return num.toLocaleString('en-US');
+  }
+  
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 1
+  }).format(num);
 }
 
 export function exportToCSV(data: VideoInsight) {

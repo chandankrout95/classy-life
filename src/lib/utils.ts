@@ -59,3 +59,12 @@ export function exportToCSV(data: VideoInsight) {
   link.click();
   document.body.removeChild(link);
 }
+
+export function truncateWords(text: string | undefined, limit: number): string {
+  if (!text) return "";
+  const words = text.split(" ");
+  if (words.length > limit) {
+    return words.slice(0, limit).join(" ") + "...";
+  }
+  return text;
+}

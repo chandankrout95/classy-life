@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { type Post } from "@/lib/types";
 import { EditPostSheet } from "@/components/edit-post-sheet";
 import { PostOptionsSheet } from "@/components/post-options-sheet";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, truncateWords } from "@/lib/utils";
 import { useRouter, useParams } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { useDashboard } from "@/app/dashboard/context";
@@ -149,7 +149,7 @@ export default function PostPage() {
               <span className="font-bold text-white">{profile.username}</span>
             </div>
             <p className="text-sm text-white">
-              {post.caption || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
+              {truncateWords(post.caption, 6) || `Rich Billionaire Family Lifestyle in Monaco 🇲🇨`}
             </p>
             <div className="flex items-center gap-2 mt-2">
               <Music2 size={16} className="text-white" />

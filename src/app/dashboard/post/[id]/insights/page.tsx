@@ -20,7 +20,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Post, RetentionData } from "@/lib/types";
-import { formatNumber, cn } from "@/lib/utils";
+import { formatNumber, cn, truncateWords } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useDashboard } from "@/app/dashboard/context";
 import { Progress } from "@/components/ui/progress";
@@ -165,15 +165,6 @@ export default function ReelInsightsPage() {
     setIsEditing(!isEditing);
   }
 
-  const truncateWords = (text: string | undefined, limit: number): string => {
-    if (!text) return "";
-    const words = text.split(" ");
-    if (words.length > limit) {
-      return words.slice(0, limit).join(" ") + "...";
-    }
-    return text;
-  };
-
   // --- APPLE LOADER LOGIC ---
 // Inside ReelInsightsPage.tsx
 if (dashboardLoading || !minWaitDone || !post) {
@@ -275,7 +266,7 @@ if (dashboardLoading || !minWaitDone || !post) {
                 className="bg-transparent border-none p-0 h-auto text-lg font-semibold text-center ring-1 ring-primary rounded-sm mx-auto max-w-sm truncate"
               />
             ) : (
-              <p className="text-lg font-semibold">{truncateWords(post.caption, 6)}</p>
+              <p className="text-lg font-semibold truncate max-w-sm mx-auto">{truncateWords(post.caption, 6)}</p>
             )}
             {isEditing ? (
               <Input

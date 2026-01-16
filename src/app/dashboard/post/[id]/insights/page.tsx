@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -422,7 +423,7 @@ if (dashboardLoading || !minWaitDone || !post) {
                   variant={activeFilter === filter ? "secondary" : "ghost"}
                   onClick={() => setActiveFilter(filter)}
                   className={cn("rounded-full h-8 px-4 text-xs sm:text-sm",
-                    activeFilter === filter ? "bg-zinc-200 text-black hover:bg-zinc-300" : "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+                    activeFilter === filter ? "bg-zinc-200 text-black hover:bg-zinc-300" : "bg-white text-black hover:bg-white/90"
                   )}
                 >
                   {filter}

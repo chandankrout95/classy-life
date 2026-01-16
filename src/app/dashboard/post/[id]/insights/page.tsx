@@ -65,6 +65,21 @@ export default function ReelInsightsPage() {
     { timestamp: 40, retention: 2 }, { timestamp: 44, retention: 2 },
   ];
 
+  const formatInsightHeaderNumber = (num: number): string => {
+    if (num === null || typeof num === 'undefined') {
+      return '0';
+    }
+    if (num < 1000) {
+      return num.toLocaleString('en-US');
+    }
+    
+    return new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      compactDisplay: 'short',
+      maximumFractionDigits: 1
+    }).format(num);
+  }
+
   // NEW: Effect for the 2-second minimum timer
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -270,31 +285,31 @@ if (dashboardLoading || !minWaitDone || !post) {
             <Heart size={20} className="fill-current" />
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.likes || 0} onChange={(e) => handleSimpleFieldChange('likes', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
-            ) : formatNumber(post.likes || 0)}</span>
+            ) : formatInsightHeaderNumber(post.likes || 0)}</span>
           </div>
            <div className="flex flex-col items-center">
             <MessageCircle size={20} className="transform -scale-x-100" />
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
-            ) : formatNumber(post.comments || 0)}</span>
+            ) : formatInsightHeaderNumber(post.comments || 0)}</span>
           </div>
           <div className="flex flex-col items-center">
             <Send size={20} />
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.shares || 0} onChange={(e) => handleSimpleFieldChange('shares', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
-            ) : formatNumber(post.shares || 0)}</span>
+            ) : formatInsightHeaderNumber(post.shares || 0)}</span>
           </div>
           <div className="flex flex-col items-center">
             <Repeat size={20} />
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.reposts || 0} onChange={(e) => handleSimpleFieldChange('reposts', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
-            ) : formatNumber(post.reposts || 0)}</span>
+            ) : formatInsightHeaderNumber(post.reposts || 0)}</span>
           </div>
           <div className="flex flex-col items-center">
             <Bookmark size={20} className="fill-current" />
             <span className="text-xs mt-1">{isEditing ? (
               <Input type="number" value={post.saves || 0} onChange={(e) => handleSimpleFieldChange('saves', parseInt(e.target.value) || 0)} className="w-16 bg-transparent text-center" />
-            ) : formatNumber(post.saves || 0)}</span>
+            ) : formatInsightHeaderNumber(post.saves || 0)}</span>
           </div>
         </div>
 

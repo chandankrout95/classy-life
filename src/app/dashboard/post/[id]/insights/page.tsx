@@ -266,7 +266,7 @@ if (dashboardLoading || !minWaitDone || !post) {
                 className="bg-transparent border-none p-0 h-auto text-lg font-semibold text-center ring-1 ring-primary rounded-sm"
               />
             ) : (
-              <p className="text-lg font-semibold">{post.caption || ""}</p>
+              <p className="text-lg font-semibold truncate">{post.caption || ""}</p>
             )}
             {isEditing ? (
               <Input
@@ -451,7 +451,7 @@ if (dashboardLoading || !minWaitDone || !post) {
               <h2 className="text-lg font-bold">Interactions</h2>
               <Info size={16} className="text-zinc-400" />
             </div>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-8">
               <div className="w-[200px] h-[200px]">
                 <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} fullNumberFormat={true} />
               </div>
@@ -606,5 +606,4 @@ if (dashboardLoading || !minWaitDone || !post) {
     </div>
   );
 }
-
     

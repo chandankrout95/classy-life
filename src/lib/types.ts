@@ -73,7 +73,7 @@ export interface UserProfileData {
   avatarHint: string;
   stats: {
     posts: number;
-    followers: string;
+    followers: number;
     following: number;
     topCountries?: { name: string, percentage: number }[];
     topCities?: { name: string, percentage: number }[];

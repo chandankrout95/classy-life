@@ -23,6 +23,7 @@ import { useState, useEffect } from "react";
 import { produce } from "immer";
 import type { UserProfileData } from "@/lib/types";
 import { useDashboard } from "@/app/dashboard/context";
+import { formatNumber } from "@/lib/utils";
 
 export default function ProfessionalDashboardPage() {
     const { profile, onProfileUpdate, loading } = useDashboard();
@@ -47,7 +48,14 @@ export default function ProfessionalDashboardPage() {
                 }
                 current = current[path[i]];
             }
-            current[path[path.length - 1]] = value;
+
+            let finalValue = value;
+            const numericFields = ['stats.followers', 'stats.following'];
+            if (numericFields.includes(field)) {
+                finalValue = parseInt(value, 10) || 0;
+            }
+            
+            current[path[path.length - 1]] = finalValue;
         });
         setTempProfile(updatedProfile);
     };
@@ -155,7 +163,7 @@ export default function ProfessionalDashboardPage() {
                                     />
                                 ) : (
                                     <span className="font-semibold">
-                                        {String(item.value)}
+                                        {(item.field === 'stats.followers' || item.field === 'stats.following') ? formatNumber(item.value as number) : String(item.value)}
                                     </span>
                                 )}
                                 {item.href && !isEditing && <ChevronRight size={20} className="text-zinc-500" />}

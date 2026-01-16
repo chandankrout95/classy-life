@@ -9,7 +9,7 @@ export const mockProfile: UserProfileData = {
   avatarHint: 'logo CL',
   stats: {
     posts: 2,
-    followers: '$34.2K',
+    followers: 34200,
     following: 150,
     topCountries: [
       { name: 'United States', percentage: 35.8 },

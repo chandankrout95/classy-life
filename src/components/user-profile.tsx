@@ -97,7 +97,7 @@ export function UserProfile() {
       ...prev!,
       stats: {
         ...prev!.stats,
-        [name]: value,
+        [name]: parseInt(value) || 0,
       },
     }));
   }
@@ -308,11 +308,11 @@ export function UserProfile() {
                       <div className="text-xs sm:text-sm text-zinc-400">posts</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-base sm:text-lg">{localProfile.stats.followers}</div>
+                      <div className="font-bold text-base sm:text-lg">{formatNumber(localProfile.stats.followers)}</div>
                       <div className="text-xs sm:text-sm text-zinc-400">followers</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-base sm:text-lg">{localProfile.stats.following}</div>
+                      <div className="font-bold text-base sm:text-lg">{formatNumber(localProfile.stats.following)}</div>
                       <div className="text-xs sm:text-sm text-zinc-400">following</div>
                     </div>
                   </div>

@@ -203,7 +203,7 @@ if (dashboardLoading || !minWaitDone || !post) {
 
   return (
     <div className="bg-background text-foreground min-h-screen">
-      <header className="relative p-4 flex items-center sticky top-0 bg-background z-10">
+      <header className="relative p-4 flex items-center bg-background z-10 border-b border-zinc-800">
   {/* Left */}
   <div className="flex justify-start">
     <Link href={`/dashboard/post/${id}`}>

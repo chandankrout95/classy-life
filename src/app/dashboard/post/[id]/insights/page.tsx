@@ -263,7 +263,7 @@ if (dashboardLoading || !minWaitDone || !post) {
               <Input
                 value={post.caption || ""}
                 onChange={(e) => handleSimpleFieldChange('caption', e.target.value)}
-                className="bg-transparent border-none p-0 h-auto text-lg font-semibold text-center ring-1 ring-primary rounded-sm"
+                className="bg-transparent border-none p-0 h-auto text-lg font-semibold text-center ring-1 ring-primary rounded-sm mx-auto max-w-sm truncate"
               />
             ) : (
               <p className="text-lg font-semibold truncate">{post.caption || ""}</p>
@@ -451,12 +451,12 @@ if (dashboardLoading || !minWaitDone || !post) {
               <h2 className="text-lg font-bold">Interactions</h2>
               <Info size={16} className="text-zinc-400" />
             </div>
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-4">
               <div className="w-[200px] h-[200px]">
                 <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} fullNumberFormat={true} />
               </div>
             </div>
-            <div className="space-y-2 text-sm w-full mt-8">
+            <div className="space-y-2 text-sm w-full mt-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-chart-1"></span>
@@ -606,4 +606,6 @@ if (dashboardLoading || !minWaitDone || !post) {
     </div>
   );
 }
+    
+
     

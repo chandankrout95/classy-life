@@ -36,6 +36,7 @@ export default function PostPage() {
   const [post, setPost] = useState<Post | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     if (profile) {
@@ -67,6 +68,10 @@ export default function PostPage() {
     setIsEditing(true);
   }
 
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+  };
+
   if (loading || !post || !profile) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -91,7 +96,7 @@ export default function PostPage() {
       }}
       className="bg-background text-foreground h-dvh flex flex-col overflow-hidden origin-center"
     >
-      <div className="relative flex-1 overflow-y-auto">
+      <div className="relative flex-1 overflow-y-auto" onDoubleClick={toggleMute}>
         <header className="absolute w-full p-2 flex items-center justify-between z-20 shrink-0">
           <div className="flex items-center gap-2">
             <Link href="/dashboard/profile">
@@ -113,6 +118,7 @@ export default function PostPage() {
                 loop
                 playsInline
                 webkit-playsinline="true"
+                muted={isMuted}
               />
             ) : (
               <Image

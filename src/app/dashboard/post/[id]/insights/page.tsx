@@ -16,7 +16,7 @@ import {
   MoreHorizontal,
   BarChart,
   ChevronRight,
-  Zap,
+  TrendingUp,
 } from "lucide-react";
 import { Post, RetentionData } from "@/lib/types";
 import { formatNumber, cn } from "@/lib/utils";
@@ -592,7 +592,7 @@ if (dashboardLoading || !minWaitDone || !post) {
             <h3 className="font-bold mb-2">Ad</h3>
             <Button variant="ghost" className="w-full justify-between items-center p-2 rounded-lg hover:bg-zinc-800">
               <div className="flex items-center gap-3">
-                <Zap className="w-5 h-5" />
+                <TrendingUp className="w-5 h-5" />
                 <span className="text-base">Boost this reel</span>
               </div>
               <ChevronRight className="w-5 h-5 text-zinc-500" />

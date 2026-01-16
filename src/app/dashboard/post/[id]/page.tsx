@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,7 +14,7 @@ import {
   Send,
   Loader2,
   BarChart,
-  Zap,
+  TrendingUp,
   Music2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -221,7 +222,7 @@ export default function PostPage() {
               variant="ghost"
               className="text-white flex-1 justify-center p-0 h-auto"
             >
-              <Zap className="mr-2 h-4 w-4" />
+              <TrendingUp className="mr-2 h-4 w-4" />
               Boost reel
             </Button>
           </div>

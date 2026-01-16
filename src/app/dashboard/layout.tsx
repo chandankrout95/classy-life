@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Post } from '@/lib/types';
 import { useUser, useFirestore } from '@/firebase';
 import { updateDoc, arrayUnion, doc } from 'firebase/firestore';
@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react';
 import { DashboardProvider, useDashboard } from './context';
 import { usePathname } from 'next/navigation';
 import { TopNav } from '@/components/top-nav';
+import { cn } from '@/lib/utils';
 
 function DashboardCore({ children }: { children: React.ReactNode }) {
   const { user, loading: userLoading } = useUser();
@@ -18,6 +19,8 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
   const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const [showBottomNav, setShowBottomNav] = useState(true);
+  const lastScrollY = useRef(0);
 
   const handleCreatePost = async (newPost: Omit<Post, 'id' | 'createdAt'>) => {
     if (!user || !firestore) return;
@@ -40,6 +43,21 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
     
     setIsCreatingPost(false);
   }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+        setShowBottomNav(false);
+      } else {
+        setShowBottomNav(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (userLoading || profileLoading) {
     return (
@@ -65,7 +83,10 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
         </div>
 
         {shouldShowNav && (
-            <div className="fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800">
+            <div className={cn(
+                "fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800 transition-transform duration-300 ease-in-out",
+                showBottomNav ? "translate-y-0" : "translate-y-full"
+            )}>
                 <TopNav 
                     onPlusClick={() => setIsCreatingPost(true)}
                     userId={user.uid}

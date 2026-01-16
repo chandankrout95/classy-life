@@ -453,7 +453,7 @@ if (dashboardLoading || !minWaitDone || !post) {
             </div>
             <div className="flex justify-center">
               <div className="w-[250px] h-[250px]">
-                <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} />
+                <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} fullNumberFormat={true} />
               </div>
             </div>
             <div className="space-y-2 text-sm w-full -mt-8">

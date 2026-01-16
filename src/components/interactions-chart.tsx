@@ -27,9 +27,10 @@ const chartConfig = {
 interface InteractionsChartProps {
   data: { followers: number; nonFollowers: number };
   totalInteractions: number;
+  fullNumberFormat?: boolean;
 }
 
-export function InteractionsChart({ data, totalInteractions }: InteractionsChartProps) {
+export function InteractionsChart({ data, totalInteractions, fullNumberFormat = false }: InteractionsChartProps) {
   const chartData = [
     { name: 'followers', value: data.followers, color: 'hsl(var(--chart-1))' },
     { name: 'non-followers', value: data.nonFollowers, color: 'hsl(var(--chart-2))' },
@@ -76,7 +77,7 @@ export function InteractionsChart({ data, totalInteractions }: InteractionsChart
                       dominantBaseline="middle"
                       className="fill-foreground text-4xl font-bold"
                     >
-                      {formatNumber(totalInteractions)}
+                      {fullNumberFormat ? totalInteractions.toLocaleString('en-US') : formatNumber(totalInteractions)}
                     </text>
                   </g>
                 )

@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -27,9 +26,10 @@ const chartConfig = {
 interface ViewsBreakdownChartProps {
     data: { name: string; value: number; color: string }[];
     totalViews: number;
+    fullNumberFormat?: boolean;
 }
 
-export function ViewsBreakdownChart({ data, totalViews }: ViewsBreakdownChartProps) {
+export function ViewsBreakdownChart({ data, totalViews, fullNumberFormat = false }: ViewsBreakdownChartProps) {
 
   return (
     <ChartContainer
@@ -72,7 +72,7 @@ export function ViewsBreakdownChart({ data, totalViews }: ViewsBreakdownChartPro
                       dominantBaseline="middle"
                       className="fill-foreground text-4xl font-bold"
                     >
-                      {formatNumber(totalViews)}
+                      {fullNumberFormat ? totalViews.toLocaleString('en-US') : formatNumber(totalViews)}
                     </text>
                   </g>
                 )

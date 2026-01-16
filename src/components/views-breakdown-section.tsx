@@ -1,4 +1,3 @@
-
 'use client';
 
 import { produce } from 'immer';
@@ -60,6 +59,7 @@ export function ViewsBreakdownSection({
           <ViewsBreakdownChart
             data={viewsBreakdownData}
             totalViews={post.views || 0}
+            fullNumberFormat={true}
           />
         </div>
       </div>

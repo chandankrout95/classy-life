@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -41,7 +42,7 @@ export function ViewsBreakdownChart({ data, totalViews, fullNumberFormat = false
           data={data}
           dataKey="value"
           nameKey="name"
-          innerRadius={110}
+          innerRadius={109}
           outerRadius={120}
           startAngle={90}
           endAngle={450}

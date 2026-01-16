@@ -13,7 +13,7 @@ import {
   MessageCircle,
   Send,
   Loader2,
-  BarChart,
+  Eye,
   TrendingUp,
   Music2,
 } from "lucide-react";
@@ -214,7 +214,7 @@ export default function PostPage() {
               className="text-white flex-1 justify-center p-0 h-auto"
               onClick={() => router.push(`/dashboard/post/${id}/insights`)}
             >
-              <BarChart className="mr-2 h-4 w-4" />
+              <Eye className="mr-2 h-4 w-4" />
               View insights
             </Button>
 

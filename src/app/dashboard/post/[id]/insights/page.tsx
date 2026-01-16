@@ -450,8 +450,8 @@ if (dashboardLoading || !minWaitDone || !post) {
               <h2 className="text-lg font-bold">Interactions</h2>
               <Info size={16} className="text-zinc-400" />
             </div>
-            <div className="flex justify-center">
-              <div className="w-[220px] h-[220px]">
+            <div className="flex justify-center mt-4">
+              <div className="w-[200px] h-[200px]">
                 <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} fullNumberFormat={true} />
               </div>
             </div>
@@ -588,7 +588,7 @@ if (dashboardLoading || !minWaitDone || !post) {
         <MonetizationSection post={post} isEditing={isEditing} onPostChange={handlePostChange} />
 
         <section className="border-t border-zinc-800 pt-6">
-          <div className="border border-zinc-700 rounded-lg p-3">
+          <div className="rounded-lg p-3">
             <h3 className="font-bold mb-2">Ad</h3>
             <Button variant="ghost" className="w-full justify-between items-center p-2 rounded-lg hover:bg-zinc-800">
               <div className="flex items-center gap-3">

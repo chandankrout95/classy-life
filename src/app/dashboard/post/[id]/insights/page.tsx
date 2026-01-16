@@ -171,7 +171,7 @@ if (dashboardLoading || !minWaitDone || !post) {
   return (
     // REMOVE 'fixed inset-0' - use 'h-screen' instead so it stays inside the template
     <div className="h-screen w-full bg-background flex flex-col no-scrollbar">
-      <header className="p-4 grid grid-cols-3 items-center border-b border-zinc-900 bg-background">
+      <header className="p-4 grid grid-cols-3 items-center bg-background">
         <div className="flex justify-start">
           <Link href={`/dashboard/post/${id}`}>
             <ChevronLeft size={28} />
@@ -606,3 +606,5 @@ if (dashboardLoading || !minWaitDone || !post) {
     </div>
   );
 }
+
+    

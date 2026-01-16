@@ -456,7 +456,7 @@ if (dashboardLoading || !minWaitDone || !post) {
                 <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} fullNumberFormat={true} />
               </div>
             </div>
-            <div className="space-y-2 text-sm w-full -mt-8">
+            <div className="space-y-2 text-sm w-full mt-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-chart-1"></span>

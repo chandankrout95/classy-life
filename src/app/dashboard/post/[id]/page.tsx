@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -103,6 +102,11 @@ export default function PostPage() {
               <ChevronLeft size={28} className="text-white"/>
             </Link>
           </div>
+
+          <h1 className="absolute left-1/2 -translate-x-1/2 text-lg font-bold text-white">
+            Your reels
+          </h1>
+
           <Button variant="ghost" size="icon" className="rounded-full text-white" onClick={() => setIsOptionsOpen(true)}>
             <MoreHorizontal size={28} />
           </Button>

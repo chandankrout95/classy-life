@@ -19,7 +19,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
           damping: 30,    // Higher damping = less oscillation/bounce
           mass: 0.8,      // Lower mass = moves lighter/faster
         }}
-        className="w-full min-h-screen bg-background overflow-hidden"
+        className="w-full min-h-screen bg-background"
       >
         {children}
       </motion.div>

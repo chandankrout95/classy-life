@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -46,7 +45,7 @@ export function InteractionsChart({ data, totalInteractions, fullNumberFormat = 
           data={chartData}
           dataKey="value"
           nameKey="name"
-          innerRadius={100}
+          innerRadius={90}
           outerRadius={120}
           startAngle={90}
           endAngle={450}

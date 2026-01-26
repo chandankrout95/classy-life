@@ -230,7 +230,7 @@ export function UserProfile() {
               <div className="space-y-1">
                 <Label>Stats</Label>
                 <div className="flex gap-2">
-                  <Input id="posts" name="posts" value={localProfile.posts.length} readOnly placeholder="Posts" className="bg-zinc-800 border-zinc-700" disabled />
+                  <Input id="posts" name="posts" value={localProfile.stats.posts} onChange={handleStatsChange} placeholder="Posts" className="bg-zinc-800 border-zinc-700" disabled={isActionPending} />
                   <Input id="followers" name="followers" value={localProfile.stats.followers} onChange={handleStatsChange} placeholder="Followers" className="bg-zinc-800 border-zinc-700" disabled={isActionPending} />
                   <Input id="following" name="following" value={localProfile.stats.following} onChange={handleStatsChange} placeholder="Following" className="bg-zinc-800 border-zinc-700" disabled={isActionPending} />
                 </div>
@@ -304,7 +304,7 @@ export function UserProfile() {
                   </div>
                   <div className="flex-1 flex justify-around items-center">
                     <div className="text-center">
-                      <div className="font-bold text-base sm:text-lg">{localProfile.posts?.length || 0}</div>
+                      <div className="font-bold text-base sm:text-lg">{formatNumber(localProfile.stats.posts)}</div>
                       <div className="text-xs sm:text-sm text-zinc-400">posts</div>
                     </div>
                     <div className="text-center">

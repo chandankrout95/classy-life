@@ -147,12 +147,21 @@ export default function ViewsPage() {
                 const listData = (tempProfile.stats as any)[listPath.split('.')[1]] || [];
 
                 const updatedList = produce(listData, (draft: any[]) => {
-                    if (!draft[index]) {
-                      if (listName === 'gender' || listName === 'ageRanges' || listName === 'cities' || listName === 'countries') {
-                        draft[index] = { name: '', percentage: 0 };
-                      }
+                    if (listName === 'gender') {
+                        // For gender, find by name because the display order is sorted
+                        const itemToUpdate = draft.find(d => d.name === item.name);
+                        if (itemToUpdate) {
+                            (itemToUpdate as any)[field] = type === 'number' ? Number(e.target.value) : e.target.value;
+                        }
+                    } else {
+                        // For other lists, update by index
+                        if (!draft[index]) {
+                            if (listName === 'ageRanges' || listName === 'cities' || listName === 'countries') {
+                                draft[index] = { name: '', percentage: 0 };
+                            }
+                        }
+                        (draft[index] as any)[field] = type === 'number' ? Number(e.target.value) : e.target.value;
                     }
-                    (draft[index] as any)[field] = type === 'number' ? Number(e.target.value) : e.target.value;
                 });
                 handleUpdate(listPath, updatedList);
           }}

@@ -413,7 +413,7 @@ export default function ViewsPage() {
                 <div className="grid grid-cols-4 gap-2">
                     {topContent.map((post, postIndex) => (
                         <div key={post.id} className="flex-shrink-0 space-y-2">
-                            <div className="relative aspect-[4/5] w-full">
+                            <div className="relative aspect-[9/16] w-full">
                                 {post.type === 'reel' ? (
                                     <video
                                         src={post.imageUrl}
@@ -605,3 +605,4 @@ export default function ViewsPage() {
         </div>
     );
 }
+

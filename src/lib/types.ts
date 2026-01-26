@@ -49,6 +49,7 @@ export interface Post {
   accountsEngaged?: number;
   follows?: number;
   createdAt?: string;
+  displayDate?: string;
   viewRate?: number;
   reposts?: number;
   likesOverTime?: { timestamp: number; retention: number }[];

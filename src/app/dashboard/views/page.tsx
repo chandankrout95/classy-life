@@ -434,34 +434,22 @@ export default function ViewsPage() {
                             </div>
                             {isPageEditing ? (
                                 <Input
-                                    value={post.createdAt ? format(new Date(post.createdAt), "dd MMM") : ''}
+                                    value={post.displayDate ?? (post.createdAt ? format(new Date(post.createdAt), "dd MMM") : '')}
                                     onChange={(e) => {
                                         if (!tempProfile) return;
-                                        const newPosts = [...tempProfile.posts];
-                                        const postToUpdate = newPosts.find(p => p.id === post.id);
-                                        if (postToUpdate) {
-                                            try {
-                                                // This is a simplification. A real app might need a date picker.
-                                                // We'll just store the string for now.
-                                                const newDate = e.target.value;
-                                                const originalDate = new Date(postToUpdate.createdAt || Date.now());
-                                                const [day, month] = newDate.split(' ');
-                                                const monthIndex = new Date(Date.parse(month +" 1, 2012")).getMonth();
-                                                originalDate.setDate(parseInt(day));
-                                                originalDate.setMonth(monthIndex);
-
-                                                postToUpdate.createdAt = originalDate.toISOString();
-                                                handleUpdate('posts', newPosts);
-                                            } catch (error) {
-                                                // Handle invalid date format if necessary
+                                        const newPosts = produce(tempProfile.posts, (draft) => {
+                                            const postToUpdate = draft.find(p => p.id === post.id);
+                                            if (postToUpdate) {
+                                                postToUpdate.displayDate = e.target.value;
                                             }
-                                        }
+                                        });
+                                        handleUpdate('posts', newPosts);
                                     }}
                                     className="bg-transparent border-none text-center text-xs text-zinc-400 p-0 h-auto w-full ring-1 ring-primary rounded-sm"
                                 />
                             ) : (
                                 <p className="text-center text-xs text-zinc-400">
-                                    {post.createdAt ? format(new Date(post.createdAt), "dd MMM") : ''}
+                                    {post.displayDate ?? (post.createdAt ? format(new Date(post.createdAt), "dd MMM") : '')}
                                 </p>
                             )}
                         </div>

@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, Info, ChevronDown, Loader2 } from "lucide-react";
+import { ChevronLeft, Info, ChevronDown, Loader2, PlaySquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -404,7 +404,7 @@ export default function ViewsPage() {
                 <div className="grid grid-cols-4 gap-2">
                     {topContent.map((post, postIndex) => (
                         <div key={post.id} className="flex-shrink-0 space-y-2">
-                            <div className="relative aspect-[9/16] w-full">
+                            <div className="relative aspect-[4/5] w-full">
                                 {post.type === 'reel' ? (
                                     <video
                                         src={post.imageUrl}
@@ -425,9 +425,7 @@ export default function ViewsPage() {
                                 )}
                                 <div className="absolute top-2 right-2">
                                      {post.type === 'reel' && (
-                                        <svg viewBox="0 0 24 24" className="w-5 h-5 text-white drop-shadow-lg">
-                                            <path d="M6.5 5.4v13.2l11-6.6-11-6.6z" fill="currentColor"/>
-                                        </svg>
+                                        <PlaySquare size={16} className="text-white drop-shadow-lg" />
                                      )}
                                 </div>
                                 <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-2 py-0.5 rounded-full">

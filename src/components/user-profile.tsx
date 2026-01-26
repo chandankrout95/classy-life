@@ -402,7 +402,7 @@ export function UserProfile() {
               <div className="grid grid-cols-3 gap-1">
                 {localProfile.posts?.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()).map((post) => (
                   <Link href={`/dashboard/post/${post.id}`} key={post.id}>
-                    <div className="relative aspect-[9/16] overflow-hidden rounded-md bg-zinc-800">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-zinc-800">
                       {post.imageUrl && (
                         post.type === 'reel' ? (
                           <video
@@ -424,24 +424,7 @@ export function UserProfile() {
                         )
                       )}
                       <div className="absolute top-2 right-2 text-white">
-                        {post.type === 'reel' && <svg
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className={"w-6 h-6"}
-                        >
-                          <rect
-                            x="3"
-                            y="3"
-                            width="18"
-                            height="18"
-                            rx="5"
-                            fill="white"
-                          />
-                          <path
-                            d="M9 7L17 12L9 17V7Z"
-                            fill="black"
-                          />
-                        </svg>}
+                        {post.type === 'reel' && <PlaySquare size={16} />}
                       </div>
                       <div className="absolute bottom-1   flex items-center gap-1 text-white text-sm font-bold  px-1.5 py-0.5 rounded-md">
                         <Eye size={16} />

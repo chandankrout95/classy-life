@@ -1,4 +1,3 @@
-
 'use client';
 
 // A simple canvas fingerprinting function

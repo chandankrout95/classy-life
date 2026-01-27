@@ -100,6 +100,7 @@ export interface UserProfileData {
     views: string;
   };
   posts: Post[];
+  registeredDeviceId?: string | null;
 }
 
 export interface TimeSeriesData {

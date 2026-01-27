@@ -7,6 +7,7 @@ import { useUser, useFirestore } from '@/firebase';
 import { doc, getDoc, setDoc, onSnapshot, DocumentData } from 'firebase/firestore';
 import { mockProfile } from '@/lib/mock-data';
 import { useRouter } from 'next/navigation';
+import { generateDeviceFingerprint } from '@/lib/device-fingerprint';
 
 interface DashboardContextType {
     profile: UserProfileData | null;
@@ -31,6 +32,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         const userDocSnap = await getDoc(userDocRef);
 
         if (!userDocSnap.exists()) {
+            const deviceId = await generateDeviceFingerprint();
             const newProfile: UserProfileData = {
                 ...mockProfile,
                 id: user.uid,
@@ -38,6 +40,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 name: user.displayName || 'New User',
                 username: user.displayName?.replace(/\s+/g, '').toLowerCase() || `user${Date.now()}`,
                 avatarUrl: user.photoURL || mockProfile.avatarUrl,
+                registeredDeviceId: deviceId,
             };
             await setDoc(userDocRef, newProfile);
             setProfile(newProfile);

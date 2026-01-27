@@ -4,16 +4,19 @@
 import { useState, useTransition } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
-import { useFirebase } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { useFirebase, useFirestore } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import { InsightForgeLogo } from '@/components/icons';
-import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { generateDeviceFingerprint } from '@/lib/device-fingerprint';
+import type { UserProfileData } from '@/lib/types';
+
 
 export default function LoginPage() {
     const router = useRouter();
@@ -25,18 +28,42 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
 
     const { auth } = useFirebase();
+    const firestore = useFirestore();
 
     const handleAuthAction = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!auth) return;
+        if (!auth || !firestore) return;
         setIsLoading(true);
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            const currentFingerprint = await generateDeviceFingerprint();
+            const userDocRef = doc(firestore, 'users', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data() as UserProfileData;
+                const registeredDeviceId = userData.registeredDeviceId;
+
+                if (registeredDeviceId && registeredDeviceId !== currentFingerprint) {
+                    await auth.signOut();
+                    toast({
+                        variant: 'destructive',
+                        title: 'Login Blocked',
+                        description: 'This account is already active on another device.',
+                    });
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
             toast({ title: 'Success!', description: 'Welcome back.' });
             startTransition(() => {
                 router.push('/dashboard/profile');
             });
+
         } catch (error: any) {
             console.error('Firebase Auth Error:', error.code, error.message);
             let description = 'An unexpected error occurred. Please try again.';
@@ -51,7 +78,9 @@ export default function LoginPage() {
             }
             toast({ variant: 'destructive', title: 'Authentication Failed', description });
         } finally {
-            setIsLoading(false);
+            if (!isPending) {
+                setIsLoading(false);
+            }
         }
     };
 

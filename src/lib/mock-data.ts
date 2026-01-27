@@ -172,4 +172,5 @@ export const mockProfile: UserProfileData = {
       ],
     },
   ],
+  registeredDeviceId: null,
 };

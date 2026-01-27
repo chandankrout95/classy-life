@@ -19,7 +19,7 @@ import { UserProfileData, Post } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useUser, useFirebase } from "@/firebase";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore"; // Added Firestore helpers
+import { doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
@@ -31,6 +31,18 @@ import { CreatePostSheet } from "./create-post-sheet";
 import { Loader2 } from "lucide-react";
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import AppleLoader from "./apple-loader";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { mockProfile } from "@/lib/mock-data";
 
 
 const BioWithMentions = ({ bio }: { bio: string[] }) => {
@@ -55,7 +67,7 @@ const BioWithMentions = ({ bio }: { bio: string[] }) => {
 
 export function UserProfile() {
   const router = useRouter();
-  const { auth, user } = useUser(); // Destructured user to get UID
+  const { auth, user } = useUser();
   const { profile: formData, onProfileUpdate: setFormData, loading: isComponentLoading } = useDashboard();
   const { firestore } = useFirebase();
   const { toast } = useToast();
@@ -128,6 +140,41 @@ export function UserProfile() {
     }
     setIsEditing(false);
   }
+
+  const handleResetAccount = async () => {
+    if (!localProfile || !user || !firestore || !setFormData) return;
+    setIsSaving(true);
+    try {
+      const resetProfile: UserProfileData = {
+        ...mockProfile,
+        id: user.uid,
+        email: localProfile.email || user.email || 'no-email@example.com',
+        name: localProfile.name || user.displayName || 'New User',
+        username: localProfile.username || user.displayName?.replace(/\s+/g, '').toLowerCase() || `user${Date.now()}`,
+        avatarUrl: localProfile.avatarUrl,
+        avatarHint: localProfile.avatarHint,
+        registeredDeviceId: localProfile.registeredDeviceId,
+        posts: [],
+      };
+
+      const userDocRef = doc(firestore, 'users', user.uid);
+      await setDoc(userDocRef, resetProfile);
+
+      setFormData(resetProfile);
+
+      toast({ title: "Account Reset Successfully", description: "Your account has been reset to its initial state." });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error resetting account:", error);
+      toast({
+        variant: "destructive",
+        title: "Reset Failed",
+        description: "There was a problem resetting your account.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleCreatePost = async (newPost: Omit<Post, "id" | "createdAt">) => {
     if (!user || !firestore) return;
@@ -235,12 +282,34 @@ export function UserProfile() {
                   <Input id="following" name="following" value={localProfile.stats.following} onChange={handleStatsChange} placeholder="Following" className="bg-zinc-800 border-zinc-700" disabled={isActionPending} />
                 </div>
               </div>
-              <div className="p-4 border-t border-zinc-800">
-                <Button variant="destructive" className="w-full" onClick={handleSignOut} disabled={isActionPending}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
-                </Button>
-              </div>
+               <div className="p-4 border-t border-zinc-800 space-y-2">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="w-full text-amber-500 border-amber-500 hover:bg-amber-500/10 hover:text-amber-400" disabled={isActionPending}>
+                        Reset Account
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete all your posts and analytics data, resetting your account to its initial state.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleResetAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                          Yes, Reset Account
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
+                  <Button variant="destructive" className="w-full" onClick={handleSignOut} disabled={isActionPending}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </Button>
+                </div>
             </div>
           </div>
         </div>

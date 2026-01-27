@@ -285,7 +285,7 @@ export function UserProfile() {
                <div className="p-4 border-t border-zinc-800 space-y-2">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="outline" className="w-full text-amber-500 border-amber-500 hover:bg-amber-500/10 hover:text-amber-400" disabled={isActionPending}>
+                      <Button variant="outline" className="w-full text-destructive border-destructive hover:bg-destructive/10 hover:text-destructive" disabled={isActionPending}>
                         Reset Account
                       </Button>
                     </AlertDialogTrigger>

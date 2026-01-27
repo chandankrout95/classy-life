@@ -146,23 +146,18 @@ export function UserProfile() {
     setIsSaving(true);
     try {
       const resetProfile: UserProfileData = {
-        ...mockProfile,
-        id: user.uid,
-        email: localProfile.email || user.email || 'no-email@example.com',
-        name: localProfile.name || user.displayName || 'New User',
-        username: localProfile.username || user.displayName?.replace(/\s+/g, '').toLowerCase() || `user${Date.now()}`,
-        avatarUrl: localProfile.avatarUrl,
-        avatarHint: localProfile.avatarHint,
-        registeredDeviceId: localProfile.registeredDeviceId,
-        posts: [],
+        ...localProfile,
+        posts: [], // Empty the posts array
       };
+      // Also explicitly set the posts count in stats to 0.
+      resetProfile.stats.posts = 0;
 
       const userDocRef = doc(firestore, 'users', user.uid);
-      await setDoc(userDocRef, resetProfile);
+      await setDoc(userDocRef, resetProfile); // Overwrite with the modified profile
 
-      setFormData(resetProfile);
+      setFormData(resetProfile); // Update the context
 
-      toast({ title: "Account Reset Successfully", description: "Your account has been reset to its initial state." });
+      toast({ title: "Account Reset Successfully", description: "All of your posts and reels have been deleted." });
       setIsEditing(false);
     } catch (error) {
       console.error("Error resetting account:", error);
@@ -293,7 +288,7 @@ export function UserProfile() {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete all your posts and analytics data, resetting your account to its initial state.
+                          This action cannot be undone. This will permanently delete all your posts and reels. Your profile information will be kept.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -518,3 +513,5 @@ export function UserProfile() {
     </>
   );
 }
+
+    

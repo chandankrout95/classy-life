@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,6 +12,7 @@ import {
   Eye,
   Link2,
   LogOut,
+  TrendingUp,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { UserProfileData, Post } from "@/lib/types";
@@ -400,8 +400,11 @@ export function UserProfile() {
                 >
                   <div>
                     <div className="font-semibold text-sm sm:text-base">Professional dashboard</div>
-                    <div className="text-xs text-zinc-400">
-                      {localProfile.professionalDashboard.views} views in the last 30 days
+                    <div className="flex items-center gap-1 text-xs text-zinc-400">
+                      <TrendingUp size={14} className="text-green-500" />
+                      <span>
+                        {localProfile.professionalDashboard.views} views in the last 30 days
+                      </span>
                     </div>
                   </div>
                   <ChevronRight size={20} />
@@ -513,5 +516,3 @@ export function UserProfile() {
     </>
   );
 }
-
-    

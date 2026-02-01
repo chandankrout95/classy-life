@@ -34,7 +34,7 @@ export function RetentionChart({ data, yAxisTicks, yAxisDomain, lineType = "mono
         margin={{
           top: 5,
           right: 20,
-          left: -20,
+          left: 0,
           bottom: 5,
         }}
       >

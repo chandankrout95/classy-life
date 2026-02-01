@@ -8,7 +8,6 @@ import { Info } from 'lucide-react';
 import type { Post } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
 import {
   DEMO_AGE_DATA,
   DEMO_COUNTRY_DATA,
@@ -47,14 +46,6 @@ export function AudienceSection({
     () => post.ageBreakdown || DEMO_AGE_DATA,
     [post.ageBreakdown]
   );
-
-  const [shouldAnimate, setShouldAnimate] = useState(false);
-
-  useEffect(() => {
-    setShouldAnimate(false);
-    const timer = setTimeout(() => setShouldAnimate(true), 100);
-    return () => clearTimeout(timer);
-  }, [activeTab]);
 
   const handleDemographicChange = (
     tab: 'gender' | 'country' | 'age',
@@ -178,8 +169,7 @@ export function AudienceSection({
                   activeTab === 'gender' && item.label === 'Women' ? 'bg-chart-2' : 'bg-chart-1'
                 )}
                 style={{
-                  width: shouldAnimate ? `${clamp(item.value)}%` : '0%',
-                  transition: `width 0.6s ease ${idx * 0.1}s`,
+                  width: `${clamp(item.value)}%`,
                 }}
               />
             </div>

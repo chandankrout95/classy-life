@@ -72,8 +72,8 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
       return null; // The context handles redirection
   }
 
-  const isReelPage = pathname.includes('/post/') && !pathname.includes('/insights');
-  const shouldShowNav = !isReelPage;
+  const isPostPage = pathname.includes('/post/');
+  const shouldShowNav = !isPostPage;
 
 
   return (

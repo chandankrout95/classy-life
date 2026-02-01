@@ -385,7 +385,7 @@ if (dashboardLoading || !minWaitDone || !post) {
             </div>
           </div>
           <div className="h-[200px] -mb-4 mt-4">
-            <RetentionChart data={retentionData} yAxisTicks={[0, 50, 99]} yAxisDomain={[0, 99]} />
+            <RetentionChart data={retentionData} yAxisTicks={[0, 50, 100]} yAxisDomain={[0, 100]} />
           </div>
           {isEditing && (
             <div className="mt-8 space-y-2">
@@ -606,6 +606,8 @@ if (dashboardLoading || !minWaitDone || !post) {
     </div>
   );
 }
+    
+
     
 
     

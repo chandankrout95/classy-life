@@ -515,7 +515,7 @@ if (dashboardLoading || !minWaitDone || !post) {
               </div>
             </div>
             <div className="h-[200px] -mb-4 mt-4">
-              <RetentionChart data={likesOverTimeData} yAxisTicks={[0, 10, 20]} yAxisDomain={[0, 20]} />
+              <RetentionChart data={likesOverTimeData} yAxisTicks={[0, 10, 20]} yAxisDomain={[0, 20]} lineType="linear" />
             </div>
             {isEditing && (
               <div className="mt-4 space-y-2">

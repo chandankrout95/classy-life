@@ -17,13 +17,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+type LineType = "basis" | "basisClosed" | "basisOpen" | "linear" | "linearClosed" | "natural" | "monotoneX" | "monotoneY" | "monotone" | "step" | "stepBefore" | "stepAfter";
+
 interface RetentionChartProps {
   data: RetentionData[];
   yAxisTicks?: number[];
   yAxisDomain?: [number, number];
+  lineType?: LineType;
 }
 
-export function RetentionChart({ data, yAxisTicks, yAxisDomain }: RetentionChartProps) {
+export function RetentionChart({ data, yAxisTicks, yAxisDomain, lineType = "monotone" }: RetentionChartProps) {
   return (
     <ChartContainer config={chartConfig} className="h-[200px] w-full">
       <LineChart
@@ -61,7 +64,7 @@ export function RetentionChart({ data, yAxisTicks, yAxisDomain }: RetentionChart
         />
         <Line
           dataKey="retention"
-          type="monotone"
+          type={lineType}
           stroke="hsl(var(--chart-1))"
           strokeWidth={3}
           dot={false}

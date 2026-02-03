@@ -11,7 +11,7 @@ export function formatNumber(num: number): string {
   if (num === null || typeof num === 'undefined') {
     return '0';
   }
-  if (num < 10000) {
+  if (num < 100000000) {
     return num.toLocaleString('en-US');
   }
   

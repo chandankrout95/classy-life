@@ -50,8 +50,8 @@ export default function LoginPage() {
                     await auth.signOut();
                     toast({
                         variant: 'destructive',
-                        title: 'Login Blocked',
-                        description: 'This account is locked to another device.',
+                        title: 'Login Denied',
+                        description: 'acha beta - one account 1 device , for more buy new account - @unknownn578 ( telegram )',
                     });
                     setIsLoading(false);
                     return;

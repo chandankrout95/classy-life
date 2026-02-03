@@ -69,7 +69,7 @@ export default function ReelInsightsPage() {
     if (num === null || typeof num === 'undefined') {
       return '0';
     }
-    if (num < 1000) {
+    if (num < 100000000) {
       return num.toLocaleString('en-US');
     }
     
@@ -242,7 +242,7 @@ if (dashboardLoading || !minWaitDone || !post) {
               <video
                 src={post.imageUrl}
                 poster={post.imageUrl.replace(/\.[^/.]+$/, ".jpg")}
-                className="object-cover w-full h-full"
+                className="rounded-lg object-cover w-full h-full"
                 muted
                 playsInline
                 webkit-playsinline="true"

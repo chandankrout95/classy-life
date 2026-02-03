@@ -50,7 +50,7 @@ export default function ProfessionalDashboardPage() {
             }
 
             let finalValue = value;
-            const numericFields = ['stats.followers', 'stats.following'];
+            const numericFields = ['stats.followers', 'stats.following', 'stats.totalViews'];
             if (numericFields.includes(field)) {
                 finalValue = parseInt(value, 10) || 0;
             }
@@ -85,10 +85,10 @@ export default function ProfessionalDashboardPage() {
     }
     
     const insights = [
-        { label: "Views", value: tempProfile.professionalDashboard.views, href: "/dashboard/views", field: 'professionalDashboard.views' },
+        { label: "Views", value: tempProfile.stats.totalViews || 0, href: "/dashboard/views", field: 'stats.totalViews' },
         { label: "Interactions", value: tempProfile.stats.followers, field: 'stats.followers' },
         { label: "New followers", value: tempProfile.stats.following, field: 'stats.following' },
-        { label: "Content you shared", value: tempProfile.posts?.length },
+        { label: "Content you shared", value: tempProfile.posts?.length || 0 },
     ];
 
     const tools = [
@@ -163,7 +163,11 @@ export default function ProfessionalDashboardPage() {
                                     />
                                 ) : (
                                     <span className="font-semibold">
-                                        {(item.field === 'stats.followers' || item.field === 'stats.following') ? formatNumber(item.value as number) : String(item.value)}
+                                        {typeof item.value === 'number' ? (
+                                            item.label === 'Views'
+                                                ? item.value.toLocaleString('en-US')
+                                                : formatNumber(item.value)
+                                        ) : String(item.value || '')}
                                     </span>
                                 )}
                                 {item.href && !isEditing && <ChevronRight size={20} className="text-zinc-500" />}

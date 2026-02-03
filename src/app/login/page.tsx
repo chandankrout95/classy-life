@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -52,7 +51,7 @@ export default function LoginPage() {
                     toast({
                         variant: 'destructive',
                         title: 'Login Blocked',
-                        description: 'This account is already active on another device.',
+                        description: 'This account is locked to another device.',
                     });
                     setIsLoading(false);
                     return;

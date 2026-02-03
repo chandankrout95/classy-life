@@ -30,9 +30,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         
         const userDocRef = doc(firestore, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
+        const deviceId = await generateDeviceFingerprint();
 
         if (!userDocSnap.exists()) {
-            const deviceId = await generateDeviceFingerprint();
             const newProfile: UserProfileData = {
                 ...mockProfile,
                 id: user.uid,
@@ -45,16 +45,28 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             await setDoc(userDocRef, newProfile);
             setProfile(newProfile);
         } else {
-            // Ensure contentTypeStats exists
             const data = userDocSnap.data() as UserProfileData;
+            let needsUpdate = false;
+            let updatedData: UserProfileData = { ...data };
+
+            if (!data.registeredDeviceId) {
+                updatedData.registeredDeviceId = deviceId;
+                needsUpdate = true;
+            }
+            
+            // Ensure contentTypeStats exists
             if (!data.stats?.contentTypeStats) {
-                const updatedData = {
-                    ...data,
+                updatedData = {
+                    ...updatedData,
                     stats: {
-                        ...data.stats,
+                        ...updatedData.stats,
                         contentTypeStats: mockProfile.stats.contentTypeStats
                     }
                 };
+                needsUpdate = true;
+            }
+
+            if (needsUpdate) {
                 await setDoc(userDocRef, updatedData, { merge: true });
                 setProfile(updatedData);
             }

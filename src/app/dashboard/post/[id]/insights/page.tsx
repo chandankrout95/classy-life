@@ -544,23 +544,23 @@ if (dashboardLoading || !minWaitDone || !post) {
             <div className="mt-8 space-y-2 text-sm">
               <div className="flex justify-between items-center">
                 <span>Likes</span>
-                {isEditing ? <Input type="number" value={post.likes || 0} onChange={(e) => handleSimpleFieldChange('likes', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{formatNumber(post.likes || 0)}</span>}
+                {isEditing ? <Input type="number" value={post.likes || 0} onChange={(e) => handleSimpleFieldChange('likes', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{(post.likes || 0).toLocaleString('en-US')}</span>}
               </div>
               <div className="flex justify-between items-center">
                 <span>Saves</span>
-                {isEditing ? <Input type="number" value={post.saves || 0} onChange={(e) => handleSimpleFieldChange('saves', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{formatNumber(post.saves || 0)}</span>}
+                {isEditing ? <Input type="number" value={post.saves || 0} onChange={(e) => handleSimpleFieldChange('saves', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{(post.saves || 0).toLocaleString('en-US')}</span>}
               </div>
               <div className="flex justify-between items-center">
                 <span>Shares</span>
-                {isEditing ? <Input type="number" value={post.shares || 0} onChange={(e) => handleSimpleFieldChange('shares', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{formatNumber(post.shares || 0)}</span>}
+                {isEditing ? <Input type="number" value={post.shares || 0} onChange={(e) => handleSimpleFieldChange('shares', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{(post.shares || 0).toLocaleString('en-US')}</span>}
               </div>
               <div className="flex justify-between items-center">
                 <span>Comments</span>
-                {isEditing ? <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{formatNumber(post.comments || 0)}</span>}
+                {isEditing ? <Input type="number" value={post.comments || 0} onChange={(e) => handleSimpleFieldChange('comments', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{(post.comments || 0).toLocaleString('en-US')}</span>}
               </div>
               <div className="flex justify-between items-center">
                 <span>Reposts</span>
-                {isEditing ? <Input type="number" value={post.reposts || 0} onChange={(e) => handleSimpleFieldChange('reposts', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{formatNumber(post.reposts || 0)}</span>}
+                {isEditing ? <Input type="number" value={post.reposts || 0} onChange={(e) => handleSimpleFieldChange('reposts', parseInt(e.target.value) || 0)} className="w-24 text-right bg-transparent" /> : <span className="font-semibold">{(post.reposts || 0).toLocaleString('en-US')}</span>}
               </div>
             </div>
           </div>
@@ -606,8 +606,3 @@ if (dashboardLoading || !minWaitDone || !post) {
     </div>
   );
 }
-    
-
-    
-
-    

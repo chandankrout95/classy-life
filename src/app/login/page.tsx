@@ -95,7 +95,7 @@ export default function LoginPage() {
 
                     <div className="relative mx-auto w-24 sm:w-32 md:w-40 lg:w-48 aspect-square">
                         <Image
-                            src="/images/578.png"
+                            src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbnN0YWdyYW18ZW58MHx8fHwxNzcxMDQzOTI5fDA&ixlib=rb-4.1.0&q=80&w=1080"
                             alt="Insight Phantom Logo"
                             fill
                             sizes="(max-width: 640px) 96px,
@@ -103,7 +103,7 @@ export default function LoginPage() {
                                     (max-width: 1024px) 160px,
                                     192px"
                             className="rounded-md object-cover"
-                            data-ai-hint="gaming team logo"
+                            data-ai-hint="instagram"
                             priority
                         />
                     </div>

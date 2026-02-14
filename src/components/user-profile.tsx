@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -205,6 +206,20 @@ export function UserProfile() {
     }
   }
 
+  const formatStat = (num: number): string => {
+    if (num === null || typeof num === 'undefined') {
+      return '0';
+    }
+    if (num > 9999) { // More than 4 digits
+      return new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 1
+      }).format(num);
+    }
+    return num.toLocaleString('en-US');
+  };
+
   const isActionPending = isSaving;
 
   if (isComponentLoading || !localProfile) {
@@ -368,15 +383,15 @@ export function UserProfile() {
                   </div>
                   <div className="flex-1 flex justify-around items-center">
                     <div className="text-center">
-                      <div className="font-bold text-base sm:text-lg">{formatNumber(localProfile.stats.posts)}</div>
+                      <div className="font-bold text-base sm:text-lg">{formatStat(localProfile.stats.posts)}</div>
                       <div className="text-xs sm:text-sm text-zinc-400">posts</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-base sm:text-lg">{formatNumber(localProfile.stats.followers)}</div>
+                      <div className="font-bold text-base sm:text-lg">{formatStat(localProfile.stats.followers)}</div>
                       <div className="text-xs sm:text-sm text-zinc-400">followers</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-base sm:text-lg">{formatNumber(localProfile.stats.following)}</div>
+                      <div className="font-bold text-base sm:text-lg">{formatStat(localProfile.stats.following)}</div>
                       <div className="text-xs sm:text-sm text-zinc-400">following</div>
                     </div>
                   </div>

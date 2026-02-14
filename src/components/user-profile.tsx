@@ -418,7 +418,7 @@ export function UserProfile() {
                     <div className="flex items-center gap-1 text-xs text-zinc-400">
                       <TrendingUp size={14} className="text-green-500" />
                       <span>
-                        {formatNumber(localProfile.stats.totalViews || 0)} views in the last 30 days
+                        {formatStat(localProfile.stats.totalViews || 0)} views in the last 30 days
                       </span>
                     </div>
                   </div>

@@ -110,7 +110,7 @@ export default function LoginPage() {
 
                     <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
                     <p className="text-muted-foreground">
-                        by 578 SaaS Agency
+                        By Nikiyan SaaS Agency , ( Telegram - @unknown578 )
                     </p>
                 </div>
 

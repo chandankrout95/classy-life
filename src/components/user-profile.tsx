@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { UserProfileData, Post } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useUser, useFirebase } from "@/firebase";
 import { doc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
@@ -79,6 +79,17 @@ export function UserProfile() {
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
   const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
   const [activeTab, setActiveTab] = useState('grid');
+
+  const getUsernameSizeClass = (username: string | undefined): string => {
+    const length = username?.length || 0;
+    if (length > 20) {
+      return 'text-base sm:text-lg';
+    }
+    if (length > 15) {
+      return 'text-lg sm:text-xl';
+    }
+    return 'text-xl sm:text-2xl';
+  };
 
   useEffect(() => {
     if (formData) {
@@ -350,7 +361,7 @@ export function UserProfile() {
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-self-center">
-                <h1 className="text-xl sm:text-2xl font-bold">{localProfile.username}</h1>
+                <h1 className={cn(getUsernameSizeClass(localProfile.username), "font-bold")}>{localProfile.username}</h1>
                 <ChevronDown size={20} />
               </div>
               <div className="flex items-center gap-4 justify-self-end">
@@ -418,7 +429,7 @@ export function UserProfile() {
                     <div className="flex items-center gap-1 text-xs text-zinc-400">
                       <TrendingUp size={14} className="text-green-500" />
                       <span>
-                        {formatStat(localProfile.stats.totalViews || 0)} views in the last 30 days
+                        {formatNumber(localProfile.stats.totalViews || 0)} views in the last 30 days
                       </span>
                     </div>
                   </div>

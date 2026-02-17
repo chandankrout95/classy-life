@@ -248,7 +248,7 @@ export default function ViewsPage() {
         <main className="p-4 space-y-8">
             <div className="flex justify-between items-center text-sm sm:text-base">
                 <Select value={dateRange} onValueChange={setDateRange}>
-                  <SelectTrigger className="bg-black text-white border border-zinc-700 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm w-auto gap-2">
+                  <SelectTrigger className="bg-zinc-800 border border-zinc-700 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm w-auto gap-2">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

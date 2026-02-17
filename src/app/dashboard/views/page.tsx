@@ -23,6 +23,13 @@ import {
 } from "@/components/ui/carousel";
 import { Slider } from "@/components/ui/slider";
 import { format } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 
 type EditableField = {
@@ -42,6 +49,7 @@ export default function ViewsPage() {
 
     const [showSliders, setShowSliders] = useState(false);
     const [contentTypeValues, setContentTypeValues] = useState<ContentTypeStat[]>([]);
+    const [dateRange, setDateRange] = useState("30");
 
     useEffect(() => {
         if (profile) {
@@ -239,10 +247,16 @@ export default function ViewsPage() {
 
         <main className="p-4 space-y-8">
             <div className="flex justify-between items-center text-sm sm:text-base">
-                <Button variant="ghost" className="bg-black text-white border border-zinc-700 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm" disabled>
-                    Last 30 days
-                    <ChevronDown size={20} className="ml-2" />
-                </Button>
+                <Select value={dateRange} onValueChange={setDateRange}>
+                  <SelectTrigger className="bg-black text-white border border-zinc-700 rounded-full h-auto py-1.5 px-4 text-xs sm:text-sm w-auto gap-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="30">Last 30 days</SelectItem>
+                    <SelectItem value="60">Last 60 days</SelectItem>
+                    <SelectItem value="90">Last 90 days</SelectItem>
+                  </SelectContent>
+                </Select>
                 {isPageEditing ? (
                     <Input 
                         value={dateRangeText}

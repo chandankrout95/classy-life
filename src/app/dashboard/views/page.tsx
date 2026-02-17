@@ -361,7 +361,6 @@ export default function ViewsPage() {
                             ) : (
                                 <p className="text-sm text-red-500">{accountsReached.change}%</p>
                             )}
-                        <span className="text-sm text-red-500">%</span>
                         </div>
                     </div>
                 </div>
@@ -546,7 +545,6 @@ export default function ViewsPage() {
                             ) : (
                                 <p className="text-sm text-red-500">{profileActivity?.change}%</p>
                             )}
-                            <span className="text-sm text-red-500">%</span>
                         </div>
                     </div>
                 </div>
@@ -584,7 +582,6 @@ export default function ViewsPage() {
                             ): (
                                 <p className="text-xs text-red-500">{profileActivity?.visits.change}%</p>
                             )}
-                            <span className="text-xs text-red-500">%</span>
                         </div>
                     </div>
                 </div>

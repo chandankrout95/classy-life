@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronLeft, Info, ChevronDown, Loader2, PlaySquare } from "lucide-react";
+import { ChevronLeft, Info, ChevronDown, Loader2, PlaySquare, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatNumber, cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -351,15 +351,27 @@ export default function ViewsPage() {
                         )}
                         <div className="flex items-center justify-end">
                             {isPageEditing ? (
-                                <Input
-                                    type="number"
-                                    value={accountsReached.change}
-                                    onChange={(e) => handleUpdate('stats.accountsReached.change', parseFloat(e.target.value) || 0)}
-                                    className="bg-transparent border-none text-sm text-red-500 text-right p-0 h-auto w-16 no-spinner ring-1 ring-primary rounded-sm"
-                                />
-
+                                <div className="flex items-center gap-1">
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={() => handleUpdate('stats.accountsReached.change', parseFloat(((accountsReached.change || 0) - 0.1).toFixed(1)))}>
+                                        <Minus size={16} />
+                                    </Button>
+                                    <Input
+                                        type="number"
+                                        value={accountsReached.change}
+                                        onChange={(e) => handleUpdate('stats.accountsReached.change', parseFloat(e.target.value) || 0)}
+                                        className={cn(
+                                            "bg-transparent border-none text-sm text-right p-0 h-auto w-16 no-spinner ring-1 ring-primary rounded-sm",
+                                            (accountsReached.change || 0) < 0 ? "text-red-500" : "text-green-500"
+                                        )}
+                                    />
+                                     <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={() => handleUpdate('stats.accountsReached.change', parseFloat(((accountsReached.change || 0) + 0.1).toFixed(1)))}>
+                                        <Plus size={16} />
+                                    </Button>
+                                </div>
                             ) : (
-                                <p className="text-sm text-red-500">{accountsReached.change}%</p>
+                               <p className={cn("text-sm", (accountsReached.change || 0) < 0 ? "text-red-500" : "text-green-500")}>
+                                    {(accountsReached.change || 0) > 0 ? '+' : ''}{accountsReached.change.toFixed(1)}%
+                                </p>
                             )}
                         </div>
                     </div>
@@ -536,14 +548,24 @@ export default function ViewsPage() {
                         )}
                         <div className="flex items-center justify-end">
                             {isPageEditing ? (
-                                <Input
-                                    type="number"
-                                    value={profileActivity?.change}
-                                    onChange={(e) => handleUpdate('stats.profileActivity.change', parseFloat(e.target.value) || 0)}
-                                    className="bg-transparent border-none text-sm text-red-500 p-0 h-auto text-right w-16 no-spinner ring-1 ring-primary rounded-sm"
-                                />
+                                <div className="flex items-center gap-1">
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={() => handleUpdate('stats.profileActivity.change', parseFloat(((profileActivity?.change || 0) - 0.1).toFixed(1)))}>
+                                        <Minus size={16} />
+                                    </Button>
+                                    <Input
+                                        type="number"
+                                        value={profileActivity?.change}
+                                        onChange={(e) => handleUpdate('stats.profileActivity.change', parseFloat(e.target.value) || 0)}
+                                        className={cn("bg-transparent border-none text-sm p-0 h-auto text-right w-16 no-spinner ring-1 ring-primary rounded-sm", (profileActivity?.change || 0) < 0 ? "text-red-500" : "text-green-500")}
+                                    />
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={() => handleUpdate('stats.profileActivity.change', parseFloat(((profileActivity?.change || 0) + 0.1).toFixed(1)))}>
+                                        <Plus size={16} />
+                                    </Button>
+                                </div>
                             ) : (
-                                <p className="text-sm text-red-500">{profileActivity?.change}%</p>
+                                <p className={cn("text-sm", (profileActivity?.change || 0) < 0 ? "text-red-500" : "text-green-500")}>
+                                    {(profileActivity?.change || 0) > 0 ? '+' : ''}{(profileActivity?.change || 0).toFixed(1)}%
+                                </p>
                             )}
                         </div>
                     </div>
@@ -573,14 +595,24 @@ export default function ViewsPage() {
                         )}
                         <div className="flex items-center justify-end">
                             {isPageEditing ? (
-                                <Input
+                                <div className="flex items-center gap-1">
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={() => handleUpdate('stats.profileActivity.visits.change', parseFloat(((profileActivity?.visits.change || 0) - 0.1).toFixed(1)))}>
+                                        <Minus size={16} />
+                                    </Button>
+                                    <Input
                                         type="number"
                                         value={profileActivity?.visits.change}
                                         onChange={(e) => handleUpdate('stats.profileActivity.visits.change', parseFloat(e.target.value) || 0)}
-                                        className="bg-transparent border-none text-xs text-red-500 p-0 h-auto text-right w-16 no-spinner ring-1 ring-primary rounded-sm"
+                                        className={cn("bg-transparent border-none text-xs p-0 h-auto text-right w-16 no-spinner ring-1 ring-primary rounded-sm", (profileActivity?.visits.change || 0) < 0 ? "text-red-500" : "text-green-500")}
                                     />
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={() => handleUpdate('stats.profileActivity.visits.change', parseFloat(((profileActivity?.visits.change || 0) + 0.1).toFixed(1)))}>
+                                        <Plus size={16} />
+                                    </Button>
+                                </div>
                             ): (
-                                <p className="text-xs text-red-500">{profileActivity?.visits.change}%</p>
+                                <p className={cn("text-xs", (profileActivity?.visits.change || 0) < 0 ? "text-red-500" : "text-green-500")}>
+                                    {(profileActivity?.visits.change || 0) > 0 ? '+' : ''}{(profileActivity?.visits.change || 0).toFixed(1)}%
+                                </p>
                             )}
                         </div>
                     </div>

@@ -52,11 +52,12 @@
     --border: 0 0% 20%;
     --input: 0 0% 15%;
     --ring: 210 40% 98%;
-    --chart-1: 320 88% 62%;
-    --chart-2: 270 70% 50%;
+    --chart-1: 304 97% 41%;
+   --chart-1: 305 100% 42%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    
   }
 }
 
@@ -70,6 +71,7 @@
 }
 
 @layer utilities {
+  
   .indicator-bg-chart-1 {
     background-color: hsl(var(--chart-1));
   }

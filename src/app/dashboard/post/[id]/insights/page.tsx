@@ -452,7 +452,7 @@ if (dashboardLoading || !minWaitDone || !post) {
               <Info size={16} className="text-zinc-400" />
             </div>
             <div className="flex justify-center mt-4">
-              <div className="w-[200px] h-[200px]">
+              <div className="w-[200px] h-[250px]">
                 <InteractionsChart data={interactionsData} totalInteractions={post.interactions || 0} fullNumberFormat={true} />
               </div>
             </div>

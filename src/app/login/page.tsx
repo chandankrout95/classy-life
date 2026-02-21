@@ -1,240 +1,159 @@
-"use client";
+'use client';
 
-import { useState, useTransition } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useFirebase, useFirestore } from "@/firebase";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
-import { InsightForgeLogo } from "@/components/icons";
-import { useToast } from "@/hooks/use-toast";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { generateDeviceFingerprint } from "@/lib/device-fingerprint";
-import type { UserProfileData } from "@/lib/types";
+import { useState, useTransition } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { useFirebase, useFirestore } from '@/firebase';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
+import { InsightForgeLogo } from '@/components/icons';
+import { useToast } from '@/hooks/use-toast';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { generateDeviceFingerprint } from '@/lib/device-fingerprint';
+import type { UserProfileData } from '@/lib/types';
+
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPending, startTransition] = useTransition();
+    const router = useRouter();
+    const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-  const { auth } = useFirebase();
-  const firestore = useFirestore();
+    const { auth } = useFirebase();
+    const firestore = useFirestore();
 
-  const handleAuthAction = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!auth || !firestore) return;
-    setIsLoading(true);
+    const handleAuthAction = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!auth || !firestore) return;
+        setIsLoading(true);
 
-    try {
-      // 1. Firebase Auth se Sign In
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const user = userCredential.user;
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-      // 2. Device Fingerprint generate karein (Security ke liye)
-      const currentFingerprint = await generateDeviceFingerprint();
-      const userDocRef = doc(firestore, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
+            const currentFingerprint = await generateDeviceFingerprint();
+            const userDocRef = doc(firestore, 'users', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
 
-      if (userDocSnap.exists()) {
-        // --- SCENARIO A: PURANA USER ---
-        const userData = userDocSnap.data() as UserProfileData;
-        const registeredDeviceId = userData.registeredDeviceId;
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data() as UserProfileData;
+                const registeredDeviceId = userData.registeredDeviceId;
 
-        // Device Lock Check
-        if (registeredDeviceId && registeredDeviceId !== currentFingerprint) {
-          await auth.signOut();
-          toast({
-            variant: "destructive",
-            title: "Login Denied",
-            description:
-              "acha beta - one account 1 device. Buy new account @unknownn578",
-          });
-          setIsLoading(false);
-          return;
+                if (registeredDeviceId && registeredDeviceId !== currentFingerprint) {
+                    await auth.signOut();
+                    toast({
+                        variant: 'destructive',
+                        title: 'Login Denied',
+                        description: 'acha beta - one account 1 device , for more buy new account - @unknownn578 ( telegram )',
+                    });
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
+            toast({ title: 'Success!', description: 'Welcome back.' });
+            startTransition(() => {
+                router.push('/dashboard/profile');
+            });
+
+        } catch (error: any) {
+            console.error('Firebase Auth Error:', error.code, error.message);
+            let description = 'An unexpected error occurred. Please try again.';
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                description = 'Invalid email or password. Please check your credentials and try again.';
+            } else if (error.code === 'auth/email-already-in-use') {
+                description = 'This email is already registered. Please sign in or use a different email.';
+            } else if (error.code === 'auth/weak-password') {
+                description = 'The password is too weak. It must be at least 6 characters long.';
+            } else if (error.code === 'auth/invalid-email') {
+                description = 'The email address is not valid. Please enter a correct email.';
+            }
+            toast({ variant: 'destructive', title: 'Authentication Failed', description });
+        } finally {
+            if (!isPending) {
+                setIsLoading(false);
+            }
         }
+    };
 
-        // Agar user purana hai par "isNew" abhi bhi true hai,
-        // toh aap dashboard pe jane ke baad use updateDoc se false kar sakte hain.
-      } else {
-        // --- SCENARIO B: NAYA USER (First Login) ---
-        // Yahan hum default data bante hain jo har user ko starting mein milega
-        const defaultData = {
-          id: user.uid,
-          email: user.email,
-          name: "New User",
-          username: `user_${Math.floor(Math.random() * 1000000)}`,
-          isNew: true, // "New" tag dikhane ke liye
-          registeredDeviceId: currentFingerprint,
-          createdAt: new Date().toISOString(),
-          avatarUrl: "/avatars/avatar-2.png", // Default image
-          bio: ["Welcome to Insight Phantom", "Finance & Hotel RAG Expert"],
-          stats: {
-            followers: 0,
-            following: 0,
-            posts: 0,
-          },
-        };
+    const isFormLoading = isLoading || isPending;
 
-        // Main User Document Create karein
-        await setDoc(userDocRef, defaultData);
+    return (
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
+            <div className="absolute top-4 right-4">
+                <ThemeToggle />
+            </div>
+            <div className="w-full max-w-sm">
+                <div className="text-center mb-8">
 
-        // Default Manual Data (Stories/Reels) Sub-collections mein add karein
-        // Note: Aap stories aur reels ko alag documents mein rakh sakte hain
-        const storiesRef = doc(
-          firestore,
-          `users/${user.uid}/manual_data`,
-          "stories",
-        );
-        await setDoc(storiesRef, {
-          items: [
-            {
-              id: 1,
-              username: "Your story",
-              img: defaultData.avatarUrl,
-              isUser: true,
-            },
-            {
-              id: 2,
-              username: "insight_forge",
-              img: "https://i.pravatar.cc/150?u=forge",
-            },
-          ],
-        });
-
-        const reelsRef = doc(
-          firestore,
-          `users/${user.uid}/manual_data`,
-          "reels",
-        );
-        await setDoc(reelsRef, {
-          items: [{ id: "r1", caption: "Default Finance Insight", views: 0 }],
-        });
-      }
-
-      toast({ title: "Success!", description: "Welcome back." });
-
-      startTransition(() => {
-        router.push("/dashboard/profile");
-      });
-    } catch (error: any) {
-      console.error("Firebase Auth Error:", error.code, error.message);
-      let description = "An unexpected error occurred.";
-      if (error.code === "auth/invalid-credential") {
-        description = "Invalid email or password.";
-      }
-      toast({
-        variant: "destructive",
-        title: "Authentication Failed",
-        description,
-      });
-    } finally {
-      if (!isPending) {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  const isFormLoading = isLoading || isPending;
-
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="relative mx-auto w-24 sm:w-32 md:w-40 lg:w-48 aspect-square">
-            <Image
-              src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbnN0YWdyYW18ZW58MHx8fHwxNzcxMDQzOTI5fDA&ixlib=rb-4.1.0&q=80&w=1080"
-              alt="Insight Phantom Logo"
-              fill
-              sizes="(max-width: 640px) 96px,
+                    <div className="relative mx-auto w-24 sm:w-32 md:w-40 lg:w-48 aspect-square">
+                        <Image
+                            src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbnN0YWdyYW18ZW58MHx8fHwxNzcxMDQzOTI5fDA&ixlib=rb-4.1.0&q=80&w=1080"
+                            alt="Insight Phantom Logo"
+                            fill
+                            sizes="(max-width: 640px) 96px,
                                     (max-width: 768px) 128px,
                                     (max-width: 1024px) 160px,
                                     192px"
-              className="rounded-md object-cover"
-              data-ai-hint="instagram"
-              priority
-            />
-          </div>
+                            className="rounded-md object-cover"
+                            data-ai-hint="instagram"
+                            priority
+                        />
+                    </div>
 
-          <h1 className="text-3xl font-bold mt-4">
-            Welcome to Insight Phantom
-          </h1>
-          <p className="text-muted-foreground">
-            By Nikiyan SaaS Agency , ( Telegram - @unknownn578 )
-          </p>
-        </div>
+                    <h1 className="text-3xl font-bold mt-4">Welcome to Insight Phantom</h1>
+                    <p className="text-muted-foreground">
+                        By Nikiyan SaaS Agency , ( Telegram - @unknown578 )
+                    </p>
+                </div>
 
-        <div className="bg-card p-8 rounded-2xl shadow-lg border">
-          <form onSubmit={handleAuthAction}>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="email" className="text-muted-foreground">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  required
-                  className="bg-input border-border"
-                />
-              </div>
-              <div>
-                <Label htmlFor="password" className="text-muted-foreground">
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="bg-input border-border"
-                />
-              </div>
+                <div className="bg-card p-8 rounded-2xl shadow-lg border">
+                    <form onSubmit={handleAuthAction}>
+                        <div className="space-y-4">
+                            <div>
+                                <Label htmlFor="email" className="text-muted-foreground">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="name@example.com"
+                                    required
+                                    className="bg-input border-border"
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="password" className="text-muted-foreground">Password</Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                    className="bg-input border-border"
+                                />
+                            </div>
+                        </div>
+                        <Button type="submit" className="w-full mt-6 bg-primary text-primary-foreground hover:bg-primary/90" disabled={isFormLoading}>
+                            {isLoading ? <Loader2 className="animate-spin" /> : 'Sign In'}
+                        </Button>
+                    </form>
+
+                    <a href="https://t.me/+Rj5caNIXxcI4OTBl" target="_blank" rel="noopener noreferrer" className="block w-full mt-4">
+                        <Button variant="secondary" className="w-full bg-amber-500 text-black hover:bg-amber-600 font-bold" disabled={isFormLoading}>
+                            BUY Now
+                        </Button>
+                    </a>
+                </div>
             </div>
-            <Button
-              type="submit"
-              className="w-full mt-6 bg-primary text-primary-foreground hover:bg-primary/90"
-              disabled={isFormLoading}
-            >
-              {isLoading ? <Loader2 className="animate-spin" /> : "Sign In"}
-            </Button>
-          </form>
-
-          <a
-            href="https://t.me/+Rj5caNIXxcI4OTBl"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full mt-4"
-          >
-            <Button
-              variant="secondary"
-              className="w-full bg-amber-500 text-black hover:bg-amber-600 font-bold"
-              disabled={isFormLoading}
-            >
-              BUY Now
-            </Button>
-          </a>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

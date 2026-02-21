@@ -44,6 +44,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { mockProfile } from "@/lib/mock-data";
+import AccountsCentreModal from "./AccountsCentreModal";
+import { useDocument } from "react-firebase-hooks/firestore";
 
 const BioWithMentions = ({ bio }: { bio: string[] }) => {
   return (
@@ -65,7 +67,12 @@ const BioWithMentions = ({ bio }: { bio: string[] }) => {
   );
 };
 
-export function UserProfile() {
+interface TopNavProps {
+  onPlusClick?: () => void;
+  userId: string;
+}
+
+export function UserProfile({ userId }: TopNavProps) {
   const router = useRouter();
   const { auth, user } = useUser();
 
@@ -76,6 +83,12 @@ export function UserProfile() {
   } = useDashboard();
   const { firestore } = useFirebase();
   const { toast } = useToast();
+
+  const [openAccounts, setOpenAccounts] = useState(false);
+
+ const [profileSnapshot, loading] = useDocument(
+    firestore && userId ? doc(firestore, "users", userId) : null,
+  );
 
   const [isCreatingPost, setIsCreatingPost] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -465,7 +478,13 @@ export function UserProfile() {
                   <div className="absolute -right-1 -top-1 w-2 h-2 bg-red-500 rounded-full"></div>
                 </div>
               </div>
-              <div className="flex items-center gap-1 justify-self-center">
+              <div
+                onClick={() => {
+                  setOpenAccounts(true);
+                  console.log("first");
+                }}
+                className="flex items-center gap-1 justify-self-center"
+              >
                 <h1
                   className={cn(
                     getUsernameSizeClass(localProfile.username),
@@ -755,6 +774,15 @@ export function UserProfile() {
         onOpenChange={setIsCreatingPost}
         onPostCreate={handleCreatePost}
       />
+
+      {/* Accounts Centre Modal - Conditional Rendering */}
+      {openAccounts && userId && (
+        <AccountsCentreModal
+          userId={userId}
+          isOpen={openAccounts}
+          onClose={() => setOpenAccounts(false)}
+        />
+      )}
     </>
   );
 }

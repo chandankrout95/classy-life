@@ -179,7 +179,7 @@ export default function MessagesPage() {
         {/* --- Thoughts Section (Fixed UI) --- */}
         <div className="flex overflow-x-auto py-6 px-2 no-scrollbar scroll-smooth">
           {/* Your Note */}
-          <div className="flex flex-col items-center min-w-[100px] space-y-2">
+          <div className="flex flex-col py-2 items-center min-w-[100px] space-y-2">
             <div className="relative">
                <div className="absolute z-20 -top-7 left-1/2 -translate-x-1/2 bg-white dark:bg-zinc-800 text-[11px] px-3 py-1 text-[10px] rounded-2xl border border-border shadow-sm text-center min-w-[70px]">
                  Create note
@@ -197,7 +197,7 @@ export default function MessagesPage() {
 
           {/* Others' Thoughts */}
           {displayThoughts.map((t: any) => (
-            <div key={t.id} className="flex flex-col items-center min-w-[100px] space-y-2 cursor-pointer group" onClick={() => {
+            <div key={t.id} className="flex flex-col py-2 items-center min-w-[100px] space-y-2 cursor-pointer group" onClick={() => {
                 setEditingItem(t); setEditName(t.username); setEditMsg(t.note); setEditImg(t.img); setIsThoughtDialogOpen(true);
             }}>
               <div className="relative">

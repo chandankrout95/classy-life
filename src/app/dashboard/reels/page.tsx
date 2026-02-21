@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useRef, useMemo } from "react";
-import { 
-  Heart, 
-  MessageCircle, 
-  Send, 
-  MoreVertical, 
-  Music, 
+import {
+  Heart,
+  MessageCircle,
+  Send,
+  MoreVertical,
+  Music,
   Camera,
   X,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -35,12 +35,13 @@ const DEFAULT_REELS = [
     id: "reel-2",
     username: "dr.nitesh.choudhary_",
     videoUrl: "https://picsum.photos/seed/reel2/600/1000",
-    caption: "from saree grace to midnight blue elegance ✨ ... #fashion #reels",
+    caption:
+      "from saree grace to midnight blue elegance ✨ ... #fashion #reels",
     audio: "badkrazy • Humsafar",
     likes: "2,630",
     comments: "98",
     shares: "253",
-  }
+  },
 ];
 
 export default function ReelsPage() {
@@ -50,8 +51,11 @@ export default function ReelsPage() {
 
   // States
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
-  const [showAnimation, setShowAnimation] = useState<{ id: string; visible: boolean } | null>(null);
-  
+  const [showAnimation, setShowAnimation] = useState<{
+    id: string;
+    visible: boolean;
+  } | null>(null);
+
   // Edit States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingReel, setEditingReel] = useState<any>(null);
@@ -65,13 +69,13 @@ export default function ReelsPage() {
   const userId = user?.uid || "guest";
   const reelsPath = `users/${userId}/user_reels`;
   const [dbReels, dbLoading] = useCollectionData(
-    query(collection(firestore, reelsPath))
+    query(collection(firestore, reelsPath)),
   );
 
   // 2. Merge Logic: Replace defaults with DB versions, maintain ID order
   const displayReels = useMemo(() => {
-    return DEFAULT_REELS.map(defaultReel => {
-      const dbVersion = dbReels?.find(r => r.id === defaultReel.id);
+    return DEFAULT_REELS.map((defaultReel) => {
+      const dbVersion = dbReels?.find((r) => r.id === defaultReel.id);
       return dbVersion ? { ...defaultReel, ...dbVersion } : defaultReel;
     });
   }, [dbReels]);
@@ -105,13 +109,17 @@ export default function ReelsPage() {
     if (!editingReel) return;
     setIsUpdating(true);
     try {
-      await setDoc(doc(firestore, reelsPath, editingReel.id.toString()), {
-        ...editingReel,
-        username: editUsername,
-        caption: editCaption,
-        likes: editLikes,
-        videoUrl: tempMediaUrl || editingReel.videoUrl,
-      }, { merge: true });
+      await setDoc(
+        doc(firestore, reelsPath, editingReel.id.toString()),
+        {
+          ...editingReel,
+          username: editUsername,
+          caption: editCaption,
+          likes: editLikes,
+          videoUrl: tempMediaUrl || editingReel.videoUrl,
+        },
+        { merge: true },
+      );
       setIsModalOpen(false);
     } catch (err) {
       console.error(err);
@@ -120,12 +128,22 @@ export default function ReelsPage() {
     }
   };
 
-  if (authLoading) return <div className="h-screen bg-black flex items-center justify-center"><Loader2 className="animate-spin text-white" /></div>;
+  if (authLoading)
+    return (
+      <div className="h-screen bg-black flex items-center justify-center">
+        <Loader2 className="animate-spin text-white" />
+      </div>
+    );
 
   return (
     <div className="h-[calc(100vh-50px)] w-full max-w-full overflow-x-hidden overflow-y-scroll snap-y snap-mandatory no-scrollbar bg-black text-white">
-      
-      <input type="file" ref={mediaInputRef} hidden accept="image/*" onChange={handleMediaUpload} />
+      <input
+        type="file"
+        ref={mediaInputRef}
+        hidden
+        accept="image/*"
+        onChange={handleMediaUpload}
+      />
 
       {/* --- Edit Modal --- */}
       {isModalOpen && (
@@ -133,22 +151,53 @@ export default function ReelsPage() {
           <div className="bg-zinc-900 w-full max-w-sm rounded-3xl p-6 border border-zinc-800">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold">Edit Reel Data</h3>
-              <X className="cursor-pointer" onClick={() => setIsModalOpen(false)} />
+              <X
+                className="cursor-pointer"
+                onClick={() => setIsModalOpen(false)}
+              />
             </div>
             <div className="space-y-4">
-              <div 
+              <div
                 className="relative aspect-[9/16] w-24 mx-auto rounded-lg overflow-hidden border border-zinc-700 cursor-pointer"
                 onClick={() => mediaInputRef.current?.click()}
               >
-                <Image src={tempMediaUrl || editingReel.videoUrl} alt="prev" fill className="object-cover" />
+                <Image
+                  src={tempMediaUrl || editingReel.videoUrl}
+                  alt="prev"
+                  fill
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  {isUpdating ? <Loader2 className="animate-spin w-5 h-5" /> : <Camera className="w-5 h-5" />}
+                  {isUpdating ? (
+                    <Loader2 className="animate-spin w-5 h-5" />
+                  ) : (
+                    <Camera className="w-5 h-5" />
+                  )}
                 </div>
               </div>
-              <input value={editUsername} onChange={(e) => setEditUsername(e.target.value)} className="w-full bg-zinc-800 p-3 rounded-xl outline-none text-sm" placeholder="Username" />
-              <textarea value={editCaption} onChange={(e) => setEditCaption(e.target.value)} className="w-full bg-zinc-800 p-3 rounded-xl outline-none text-sm h-20" placeholder="Caption" />
-              <input value={editLikes} onChange={(e) => setEditLikes(e.target.value)} className="w-full bg-zinc-800 p-3 rounded-xl outline-none text-sm" placeholder="Likes Count" />
-              <button onClick={saveReelChanges} disabled={isUpdating} className="w-full bg-white text-black font-bold py-3 rounded-xl active:scale-95 transition-transform">
+              <input
+                value={editUsername}
+                onChange={(e) => setEditUsername(e.target.value)}
+                className="w-full bg-zinc-800 p-3 rounded-xl outline-none text-sm"
+                placeholder="Username"
+              />
+              <textarea
+                value={editCaption}
+                onChange={(e) => setEditCaption(e.target.value)}
+                className="w-full bg-zinc-800 p-3 rounded-xl outline-none text-sm h-20"
+                placeholder="Caption"
+              />
+              <input
+                value={editLikes}
+                onChange={(e) => setEditLikes(e.target.value)}
+                className="w-full bg-zinc-800 p-3 rounded-xl outline-none text-sm"
+                placeholder="Likes Count"
+              />
+              <button
+                onClick={saveReelChanges}
+                disabled={isUpdating}
+                className="w-full bg-white text-black font-bold py-3 rounded-xl active:scale-95 transition-transform"
+              >
                 {isUpdating ? "Saving..." : "Save Changes"}
               </button>
             </div>
@@ -162,17 +211,17 @@ export default function ReelsPage() {
       </div>
 
       {displayReels.map((reel: any) => (
-        <div 
-          key={reel.id} 
+        <div
+          key={reel.id}
           className="h-full w-full relative snap-start flex items-center justify-center bg-zinc-900 overflow-hidden touch-pan-y"
           onDoubleClick={() => handleDoubleTap(reel.id)}
         >
-          <Image 
-            src={reel.videoUrl} 
-            alt="Reel content" 
-            fill 
+          <Image
+            src={reel.videoUrl}
+            alt="Reel content"
+            fill
             priority
-            className="object-cover pointer-events-none" 
+            className="object-cover pointer-events-none"
           />
 
           {showAnimation?.id === reel.id && (
@@ -183,57 +232,76 @@ export default function ReelsPage() {
 
           {/* --- UI Overlays --- */}
           <div className="absolute bottom-0 left-0 w-full p-4 pb-8 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex justify-between items-end z-30">
-            
             <div className="flex-1 max-w-[75%] space-y-3">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full overflow-hidden border border-zinc-500 flex-shrink-0">
-                  <Image src={`https://i.pravatar.cc/150?u=${reel.username}`} width={32} height={32} alt="avatar" />
+                  <Image
+                    src={`https://i.pravatar.cc/150?u=${reel.username}`}
+                    width={32}
+                    height={32}
+                    alt="avatar"
+                  />
                 </div>
-                <span className="text-sm font-semibold truncate">{reel.username}</span>
-                <button className="text-xs border border-white px-2 py-0.5 rounded-md font-bold hover:bg-white/10 active:scale-95 transition-all">Follow</button>
+                <span className="text-sm font-semibold truncate">
+                  {reel.username}
+                </span>
+                <button className="text-xs border border-white px-2 py-0.5 rounded-md font-bold hover:bg-white/10 active:scale-95 transition-all">
+                  Follow
+                </button>
               </div>
-              
-              <p className="text-sm leading-snug line-clamp-2 pr-2">{reel.caption}</p>
-              
+
+              <p className="text-sm leading-snug line-clamp-2 pr-2">
+                {reel.caption}
+              </p>
+
               <div className="flex items-center gap-2 text-[11px] bg-black/40 backdrop-blur-md w-fit px-3 py-1.5 rounded-full border border-white/10">
                 <Music className="w-3 h-3" />
                 <div className="w-28 overflow-hidden whitespace-nowrap">
-                   <p className="animate-marquee inline-block">{reel.audio}</p>
+                  <p className="animate-marquee inline-block">{reel.audio}</p>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col items-center gap-6 mb-2 mr-1">
               <div className="flex flex-col items-center group">
-                <Heart 
+                <Heart
                   onClick={(e) => {
                     e.stopPropagation();
-                    setLikedPosts(p => ({...p, [reel.id]: !p[reel.id]}));
+                    setLikedPosts((p) => ({ ...p, [reel.id]: !p[reel.id] }));
                   }}
-                  className={`w-7 h-7 cursor-pointer transition-all active:scale-150 ${likedPosts[reel.id] ? "fill-red-500 text-red-500" : "text-white"}`} 
+                  className={`w-7 h-7 cursor-pointer transition-all active:scale-150 ${likedPosts[reel.id] ? "fill-red-500 text-red-500" : "text-white"}`}
                 />
-                <span className="text-[11px] font-bold mt-1 shadow-sm">{reel.likes}</span>
+                <span className="text-[11px] font-bold mt-1 shadow-sm">
+                  {reel.likes}
+                </span>
               </div>
 
-              <div className="flex flex-col items-center" onClick={() => {
-                setEditingReel(reel);
-                setEditCaption(reel.caption);
-                setEditUsername(reel.username);
-                setEditLikes(reel.likes);
-                setTempMediaUrl(reel.videoUrl);
-                setIsModalOpen(true);
-              }}>
-                <MessageCircle className="w-7 h-7 cursor-pointer active:scale-110 transition-transform" />
-                <span className="text-[11px] font-bold mt-1">{reel.comments}</span>
+              <div
+                className="flex flex-col items-center"
+                onClick={() => {
+                  setEditingReel(reel);
+                  setEditCaption(reel.caption);
+                  setEditUsername(reel.username);
+                  setEditLikes(reel.likes);
+                  setTempMediaUrl(reel.videoUrl);
+                  setIsModalOpen(true);
+                }}
+              >
+                <MessageCircle className="w-7 h-7 cursor-pointer active:scale-110 transition-transform scale-x-[-1]" />{" "}
+                <span className="text-[11px] font-bold mt-1">
+                  {reel.comments}
+                </span>
               </div>
 
               <div className="flex flex-col items-center">
                 <Send className="w-7 h-7 cursor-pointer active:scale-110 transition-transform -rotate-14" />
-                <span className="text-[11px] font-bold mt-1">{reel.shares}</span>
+                <span className="text-[11px] font-bold mt-1">
+                  {reel.shares}
+                </span>
               </div>
 
-              <MoreVertical 
-                className="w-6 h-6 cursor-pointer opacity-80" 
+              <MoreVertical
+                className="w-6 h-6 cursor-pointer opacity-80"
                 onClick={() => {
                   setEditingReel(reel);
                   setEditCaption(reel.caption);
@@ -244,8 +312,14 @@ export default function ReelsPage() {
                 }}
               />
 
-              <div className="w-8 h-8 border-2 border-white/40 rounded-lg overflow-hidden bg-zinc-800 animate-spin-slow mt-2 ring-2 ring-black">
-                 <Image src={reel.videoUrl} width={32} height={32} alt="music-disc" className="object-cover" />
+              <div className="w-8 h-8 border-2 border-white/40 rounded-lg overflow-hidden bg-zinc-800  mt-2 ring-2 ring-black">
+                <Image
+                  src={reel.videoUrl}
+                  width={32}
+                  height={32}
+                  alt="music-disc"
+                  className="object-cover"
+                />
               </div>
             </div>
           </div>
@@ -253,19 +327,59 @@ export default function ReelsPage() {
       ))}
 
       <style jsx global>{`
-        html, body { overscroll-behavior: none; overflow: hidden; width: 100%; }
-        @keyframes heart-pop {
-          0% { transform: scale(0); opacity: 0; }
-          25% { transform: scale(1.4); opacity: 1; }
-          50% { transform: scale(1); opacity: 1; }
-          100% { transform: scale(1.6); opacity: 0; }
+        html,
+        body {
+          overscroll-behavior: none;
+          overflow: hidden;
+          width: 100%;
         }
-        .animate-heart-pop { animation: heart-pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .animate-marquee { animation: marquee 12s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spin 4s linear infinite; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        @keyframes heart-pop {
+          0% {
+            transform: scale(0);
+            opacity: 0;
+          }
+          25% {
+            transform: scale(1.4);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1.6);
+            opacity: 0;
+          }
+        }
+        .animate-heart-pop {
+          animation: heart-pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+            forwards;
+        }
+        @keyframes marquee {
+          0% {
+            transform: translateX(100%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 12s linear infinite;
+        }
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .animate-spin-slow {
+          animation: spin 4s linear infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
     </div>
   );

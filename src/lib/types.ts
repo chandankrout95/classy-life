@@ -69,7 +69,7 @@ export interface ContentTypeStat {
 export interface UserProfileData {
   id: string; // Firebase UID
   username: string;
-  isNew?: boolean;
+  // isNew: boolean; // Add this line
   email: string;
   avatarUrl: string;
   avatarHint: string;

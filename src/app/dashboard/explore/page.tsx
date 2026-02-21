@@ -10,6 +10,8 @@ import {
   Copy
 } from "lucide-react";
 import Image from "next/image";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import AppleLoader from "@/components/apple-loader";
 
 // --- Dummy Data ---
 // Generating 30 posts with varied metadata
@@ -37,6 +39,13 @@ export default function ExplorePage() {
       </header>
 
       <main className="pt-14">
+        <PullToRefresh
+          onRefresh={() =>
+            new Promise((resolve) => setTimeout(resolve, 1000))
+          }
+          pullingContent={<AppleLoader />}
+          refreshingContent={<AppleLoader />}
+        >
         {/* --- Explore Grid --- */}
         <div className="grid grid-cols-3 gap-[2px]">
           {EXPLORE_POSTS.map((post, index) => {
@@ -73,6 +82,7 @@ export default function ExplorePage() {
             );
           })}
         </div>
+        </PullToRefresh>
       </main>
 
     </div>

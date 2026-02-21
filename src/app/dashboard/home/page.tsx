@@ -29,6 +29,8 @@ import { updateProfile } from "firebase/auth";
 import { UserProfileData } from "@/lib/types";
 import { useDashboard } from "../context";
 import { useRouter } from "next/navigation";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import AppleLoader from "@/components/apple-loader";
 
 // --- Fallback Data ---
 const DEFAULT_STORIES = [
@@ -393,6 +395,13 @@ export default function InstagramHomePage() {
       </header>
 
       <main className=" max-w-md mx-auto">
+        <PullToRefresh
+          onRefresh={() =>
+            new Promise((resolve) => setTimeout(resolve, 1000))
+          }
+          pullingContent={<AppleLoader />}
+          refreshingContent={<AppleLoader />}
+        >
         {/* --- Stories Section --- */}
         <div className="flex overflow-x-auto py-3 px-3 no-scrollbar border-b border-border bg-background/50">
           {/* --- Your Story (Increased Size) --- */}
@@ -518,6 +527,7 @@ export default function InstagramHomePage() {
             </article>
           ))}
         </div>
+        </PullToRefresh>
       </main>
     </div>
   );

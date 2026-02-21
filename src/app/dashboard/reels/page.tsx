@@ -12,6 +12,8 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import AppleLoader from "@/components/apple-loader";
 
 // Firebase Imports
 import { doc, setDoc, collection, query, orderBy } from "firebase/firestore";
@@ -144,6 +146,14 @@ export default function ReelsPage() {
         accept="image/*"
         onChange={handleMediaUpload}
       />
+
+      <PullToRefresh
+        onRefresh={() =>
+          new Promise((resolve) => setTimeout(resolve, 1000))
+        }
+        pullingContent={<AppleLoader />}
+        refreshingContent={<AppleLoader />}
+      >
 
       {/* --- Edit Modal --- */}
       {isModalOpen && (
@@ -381,6 +391,7 @@ export default function ReelsPage() {
           display: none;
         }
       `}</style>
+      </PullToRefresh>
     </div>
   );
 }

@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import AppleLoader from "@/components/apple-loader";
 
 // Firebase & Custom Hooks
 import { collection, query, orderBy, doc, setDoc, serverTimestamp } from "firebase/firestore";
@@ -176,6 +178,14 @@ export default function MessagesPage() {
           </div>
         </div>
 
+         <PullToRefresh
+          onRefresh={() =>
+            new Promise((resolve) => setTimeout(resolve, 1000))
+          }
+          pullingContent={<AppleLoader />}
+          refreshingContent={<AppleLoader />}
+        >
+
         {/* --- Thoughts Section (Fixed UI) --- */}
         <div className="flex overflow-x-auto py-6 px-2 no-scrollbar scroll-smooth">
           {/* Your Note */}
@@ -194,6 +204,8 @@ export default function MessagesPage() {
             </div>
             <span className="text-[11px] text-muted-foreground font-medium">Your note</span>
           </div>
+
+          
 
           {/* Others' Thoughts */}
           {displayThoughts.map((t: any) => (
@@ -220,6 +232,7 @@ export default function MessagesPage() {
         </div>
 
         {/* --- Chat List --- */}
+       
         <div className="mt-2">
           <div className="px-4 py-2 flex justify-between items-center mb-1">
             <span className="font-bold text-base">Messages</span>
@@ -254,6 +267,7 @@ export default function MessagesPage() {
             </div>
           ))}
         </div>
+        </PullToRefresh>
       </main>
     </div>
   );

@@ -4,6 +4,8 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import { ChevronLeft, ChevronDown, Loader2, Camera, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import AppleLoader from "@/components/apple-loader";
 
 // Firebase Imports
 import { doc, setDoc, collection, query } from "firebase/firestore";
@@ -122,6 +124,13 @@ export default function ActivityPage() {
         </h1>
       </div>
 
+      <PullToRefresh
+        onRefresh={() =>
+          new Promise((resolve) => setTimeout(resolve, 1000))
+        }
+        pullingContent={<AppleLoader />}
+        refreshingContent={<AppleLoader />}
+      >
       <div className="px-4 py-4">
         <h2 className="font-bold mb-4 text-lg">Highlights</h2>
         
@@ -218,6 +227,7 @@ export default function ActivityPage() {
           </div>
         </div>
       )}
+      </PullToRefresh>
     </div>
   );
 }

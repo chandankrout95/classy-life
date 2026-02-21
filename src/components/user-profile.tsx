@@ -480,6 +480,7 @@ export function UserProfile({ userId }: TopNavProps) {
               </div>
               <div
                 onClick={() => {
+                  console.log("Username clicked, setting openAccounts to true");
                   setOpenAccounts(true);
                   console.log("first");
                 }}
@@ -775,14 +776,12 @@ export function UserProfile({ userId }: TopNavProps) {
         onPostCreate={handleCreatePost}
       />
 
-      {/* Accounts Centre Modal - Conditional Rendering */}
-      {openAccounts && userId && (
-        <AccountsCentreModal
-          userId={userId}
-          isOpen={openAccounts}
-          onClose={() => setOpenAccounts(false)}
-        />
-      )}
+      {/* Accounts Centre Modal - Always mounted, controlled by isOpen prop */}
+      <AccountsCentreModal
+        userId={userId}
+        isOpen={openAccounts}
+        onClose={() => setOpenAccounts(false)}
+      />
     </>
   );
 }

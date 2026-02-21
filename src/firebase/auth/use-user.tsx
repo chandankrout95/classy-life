@@ -14,10 +14,33 @@ export function useUser() {
     if (!auth) {
       setLoading(false);
       return;
-    };
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        console.log('[useUser] Full Auth User Object:', {
+          uid: authUser.uid,
+          email: authUser.email,
+          displayName: authUser.displayName,
+          photoURL: authUser.photoURL,
+          emailVerified: authUser.emailVerified,
+          isAnonymous: authUser.isAnonymous,
+          metadata: authUser.metadata,
+          phoneNumber: authUser.phoneNumber,
+          providerData: authUser.providerData,
+          providerId: authUser.providerId,
+          tenantId: authUser.tenantId,
+          refreshToken: authUser.refreshToken ? '***' : null,
+          createdAt: authUser.metadata?.creationTime,
+          lastSignIn: authUser.metadata?.lastSignInTime,
+          // Full raw object for inspection
+          _raw: authUser,
+        });
+        console.log('[useUser] Complete User Object (stringified):', JSON.stringify(authUser, null, 2));
+      } else {
+        console.log('[useUser] No authenticated user');
+      }
+      setUser(authUser);
       setLoading(false);
     });
 

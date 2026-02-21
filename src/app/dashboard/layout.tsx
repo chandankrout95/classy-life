@@ -72,7 +72,7 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
       return null; // The context handles redirection
   }
 
-  const isPostPage = pathname.includes('/post/');
+  const isPostPage = pathname.includes('/post/') 
   const shouldShowNav = !isPostPage;
 
 
@@ -84,8 +84,8 @@ function DashboardCore({ children }: { children: React.ReactNode }) {
 
         {shouldShowNav && (
             <div className={cn(
-                "fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800 transition-transform duration-300 ease-in-out",
-                showBottomNav ? "translate-y-0" : "translate-y-full"
+                "fixed bottom-0 left-0 right-0 z-20 bg-background border-t border-zinc-800 ",
+                // showBottomNav ? "translate-y-0" : "translate-y-full"
             )}>
                 <TopNav 
                     onPlusClick={() => setIsCreatingPost(true)}

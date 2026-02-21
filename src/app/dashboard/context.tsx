@@ -26,13 +26,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     const initializeProfile = useCallback(async () => {
-        if (!firestore || !user) return;
+        if (!firestore || !user) {
+            console.log('[DashboardContext] Skipping init: firestore?', !!firestore, 'user?', !!user);
+            return;
+        }
         
         const userDocRef = doc(firestore, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
         const deviceId = await generateDeviceFingerprint();
 
         if (!userDocSnap.exists()) {
+            console.log('[DashboardContext] Profile does not exist, creating new one for', user.uid);
             const newProfile: UserProfileData = {
                 ...mockProfile,
                 id: user.uid,
@@ -44,7 +48,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             };
             await setDoc(userDocRef, newProfile);
             setProfile(newProfile);
+            console.log('[DashboardContext] Profile created:', newProfile.id);
         } else {
+            console.log('[DashboardContext] Profile exists for', user.uid);
             const data = userDocSnap.data() as UserProfileData;
             let needsUpdate = false;
             let updatedData: UserProfileData = { ...data };
@@ -88,11 +94,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         const userDocRef = doc(firestore, 'users', user.uid);
         const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
             if (docSnap.exists()) {
-                setProfile(docSnap.data() as UserProfileData);
+                const profileData = docSnap.data() as UserProfileData;
+                console.log('[DashboardContext] Profile snapshot received:', profileData.id, 'username:', profileData.username);
+                console.log('[DashboardContext] Full Profile Data Object:', profileData);
+                console.log('[DashboardContext] Complete Profile Data (stringified):', JSON.stringify(profileData, null, 2));
+                setProfile(profileData);
+            } else {
+                console.log('[DashboardContext] Profile snapshot: document does not exist');
             }
             setLoading(false);
         }, (error) => {
-            console.error("Error listening to profile changes:", error);
+            console.error("[DashboardContext] Error listening to profile changes:", error);
             setLoading(false);
         });
 

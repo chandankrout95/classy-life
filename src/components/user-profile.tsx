@@ -68,7 +68,6 @@ const BioWithMentions = ({ bio }: { bio: string[] }) => {
 export function UserProfile() {
   const router = useRouter();
   const { auth, user } = useUser();
-  console.log(user)
 
   const {
     profile: formData,
@@ -508,7 +507,7 @@ export function UserProfile() {
                     )}
 
                     {/* Only shows if 'isNew' is true (you can pass this as a prop or check a field) */}
-                    {true && (
+                    {localProfile.isNew && (
                       <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-10">
                         <div className="bg-[#4c6ef5] text-white text-[10px] font-bold px-2 py-0.5 rounded-[4px]  shadow-sm">
                           New

@@ -38,7 +38,7 @@ export function TopNav({ onPlusClick, userId }: TopNavProps) {
   return (
     <div
       className={cn(
-        "flex justify-around items-center py-[13px] w-full transition-colors duration-300 border-t",
+        "flex justify-around items-center py-[13px] w-full transition-colors duration-300 border-[1px] border-gray-400",
         isReels
           ? "bg-black border-transparent"
           : "bg-[hsl(var(--background))] border-border",

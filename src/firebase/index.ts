@@ -1,4 +1,3 @@
-
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore, enableIndexedDbPersistence } from 'firebase/firestore';
@@ -9,6 +8,8 @@ import { useFirebase, useFirebaseApp, useAuth, useFirestore, useStorage, Firebas
 import { FirebaseClientProvider } from './client-provider';
 import { useUser } from './auth/use-user';
 
+// Global variable to track persistence initialization
+let persistencePromise: Promise<void> | null = null;
 
 function initializeFirebase(): {
   app: FirebaseApp;
@@ -22,12 +23,13 @@ function initializeFirebase(): {
   const firestore = getFirestore(app);
   const storage = getStorage(app);
 
-  if (typeof window !== 'undefined') {
-    enableIndexedDbPersistence(firestore).catch((err) => {
-      if (err.code == 'failed-precondition') {
-        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
-      } else if (err.code == 'unimplemented') {
-        console.log('The current browser does not support all of the features required to enable persistence.');
+  // FIXED: Persistence logic with singleton pattern
+  if (typeof window !== 'undefined' && !persistencePromise) {
+    persistencePromise = enableIndexedDbPersistence(firestore).catch((err) => {
+      if (err.code === 'failed-precondition') {
+        console.warn('Multiple tabs open, persistence enabled in one tab only.');
+      } else if (err.code === 'unimplemented') {
+        console.warn('Browser does not support persistence.');
       }
     });
   }
@@ -35,7 +37,14 @@ function initializeFirebase(): {
   return { app, auth, firestore, storage };
 }
 
+// Initialize once
+const { app, auth, firestore, storage } = initializeFirebase();
+
 export {
+  auth,
+  firestore,
+  storage,
+  app,
   initializeFirebase,
   useFirebase,
   useFirebaseApp,

@@ -1,202 +1,260 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   ArrowLeft,
   Edit,
   Search,
   Camera,
   ChevronDown,
-  MoreVertical,
+  X,
+  Loader2,
+  Plus,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-// --- Dummy Data ---
-const THOUGHTS = [
-  {
-    id: 1,
-    username: "Your note",
-    img: "https://i.pravatar.cc/150?u=admin",
-    note: "Obsessed with...",
-    isUser: true,
-  },
-  {
-    id: 3,
-    username: "whopphantom",
-    img: "https://i.pravatar.cc/150?u=phantom",
-    note: "LFG! 🚀",
-  },
-  {
-    id: 4,
-    username: "dripsociety",
-    img: "https://i.pravatar.cc/150?u=drip",
-    note: "New drop live",
-  },
-  {
-    id: 5,
-    username: "mxrcmuno_oz",
-    img: "https://i.pravatar.cc/150?u=marc",
-    note: "Working...",
-  },
-];
+// Firebase & Custom Hooks
+import { collection, query, orderBy, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useFirestore, useUser, storage as firebaseStorage } from "@/firebase"; 
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useDashboard } from "../context";
+import { UserProfileData } from "@/lib/types";
 
-const CHATS = Array.from({ length: 15 }).map((_, i) => ({
-  id: i + 1,
-  username: [
-    "amaritsaran",
-    "dripsociety.inc",
-    "whopphantom",
-    "textfae.ree67",
-    "iguana.8749135",
-    "Pawan Saini",
-  ][i % 6],
+const DEFAULT_CHATS = Array.from({ length: 8 }).map((_, i) => ({
+  id: `chat-${i + 1}`,
+  username: ["amaritsaran", "dripsociety.inc", "whopphantom", "textfae.ree67", "Pawan Saini"][i % 5],
   img: `https://i.pravatar.cc/150?u=user${i}`,
-  lastMsg: [
-    "Ooo · Reply?",
-    "Sent 10h ago",
-    "Active 3h ago",
-    "Active 3h ago",
-    "Active 4h ago",
-    "Seen on Wednesday",
-  ][i % 6],
+  lastMsg: ["Ooo · Reply?", "Sent 10h ago", "Active 3h ago", "Seen on Wednesday"][i % 4],
   hasStory: i % 3 === 0,
 }));
 
+const DEFAULT_THOUGHTS = [
+  { id: "t-1", username: "whopphantom", img: "https://i.pravatar.cc/150?u=phantom", note: "LFG! 🚀" },
+  { id: "t-2", username: "dripsociety", img: "https://i.pravatar.cc/150?u=drip", note: "New drop live" },
+  { id: "t-3", username: "mxrcmuno_oz", img: "https://i.pravatar.cc/150?u=marc", note: "Working..." },
+];
+
 export default function MessagesPage() {
+  const router = useRouter();
+  const firestore = useFirestore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user, loading: authLoading } = useUser();
+  const [localProfile, setLocalProfile] = useState<UserProfileData | null>(null);
+  const { profile: formData } = useDashboard();
+
+  useEffect(() => {
+    if (formData) setLocalProfile(formData);
+  }, [formData]);
+
+  // States
+  const [isChatDialogOpen, setIsChatDialogOpen] = useState(false);
+  const [isThoughtDialogOpen, setIsThoughtDialogOpen] = useState(false);
+  
+  const [editingItem, setEditingItem] = useState<any>(null);
+  const [editName, setEditName] = useState("");
+  const [editMsg, setEditMsg] = useState("");
+  const [editImg, setEditImg] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const userId = user?.uid || "guest";
+  const chatPath = `users/${userId}/user_messages`;
+  const thoughtPath = `users/${userId}/user_thoughts`;
+
+  const [dbChats] = useCollectionData(query(collection(firestore, chatPath), orderBy("createdAt", "desc")));
+  const [dbThoughts] = useCollectionData(query(collection(firestore, thoughtPath), orderBy("createdAt", "desc")));
+
+  const displayChats = dbChats && dbChats.length > 0 
+    ? [...dbChats, ...DEFAULT_CHATS.filter(dc => !dbChats.find(db => db.id === dc.id))] 
+    : DEFAULT_CHATS;
+
+  const displayThoughts = dbThoughts && dbThoughts.length > 0 
+    ? [...dbThoughts, ...DEFAULT_THOUGHTS.filter(dt => !dbThoughts.find(db => db.id === dt.id))] 
+    : DEFAULT_THOUGHTS;
+
+  // Image Upload Logic
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUpdating(true);
+    try {
+      const sRef = ref(firebaseStorage, `messages/${userId}/${Date.now()}`);
+      await uploadBytes(sRef, file);
+      const url = await getDownloadURL(sRef);
+      setEditImg(url);
+    } catch (err) { console.error(err); } finally { setIsUpdating(false); }
+  };
+
+  // Save Handlers
+  const handleSaveChat = async () => {
+    if (!editingItem) return;
+    setIsUpdating(true);
+    await setDoc(doc(firestore, chatPath, editingItem.id.toString()), {
+      ...editingItem, username: editName, lastMsg: editMsg, img: editImg, createdAt: serverTimestamp(),
+    }, { merge: true });
+    setIsChatDialogOpen(false);
+    setIsUpdating(false);
+  };
+
+  const handleSaveThought = async () => {
+    if (!editingItem) return;
+    setIsUpdating(true);
+    await setDoc(doc(firestore, thoughtPath, editingItem.id.toString()), {
+      ...editingItem, username: editName, note: editMsg, img: editImg, createdAt: serverTimestamp(),
+    }, { merge: true });
+    setIsThoughtDialogOpen(false);
+    setIsUpdating(false);
+  };
+
+  if (authLoading) return <div className="h-screen flex items-center justify-center bg-background"><Loader2 className="animate-spin" /></div>;
+
   return (
-    /* Changed bg-background to handle the main container color */
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <div className="min-h-screen bg-background text-foreground pb-10">
+      <input type="file" ref={fileInputRef} hidden onChange={handleImageChange} />
       
-      {/* --- Header --- */}
-      <header className="fixed top-0 w-full bg-background border-b border-border z-50 px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <ArrowLeft className="w-6 h-6 cursor-pointer" />
-          <div className="flex items-center gap-1 font-bold text-xl tracking-tight">
-            insight_editor_app <ChevronDown className="w-4 h-4 mt-1" />
-            <div className="w-2 h-2 bg-red-500 rounded-full ml-1" />
+      {/* --- Common Modal Content (Dynamic for Chat/Thought) --- */}
+      {(isChatDialogOpen || isThoughtDialogOpen) && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-card w-full max-w-sm rounded-3xl border border-border p-6 shadow-xl animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-bold text-lg">Edit {isChatDialogOpen ? "Chat" : "Note"}</h3>
+              <X className="w-5 h-5 cursor-pointer" onClick={() => { setIsChatDialogOpen(false); setIsThoughtDialogOpen(false); }} />
+            </div>
+            
+            <div className="space-y-4">
+              {/* Image Editor */}
+              <div className="flex justify-center">
+                <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-border cursor-pointer group" onClick={() => fileInputRef.current?.click()}>
+                  <Image src={editImg} alt="edit" fill className="object-cover" />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Camera className="text-white w-5 h-5" />
+                  </div>
+                  {isUpdating && <div className="absolute inset-0 bg-black/60 flex items-center justify-center"><Loader2 className="animate-spin text-white w-5 h-5" /></div>}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                 <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">Display Name</label>
+                 <input value={editName} onChange={(e) => setEditName(e.target.value)} className="w-full bg-secondary p-3 rounded-xl outline-none text-sm" placeholder="Username" />
+              </div>
+
+              <div className="space-y-1">
+                 <label className="text-[10px] font-bold text-muted-foreground uppercase ml-1">{isChatDialogOpen ? "Message Text" : "Note Bubble Text"}</label>
+                 <input value={editMsg} onChange={(e) => setEditMsg(e.target.value)} className="w-full bg-secondary p-3 rounded-xl outline-none text-sm" placeholder={isChatDialogOpen ? "Last message..." : "Note (max 20 chars)"} maxLength={isThoughtDialogOpen ? 20 : 100} />
+              </div>
+
+              <button 
+                onClick={isChatDialogOpen ? handleSaveChat : handleSaveThought} 
+                disabled={isUpdating} 
+                className="w-full bg-foreground text-background font-bold py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-transform"
+              >
+                {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
+              </button>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Edit className="w-6 h-6 cursor-pointer" />
+      )}
+
+      {/* --- Header --- */}
+      <header className="fixed top-0 w-full bg-background z-50 px-4 h-14 flex items-center justify-between ">
+        <div className="flex items-center gap-6">
+          <ArrowLeft className="w-7 h-7 cursor-pointer active:scale-90 transition-transform" onClick={() => router.back()} />
+          <div className="flex items-center gap-1 font-bold text-xl tracking-tight">
+            {localProfile?.username || "insight_editor"} 
+            <ChevronDown className="w-4 h-4 mt-1" />
+          </div>
         </div>
+        <Edit className="w-6 h-6 cursor-pointer" />
       </header>
 
       <main className="pt-14 max-w-md mx-auto">
-        {/* --- Search Bar --- */}
-        <div className="px-4 py-2">
-          {/* bg-muted automatically adapts to light/dark if configured in tailwind.config */}
-          <div className="flex items-center gap-3 bg-secondary/50 dark:bg-muted rounded-xl px-3 py-2 text-muted-foreground">
+        <div className="px-4 py-3">
+          <div className="flex items-center gap-3 bg-secondary/60 rounded-xl px-3 py-2.5 text-muted-foreground">
             <Search className="w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-transparent border-none outline-none text-sm w-full placeholder:text-muted-foreground"
-            />
+            <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-sm w-full" />
           </div>
         </div>
 
-        {/* --- Thoughts / Notes Section --- */}
-        <div className="flex overflow-x-auto py-4 px-2 no-scrollbar">
-          {THOUGHTS.map((t) => (
-            <div key={t.id} className="flex flex-col items-center min-w-[95px] space-y-2">
+        {/* --- Thoughts Section (Fixed UI) --- */}
+        <div className="flex overflow-x-auto py-6 px-2 no-scrollbar scroll-smooth">
+          {/* Your Note */}
+          <div className="flex flex-col items-center min-w-[100px] space-y-2">
+            <div className="relative">
+               <div className="absolute z-20 -top-7 left-1/2 -translate-x-1/2 bg-white dark:bg-zinc-800 text-[11px] px-3 py-1 text-[10px] rounded-2xl border border-border shadow-sm text-center min-w-[70px]">
+                 Create note
+                 <div className="absolute -bottom-1 left-4 w-2 h-2 bg-inherit border-r border-b border-border rotate-45" />
+               </div>
+               <div className="relative w-16 h-16 rounded-full overflow-hidden bg-secondary">
+                 <Image src={localProfile?.avatarUrl || "https://i.pravatar.cc/150?u=admin"} alt="me" fill className="object-cover" />
+               </div>
+               <div className="absolute bottom-0 right-0 bg-secondary rounded-full p-1 border-2 border-background">
+                 <Plus className="w-3 h-3 text-foreground" strokeWidth={3} />
+               </div>
+            </div>
+            <span className="text-[11px] text-muted-foreground font-medium">Your note</span>
+          </div>
+
+          {/* Others' Thoughts */}
+          {displayThoughts.map((t: any) => (
+            <div key={t.id} className="flex flex-col items-center min-w-[100px] space-y-2 cursor-pointer group" onClick={() => {
+                setEditingItem(t); setEditName(t.username); setEditMsg(t.note); setEditImg(t.img); setIsThoughtDialogOpen(true);
+            }}>
               <div className="relative">
-                {/* Note Bubble - Adaptive Colors */}
                 {t.note && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-muted text-[11px] px-3 py-1.5 rounded-2xl border border-border shadow-sm whitespace-nowrap z-10 text-foreground">
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white dark:bg-zinc-900 text-[12px] px-3 py-1.5 rounded-2xl border border-border shadow-lg whitespace-nowrap z-10 font-medium">
                     {t.note}
-                    {/* Bubble Tail */}
-                    <div className="absolute -bottom-1 left-4 w-2 h-2 bg-white dark:bg-muted border-r border-b border-border rotate-45" />
+                    {/* Cloud tail bubble */}
+                    <div className="absolute -bottom-1 left-4 w-2.5 h-2.5 bg-inherit border-r border-b border-border rotate-45" />
                   </div>
                 )}
-
-                <div className={`p-[2px] rounded-full ${t.isUser ? "" : "border border-border"}`}>
+                <div className="p-[2px] rounded-full border border-border group-active:scale-95 transition-transform">
                   <div className="relative w-16 h-16 rounded-full overflow-hidden bg-secondary">
                     <Image src={t.img} alt={t.username} fill className="object-cover" />
-                    {/* {t.isUser && (
-                      <div className="absolute bottom-0 right-0 bg-blue-500 rounded-full border-2 border-background p-0.5">
-                        <PlusIcon />
-                      </div>
-                    )} */}
                   </div>
                 </div>
               </div>
-              <span className="text-[11px] text-muted-foreground text-center truncate w-20">
-                {t.isUser ? "Your note" : t.username}
-              </span>
+              <span className="text-[11px] text-muted-foreground truncate w-20 text-center">{t.username}</span>
             </div>
           ))}
         </div>
 
-        {/* --- Chat Tabs --- */}
-        <div className="flex items-center gap-2 px-3 py-3 border-b border-border bg-background">
-          {/* Filter Icon Button - Theme Adaptive Border */}
-          <button className="p-2 rounded-full border border-border hover:bg-secondary transition-colors">
-            <div className="flex items-center gap-1 text-foreground">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
-                <line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" />
-                <line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" />
-                <line x1="2" y1="14" x2="6" y2="14" /><line x1="10" y1="8" x2="14" y2="8" /><line x1="18" y1="16" x2="22" y2="16" />
-              </svg>
-              <ChevronDown className="w-3 h-3 fill-current" />
-            </div>
-          </button>
-
-          {/* Tabs Scrollable Area */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-            {/* Primary Tab (Active) - Swaps Zinc-800 for adaptive muted color or black */}
-            <button className="flex items-center gap-2 px-4 py-1.5 bg-foreground text-background dark:bg-muted dark:text-foreground rounded-full transition-opacity active:opacity-80">
-              <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-              <span className="text-xs font-bold whitespace-nowrap">Primary</span>
-              <span className="text-xs font-medium opacity-60">6</span>
-            </button>
-
-            {/* Requests Tab */}
-            <button className="px-4 py-1.5 rounded-full border border-border hover:bg-secondary transition-colors">
-              <span className="text-xs font-bold text-foreground whitespace-nowrap">Requests</span>
-            </button>
-
-            {/* General Tab */}
-            <button className="px-4 py-1.5 rounded-full border border-border hover:bg-secondary transition-colors">
-              <span className="text-xs font-bold text-foreground whitespace-nowrap">General</span>
-            </button>
-          </div>
-        </div>
-
         {/* --- Chat List --- */}
-        <div className="mt-1">
-          {CHATS.map((chat) => (
+        <div className="mt-2">
+          <div className="px-4 py-2 flex justify-between items-center mb-1">
+            <span className="font-bold text-base">Messages</span>
+            <span className="text-blue-500 text-sm font-bold active:opacity-50">Requests</span>
+          </div>
+          
+          {displayChats.map((chat: any) => (
             <div
               key={chat.id}
-              className="flex items-center justify-between px-4 py-3 active:bg-secondary transition-colors cursor-pointer"
+              onClick={() => {
+                setEditingItem(chat); setEditName(chat.username); setEditMsg(chat.lastMsg); setEditImg(chat.img); setIsChatDialogOpen(true);
+              }}
+              className="flex items-center justify-between px-4 py-3 active:bg-secondary transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-3">
-                <div className={`p-[2px] rounded-full ${chat.hasStory ? "bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600" : ""}`}>
-                  <div className={`relative w-14 h-14 rounded-full overflow-hidden border-2 ${chat.hasStory ? "border-background" : "border-transparent"}`}>
+                <div className={`p-[2.5px] rounded-full ${chat.hasStory ? "bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600" : ""}`}>
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-background">
                     <Image src={chat.img} alt={chat.username} fill className="object-cover bg-secondary" />
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[14px] font-medium text-foreground">{chat.username}</span>
-                  <span className="text-[13px] text-muted-foreground line-clamp-1">
+                  <span className="text-[15px] font-semibold text-foreground flex items-center gap-2">
+                    {chat.username}
+                    {chat.createdAt && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
+                  </span>
+                  <span className={`text-[13px] line-clamp-1 ${chat.createdAt ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
                     {chat.lastMsg}
                   </span>
                 </div>
               </div>
-              <Camera className="w-6 h-6 text-muted-foreground" />
+              <Camera className="w-6 h-6 text-muted-foreground opacity-40 group-hover:opacity-100" />
             </div>
           ))}
         </div>
       </main>
     </div>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
   );
 }
